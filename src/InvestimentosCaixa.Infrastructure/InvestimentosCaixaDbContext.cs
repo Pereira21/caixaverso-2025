@@ -12,6 +12,7 @@ namespace InvestimentosCaixa.Infrastructure
         }
 
         public DbSet<Produto> Produtos { get; set; }
+        public DbSet<Telemetria> Telemetrias { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -20,6 +21,7 @@ namespace InvestimentosCaixa.Infrastructure
             modelBuilder.ApplyConfiguration(new ProdutoMapping());
             modelBuilder.ApplyConfiguration(new TipoProdutoMapping());
             modelBuilder.ApplyConfiguration(new SimulacaoMapping());
+            modelBuilder.ApplyConfiguration(new TelemetriaMapping());
         }
     }
 }

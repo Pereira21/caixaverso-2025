@@ -2,6 +2,8 @@
 {
     public class Simulacao : BaseEntity
     {
+        protected Simulacao() { }
+
         public Simulacao(int clienteId, int produtoId, decimal valorInvestido, decimal valorFinal, int prazoMeses, decimal rentabilidadeEfetiva, DateTime dataSimulacao)
         {
             ClienteId = clienteId;

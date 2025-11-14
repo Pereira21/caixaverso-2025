@@ -1,4 +1,4 @@
-﻿namespace InvestimentosCaixa.Application.DTO
+﻿namespace InvestimentosCaixa.Application.DTO.Response
 {
     public class SimulacaoResponseDTO
     {

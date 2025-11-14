@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace InvestimentosCaixa.Api.Models
+namespace InvestimentosCaixa.Api.Models.Simulacao
 {
     public class SimularInvestimentoModel
     {

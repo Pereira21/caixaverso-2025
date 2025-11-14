@@ -1,38 +1,57 @@
 ﻿using AutoMapper;
-using InvestimentosCaixa.Api.Models;
-using InvestimentosCaixa.Application.DTO;
-using InvestimentosCaixa.Application.Interfaces;
+using InvestimentosCaixa.Api.Models.Simulacao;
+using InvestimentosCaixa.Application.DTO.Request;
+using InvestimentosCaixa.Application.Interfaces.Services;
+using InvestimentosCaixa.Application.Notificacoes;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace InvestimentosCaixa.Api.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     public class InvestimentosController : MainController
     {
         private readonly ISimulacaoService _simulacaoService;
         
-        public InvestimentosController(IMapper mapper, ISimulacaoService simulacaoService) : base (mapper)
+        public InvestimentosController(IMapper mapper, INotificador notificador, ISimulacaoService simulacaoService) : base (mapper, notificador)
         {
             _simulacaoService = simulacaoService;
         }
 
         [HttpPost("simular-investimento")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> SimularInvestimento([FromBody] SimularInvestimentoModel model)
         {
-            if (!ModelState.IsValid) return BadRequest();
+            if (!ModelState.IsValid) return CustomResponse(ModelState);
 
-            var request = _mapper.Map<SimularInvestimentoRequestDTO>(model);
+            var request = _mapper.Map<SimularInvestimentoRequest>(model);
 
             var simulacao = await _simulacaoService.SimularInvestimento(request);
 
-            return Ok(simulacao);
+            return CustomResponse(simulacao);
         }
 
         [HttpGet("simulacoes")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Get()
         {
             var historico = await _simulacaoService.ObterHistorico();
-            return Ok(historico);
+            return CustomResponse(historico);
+        }
+
+        [HttpGet("simulacoes/por-produto-dia")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> ObterPorProdutoDia()
+        {
+            var resultado = await _simulacaoService.ObterPorProdutoDiaAsync();
+            return Ok(resultado);
         }
     }
 }

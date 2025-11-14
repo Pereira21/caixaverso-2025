@@ -1,6 +1,6 @@
-﻿namespace InvestimentosCaixa.Infrastructure.DTO
+﻿namespace InvestimentosCaixa.Application.DTO.Response
 {
-    public class SimulacaoPorProdutoDiaData
+    public class SimulacaoPorProdutoDiaResponse
     {
         public string Produto { get; set; }
         public DateTime Data { get; set; }

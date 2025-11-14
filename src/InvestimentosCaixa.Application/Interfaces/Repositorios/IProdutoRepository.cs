@@ -1,7 +1,6 @@
 ﻿using InvestimentosCaixa.Domain.Entidades;
-using InvestimentosCaixa.Domain.Interfaces;
 
-namespace InvestimentosCaixa.Domain.Repositorios
+namespace InvestimentosCaixa.Application.Interfaces.Repositorios
 {
     public interface IProdutoRepository : IRepository<Produto>
     {

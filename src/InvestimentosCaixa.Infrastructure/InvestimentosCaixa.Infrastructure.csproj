@@ -17,6 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\InvestimentosCaixa.Application\InvestimentosCaixa.Application.csproj" />
     <ProjectReference Include="..\InvestimentosCaixa.Domain\InvestimentosCaixa.Domain.csproj" />
   </ItemGroup>
 

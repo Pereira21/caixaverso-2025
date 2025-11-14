@@ -20,10 +20,5 @@
 
         public TipoProduto TipoProduto { get; private set; }
         public ICollection<Simulacao> Simulacoes { get; set; }
-
-        //public void AtualizarRentabilidade(decimal novaTaxa)
-        //{
-        //    RentabilidadeAnual = novaTaxa;
-        //}
     }
 }

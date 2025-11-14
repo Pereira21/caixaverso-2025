@@ -1,9 +1,10 @@
-﻿using InvestimentosCaixa.Application.DTO;
-using InvestimentosCaixa.Application.Interfaces;
+﻿using AutoMapper;
+using InvestimentosCaixa.Application.DTO.Request;
+using InvestimentosCaixa.Application.DTO.Response;
+using InvestimentosCaixa.Application.Interfaces.Repositorios;
+using InvestimentosCaixa.Application.Interfaces.Services;
 using InvestimentosCaixa.Application.Notificacoes;
 using InvestimentosCaixa.Domain.Entidades;
-using InvestimentosCaixa.Domain.Repositorios;
-using System.Threading;
 
 namespace InvestimentosCaixa.Application.Services
 {
@@ -11,16 +12,14 @@ namespace InvestimentosCaixa.Application.Services
     {
         private readonly IProdutoRepository _produtoRepository;
         private readonly ISimulacaoRepository _simulacaoRepository;
-        private readonly IUnitOfWork _uow;
 
-        public SimulacaoService(INotificador notificador, IUnitOfWork uow, IProdutoRepository produtoRepository, ISimulacaoRepository simulacaoRepository) : base (notificador)
+        public SimulacaoService(INotificador notificador, IMapper mapper, IUnitOfWork unitOfWork, IProdutoRepository produtoRepository, ISimulacaoRepository simulacaoRepository) : base (notificador, mapper, unitOfWork)
         {
             _produtoRepository = produtoRepository;
-            _simulacaoRepository = simulacaoRepository;
-            _uow = uow;
+            _simulacaoRepository = simulacaoRepository;            
         }
 
-        public async Task<SimularInvestimentoResponseDTO> SimularInvestimento(SimularInvestimentoRequestDTO request)
+        public async Task<SimularInvestimentoResponse> SimularInvestimento(SimularInvestimentoRequest request)
         {
             var produtoAdequado = await _produtoRepository.ObterAdequadoAsync(request.PrazoMeses, request.TipoProduto);
 
@@ -31,19 +30,17 @@ namespace InvestimentosCaixa.Application.Services
             if (_notificador.TemNotificacao())
                 return null;
 
-            // 3) cálculo simples exemplo (pro rata anual)
             var valorFinal = request.Valor * (1 + produtoAdequado.RentabilidadeAnual * (produtoAdequado.PrazoMinimoMeses / 12m));
 
-            var response = new SimularInvestimentoResponseDTO
+            var response = new SimularInvestimentoResponse
             {
                 ProdutoValidado = new ProdutoDTO { Id = produtoAdequado.Id, Nome = produtoAdequado.Nome, Tipo = produtoAdequado.TipoProduto.Nome, Rentabilidade = produtoAdequado.RentabilidadeAnual, Risco = produtoAdequado.TipoProduto.Risco },
                 ResultadoSimulacao = new SimulacaoDTO { ValorFinal = decimal.Round(valorFinal, 2), RentabilidadeEfetiva = produtoAdequado.RentabilidadeAnual, PrazoMeses = produtoAdequado.PrazoMinimoMeses },
                 DataSimulacao = DateTime.UtcNow
             };
 
-            // 4) persistir simulação (se tiver repositório Simulacao, adiciona aqui e salva)
             await _simulacaoRepository.AdicionarAsync(new Simulacao(request.ClienteId, produtoAdequado.Id, request.Valor, valorFinal, request.PrazoMeses, produtoAdequado.RentabilidadeAnual, DateTime.UtcNow));
-            await _uow.SaveChangesAsync();
+            await _unitOfWork.SaveChangesAsync();
 
             return response;
         }
@@ -52,17 +49,12 @@ namespace InvestimentosCaixa.Application.Services
         {
             var simulacoes = await _simulacaoRepository.ObterTodosComProdutoAsync();
 
-            return simulacoes.Select(s => new SimulacaoResponseDTO
-            {
-                Id = s.Id,
-                ClienteId = s.ClienteId,
-                Produto = s.Produto?.Nome ?? string.Empty,
-                ValorInvestido = s.ValorInvestido,
-                ValorFinal = s.ValorFinal,
-                PrazoMeses = s.PrazoMeses,
-                DataSimulacao = s.DataSimulacao
-            }
-            ).ToList();
+            return _mapper.Map<List<SimulacaoResponseDTO>>(simulacoes);
+        }
+
+        public async Task<List<SimulacaoPorProdutoDiaResponse>> ObterPorProdutoDiaAsync()
+        {
+            return await _simulacaoRepository.ObterSimulacoesPorProdutoDiaAsync();
         }
     }
 }

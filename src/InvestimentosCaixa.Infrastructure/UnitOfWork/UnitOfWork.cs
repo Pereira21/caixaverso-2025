@@ -1,4 +1,4 @@
-﻿using InvestimentosCaixa.Domain.Repositorios;
+﻿using InvestimentosCaixa.Application.Interfaces.Repositorios;
 
 namespace InvestimentosCaixa.Infrastructure.UnitOfWork
 {

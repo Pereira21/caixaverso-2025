@@ -59,3 +59,12 @@ CREATE TABLE Simulacao (
 
     FOREIGN KEY (ProdutoId) REFERENCES Produto(Id)
 );
+
+CREATE TABLE Telemetria (
+    Id INT IDENTITY(1,1) PRIMARY KEY,
+    Endpoint VARCHAR(200) NOT NULL,
+    Metodo VARCHAR(10) NOT NULL,
+    TempoRespostaMs INT NOT NULL,
+    Sucesso BIT NOT NULL,
+    DataRegistro DATETIME NOT NULL
+);

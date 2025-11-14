@@ -1,5 +1,5 @@
-﻿using InvestimentosCaixa.Domain.Entidades;
-using InvestimentosCaixa.Domain.Repositorios;
+﻿using InvestimentosCaixa.Application.Interfaces.Repositorios;
+using InvestimentosCaixa.Domain.Entidades;
 using Microsoft.EntityFrameworkCore;
 
 namespace InvestimentosCaixa.Infrastructure.Repositorios

@@ -1,6 +1,6 @@
-﻿namespace InvestimentosCaixa.Application.DTO
+﻿namespace InvestimentosCaixa.Application.DTO.Response
 {
-    public class SimularInvestimentoResponseDTO
+    public class SimularInvestimentoResponse
     {
         public ProdutoDTO ProdutoValidado { get; set; }
         public SimulacaoDTO ResultadoSimulacao { get; set; }

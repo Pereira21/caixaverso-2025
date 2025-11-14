@@ -1,6 +1,6 @@
-﻿namespace InvestimentosCaixa.Application.DTO
+﻿namespace InvestimentosCaixa.Application.DTO.Request
 {
-    public class SimularInvestimentoRequestDTO
+    public class SimularInvestimentoRequest
     {
         public int ClienteId { get; set; }
         public decimal Valor { get; set; }

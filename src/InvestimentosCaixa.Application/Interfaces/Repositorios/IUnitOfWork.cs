@@ -1,4 +1,4 @@
-﻿namespace InvestimentosCaixa.Domain.Repositorios
+﻿namespace InvestimentosCaixa.Application.Interfaces.Repositorios
 {
     public interface IUnitOfWork
     {

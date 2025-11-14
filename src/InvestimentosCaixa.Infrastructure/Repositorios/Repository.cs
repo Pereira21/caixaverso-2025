@@ -1,5 +1,5 @@
-﻿using InvestimentosCaixa.Domain.Entidades;
-using InvestimentosCaixa.Domain.Interfaces;
+﻿using InvestimentosCaixa.Application.Interfaces.Repositorios;
+using InvestimentosCaixa.Domain.Entidades;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 

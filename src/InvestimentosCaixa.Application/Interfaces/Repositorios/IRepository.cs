@@ -1,7 +1,7 @@
 ﻿using InvestimentosCaixa.Domain.Entidades;
 using System.Linq.Expressions;
 
-namespace InvestimentosCaixa.Domain.Interfaces
+namespace InvestimentosCaixa.Application.Interfaces.Repositorios
 {
     public interface IRepository<T> where T : BaseEntity
     {

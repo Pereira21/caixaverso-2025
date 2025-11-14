@@ -1,6 +1,6 @@
-﻿using InvestimentosCaixa.Domain.Entidades;
-using InvestimentosCaixa.Domain.Repositorios;
-using InvestimentosCaixa.Infrastructure.DTO;
+﻿using InvestimentosCaixa.Application.DTO.Response;
+using InvestimentosCaixa.Application.Interfaces.Repositorios;
+using InvestimentosCaixa.Domain.Entidades;
 using Microsoft.EntityFrameworkCore;
 
 namespace InvestimentosCaixa.Infrastructure.Repositorios
@@ -12,6 +12,27 @@ namespace InvestimentosCaixa.Infrastructure.Repositorios
         public async Task<List<Simulacao>> ObterTodosComProdutoAsync()
         {
             return await _dbSet.Include(x => x.Produto).ToListAsync();
+        }
+
+        public async Task<List<SimulacaoPorProdutoDiaResponse>> ObterSimulacoesPorProdutoDiaAsync()
+        {
+            return await _dbSet
+                .Include(s => s.Produto)
+                .GroupBy(s => new
+                {
+                    s.Produto.Nome,
+                    Dia = s.DataSimulacao.Date
+                })
+                .Select(g => new SimulacaoPorProdutoDiaResponse
+                {
+                    Produto = g.Key.Nome,
+                    Data = g.Key.Dia,
+                    QuantidadeSimulacoes = g.Count(),
+                    MediaValorFinal = Math.Round(g.Average(x => x.ValorFinal), 2)
+                })
+                .OrderBy(x => x.Produto)
+                .ThenBy(x => x.Data)
+                .ToListAsync();
         }
     }
 }
