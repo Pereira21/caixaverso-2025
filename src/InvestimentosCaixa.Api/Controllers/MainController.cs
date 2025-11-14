@@ -1,22 +1,18 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 
 namespace InvestimentosCaixa.Api.Controllers
 {
     [ApiController]
     public class MainController : Controller
     {
-        public MainController()
+        protected readonly IMapper _mapper;
+        public MainController(IMapper mapper)
         {
-            
+            _mapper = mapper;
         }
-        //protected readonly INotificador _notificator;
-        //protected readonly IMapper _mapper;
 
-        //public MainController(INotificador notificador, IMapper mapper)
-        //{
-        //    _notificator = notificador;
-        //    _mapper = mapper;
-        //}
+        //protected readonly INotificador _notificator;        
 
         //protected bool OperacaoValida()
         //{

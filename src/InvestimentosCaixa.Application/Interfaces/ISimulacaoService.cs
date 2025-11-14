@@ -3,7 +3,9 @@
 namespace InvestimentosCaixa.Application.Interfaces
 {
     public interface ISimulacaoService
-    {
-        Task<SimularInvestimentoDTO> SimularInvestimento(int clienteId, decimal valor, short prazoMeses, string tipoProduto);
+    {        
+        Task<SimularInvestimentoResponseDTO> SimularInvestimento(SimularInvestimentoRequestDTO request);
+
+        Task<List<SimulacaoResponseDTO>> ObterHistorico();
     }
 }

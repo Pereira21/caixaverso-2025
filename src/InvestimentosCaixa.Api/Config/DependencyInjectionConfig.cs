@@ -1,5 +1,10 @@
 ﻿using InvestimentosCaixa.Application.Interfaces;
+using InvestimentosCaixa.Application.Notificacoes;
 using InvestimentosCaixa.Application.Services;
+using InvestimentosCaixa.Domain.Interfaces;
+using InvestimentosCaixa.Domain.Repositorios;
+using InvestimentosCaixa.Infrastructure.Repositorios;
+using InvestimentosCaixa.Infrastructure.UnitOfWork;
 
 namespace InvestimentosCaixa.Api.Config
 {
@@ -9,11 +14,15 @@ namespace InvestimentosCaixa.Api.Config
         {
             services.AddSingleton<IConfiguration>(configuration);
 
-            //services.AddScoped<INotificador, Notificador>();
+            services.AddScoped<INotificador, Notificador>();
 
             ////Repositorios
-            //services.AddScoped<IProdutoRepository, ProdutoRepository>();
-            //services.AddScoped<ISimulacaoRepository, SimulacaoRepository>();
+            services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+            services.AddScoped<IProdutoRepository, ProdutoRepository>();
+            services.AddScoped<ISimulacaoRepository, SimulacaoRepository>();
+
+            // Unit of work
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             //Servicos
             services.AddScoped<ISimulacaoService, SimulacaoService>();

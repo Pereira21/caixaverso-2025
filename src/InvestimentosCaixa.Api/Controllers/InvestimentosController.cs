@@ -1,4 +1,6 @@
-﻿using InvestimentosCaixa.Api.Models;
+﻿using AutoMapper;
+using InvestimentosCaixa.Api.Models;
+using InvestimentosCaixa.Application.DTO;
 using InvestimentosCaixa.Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,7 +11,7 @@ namespace InvestimentosCaixa.Api.Controllers
     {
         private readonly ISimulacaoService _simulacaoService;
         
-        public InvestimentosController(ISimulacaoService simulacaoService)
+        public InvestimentosController(IMapper mapper, ISimulacaoService simulacaoService) : base (mapper)
         {
             _simulacaoService = simulacaoService;
         }
@@ -17,12 +19,20 @@ namespace InvestimentosCaixa.Api.Controllers
         [HttpPost("simular-investimento")]
         public async Task<IActionResult> SimularInvestimento([FromBody] SimularInvestimentoModel model)
         {
-            //if (!ModelState.IsValid) return CustomResponse(ModelState);
+            if (!ModelState.IsValid) return BadRequest();
 
-            var simulacao = await _simulacaoService.SimularInvestimento(model.ClienteId, model.Valor, model.PrazoMeses, model.TipoProduto);
+            var request = _mapper.Map<SimularInvestimentoRequestDTO>(model);
+
+            var simulacao = await _simulacaoService.SimularInvestimento(request);
 
             return Ok(simulacao);
-            //return CustomResponse(parcelas);
+        }
+
+        [HttpGet("simulacoes")]
+        public async Task<IActionResult> Get()
+        {
+            var historico = await _simulacaoService.ObterHistorico();
+            return Ok(historico);
         }
     }
 }

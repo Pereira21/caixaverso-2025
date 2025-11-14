@@ -7,11 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="15.1.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.11" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\InvestimentosCaixa.Application\InvestimentosCaixa.Application.csproj" />
+    <ProjectReference Include="..\InvestimentosCaixa.Infrastructure\InvestimentosCaixa.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>
