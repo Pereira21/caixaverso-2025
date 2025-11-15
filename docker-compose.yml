@@ -1,0 +1,32 @@
+version: '3.9'
+
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: investimentos-sql
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=SenhaF0rte!2025
+    ports:
+      - "1433:1433"
+    networks:
+      - app-network
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: investimentos-api
+    ports:
+      - "5000:80"
+    depends_on:
+      - sqlserver
+    environment:
+      - ASPNETCORE_URLS=http://0.0.0.0:80
+      - ConnectionStrings__DefaultConnection=Server=sqlserver,1433;Database=InvestimentosCaixa;User Id=sa;Password=SenhaF0rte!2025;TrustServerCertificate=True;
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
