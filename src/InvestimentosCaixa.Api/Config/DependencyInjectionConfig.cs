@@ -19,12 +19,13 @@ namespace InvestimentosCaixa.Api.Config
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             services.AddScoped<IProdutoRepository, ProdutoRepository>();
             services.AddScoped<ISimulacaoRepository, SimulacaoRepository>();
-            services.AddScoped<ITelemetriaRepository, TelemetriaRepository>();
+            services.AddScoped<ILogTelemetriaRepository, LogTelemetriaRepository>();
 
             // Unit of work
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             //Servicos
+            services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<ISimulacaoService, SimulacaoService>();
 
             return services;

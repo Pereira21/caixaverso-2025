@@ -1,10 +1,12 @@
 ﻿using InvestimentosCaixa.Domain.Entidades;
 using InvestimentosCaixa.Infrastructure.Mapeamentos;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace InvestimentosCaixa.Infrastructure
 {
-    public class InvestimentosCaixaDbContext : DbContext
+    public class InvestimentosCaixaDbContext : IdentityDbContext<IdentityUser<Guid>, IdentityRole<Guid>, Guid>
     {
         public InvestimentosCaixaDbContext(DbContextOptions<InvestimentosCaixaDbContext> options)
             : base(options)
@@ -12,7 +14,7 @@ namespace InvestimentosCaixa.Infrastructure
         }
 
         public DbSet<Produto> Produtos { get; set; }
-        public DbSet<Telemetria> Telemetrias { get; set; }
+        public DbSet<LogTelemetria> LogsTelemetria { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -21,7 +23,7 @@ namespace InvestimentosCaixa.Infrastructure
             modelBuilder.ApplyConfiguration(new ProdutoMapping());
             modelBuilder.ApplyConfiguration(new TipoProdutoMapping());
             modelBuilder.ApplyConfiguration(new SimulacaoMapping());
-            modelBuilder.ApplyConfiguration(new TelemetriaMapping());
+            modelBuilder.ApplyConfiguration(new LogTelemetriaMapping());
         }
     }
 }

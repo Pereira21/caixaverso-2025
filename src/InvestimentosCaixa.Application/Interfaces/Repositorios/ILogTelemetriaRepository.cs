@@ -2,7 +2,7 @@
 
 namespace InvestimentosCaixa.Application.Interfaces.Repositorios
 {
-    public interface ITelemetriaRepository : IRepository<Telemetria>
+    public interface ILogTelemetriaRepository : IRepository<LogTelemetria>
     {
         Task<IEnumerable<dynamic>> ObterResumoAsync();
     }

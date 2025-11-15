@@ -21,8 +21,8 @@ namespace InvestimentosCaixa.Api.Controllers
 
         [HttpPost("simular-investimento")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [AllowAnonymous]
         public async Task<IActionResult> SimularInvestimento([FromBody] SimularInvestimentoModel model)
         {
             if (!ModelState.IsValid) return CustomResponse(ModelState);
@@ -36,7 +36,7 @@ namespace InvestimentosCaixa.Api.Controllers
 
         [HttpGet("simulacoes")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Get()
         {
@@ -46,7 +46,7 @@ namespace InvestimentosCaixa.Api.Controllers
 
         [HttpGet("simulacoes/por-produto-dia")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> ObterPorProdutoDia()
         {

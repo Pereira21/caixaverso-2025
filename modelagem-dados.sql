@@ -60,11 +60,29 @@ CREATE TABLE Simulacao (
     FOREIGN KEY (ProdutoId) REFERENCES Produto(Id)
 );
 
-CREATE TABLE Telemetria (
+CREATE TABLE LogTelemetria (
     Id INT IDENTITY(1,1) PRIMARY KEY,
     Endpoint VARCHAR(200) NOT NULL,
     Metodo VARCHAR(10) NOT NULL,
     TempoRespostaMs INT NOT NULL,
     Sucesso BIT NOT NULL,
     DataRegistro DATETIME NOT NULL
+);
+
+CREATE TABLE AspNetUsers (
+	Id uniqueidentifier NOT NULL PRIMARY KEY,
+	UserName NVARCHAR(256) NULL,
+	NormalizedUserName NVARCHAR(256) NULL,
+	Email NVARCHAR(256) NULL,
+	NormalizedEmail NVARCHAR(256) NULL,
+	EmailConfirmed BIT NOT NULL DEFAULT 0,
+	PasswordHash NVARCHAR(MAX) NULL,
+	SecurityStamp NVARCHAR(MAX) NULL,
+	ConcurrencyStamp NVARCHAR(MAX) NULL,
+	PhoneNumber NVARCHAR(MAX) NULL,
+	PhoneNumberConfirmed BIT NOT NULL DEFAULT 0,
+	TwoFactorEnabled BIT NOT NULL DEFAULT 0,
+	LockoutEnd DATETIMEOFFSET NULL,
+	LockoutEnabled BIT NOT NULL DEFAULT 0,
+	AccessFailedCount INT NOT NULL DEFAULT 0
 );

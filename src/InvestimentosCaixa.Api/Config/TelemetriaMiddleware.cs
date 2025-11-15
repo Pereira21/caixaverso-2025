@@ -13,7 +13,7 @@ namespace InvestimentosCaixa.Api.Config
             _next = next;
         }
 
-        public async Task Invoke(HttpContext context, IUnitOfWork unitOfWork, ITelemetriaRepository telemetriaRepository)
+        public async Task Invoke(HttpContext context, IUnitOfWork unitOfWork, ILogTelemetriaRepository telemetriaRepository)
         {
             var stopwatch = Stopwatch.StartNew();
 
@@ -21,7 +21,7 @@ namespace InvestimentosCaixa.Api.Config
 
             stopwatch.Stop();
 
-            var registro = new Telemetria(
+            var registro = new LogTelemetria(
                 endpoint: context.Request.Path,
                 metodo: context.Request.Method,
                 tempoRespostaMs: (int)stopwatch.ElapsedMilliseconds,

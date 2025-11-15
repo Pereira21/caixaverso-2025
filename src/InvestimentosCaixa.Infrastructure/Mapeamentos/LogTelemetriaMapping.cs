@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace InvestimentosCaixa.Infrastructure.Mapeamentos
 {
-    public class TelemetriaMapping : IEntityTypeConfiguration<Telemetria>
+    public class LogTelemetriaMapping : IEntityTypeConfiguration<LogTelemetria>
     {
-        public void Configure(EntityTypeBuilder<Telemetria> builder)
+        public void Configure(EntityTypeBuilder<LogTelemetria> builder)
         {
             builder.ToTable("Telemetria");
 
