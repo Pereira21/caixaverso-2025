@@ -2,87 +2,42 @@ CREATE DATABASE InvestimentosCaixa
 
 USE InvestimentosCaixa;
 
-CREATE TABLE TipoProduto (
-    Id INTEGER PRIMARY KEY,
-    Nome VARCHAR(50),            -- Ex.: "CDB", "Tesouro", "LCI", "Fundo"
-    Risco VARCHAR(20),           -- Baixo, Médio, Alto
-    Liquidez VARCHAR(20),        -- diária, mensal, vencimento
-    Descricao VARCHAR(200)
-);
+INSERT INTO Risco (Nome, Descricao) VALUES 
+('Baixo', 'Perfil de risco baixo'), 
+('Médio', 'Perfil de risco médio'), 
+('Alto', 'Perfil de risco alto');
 
-INSERT INTO TipoProduto (Id, Nome, Risco, Liquidez, Descricao) VALUES
-(1, 'CDB',      'Baixo',  'vencimento', 'Certificado de Depósito Bancário'),
-(2, 'Tesouro',  'Baixo',  'diaria',     'Títulos públicos federais'),
-(3, 'LCI',      'Médio',  'mensal',     'Letra de Crédito Imobiliário'),
-(4, 'Fundo',    'Alto',   'mensal',     'Fundo multimercado');
+INSERT INTO TipoProduto (Nome, RiscoId, Liquidez, Descricao) VALUES 
+('Poupança', 1, 'Diária', 'Conta poupança com liquidez diária e baixo risco'), 
+('CDB', 2, 'Mensal', 'Certificado de Depósito Bancário com liquidez mensal e risco moderado'), 
+('Ações', 3, 'Variável', 'Investimento em ações com alta volatilidade e maior risco');
 
-CREATE TABLE Produto (
-    Id INTEGER PRIMARY KEY,
-    TipoProdutoId INTEGER NOT NULL,
-    Nome VARCHAR(100),
-    RentabilidadeAnual DECIMAL(5,4),
-    PrazoMinimoMeses INT,
-    FOREIGN KEY (TipoProdutoId) REFERENCES TipoProduto(Id)
-);
+INSERT INTO Produto (TipoProdutoId, Nome, RentabilidadeAnual, PrazoMinimoMeses) VALUES 
+(1, 'Poupança Caixa', 0.0400, 0), 
+(2, 'CDB Caixa 12 meses', 0.1200, 12), 
+(3, 'Ações XPTO', 0.2000, 6);
+                
+INSERT INTO PerfilPontuacaoVolume (MinValor, MaxValor, Pontos) VALUES 
+(0.01, 5000.00, 10), 
+(5000.01, 50000.00, 20), 
+(50000.01, 99999999.99, 30);
 
-INSERT INTO Produto VALUES
-(101, 1, 'CDB Caixa 2026', 0.1200, 12),
-(102, 1, 'CDB Liquidez Diária 2025', 0.1080, 1),
-(103, 1, 'CDB Longo Prazo 2030', 0.1450, 36),
-(104, 1, 'CDB Premium 2027', 0.1300, 18),
-(105, 1, 'CDB Curto Prazo 6M', 0.0950, 6),
-(201, 2, 'Tesouro Selic 2027', 0.1000, 1),
-(202, 2, 'Tesouro IPCA+ 2035', 0.0600, 12),
-(203, 2, 'Tesouro Prefixado 2029', 0.1150, 24),
-(204, 2, 'Tesouro IPCA Curto 2029', 0.0550, 6),
-(205, 2, 'Tesouro Prefixado Curto 2026', 0.1020, 3),
-(301, 3, 'LCI Caixa 2026', 0.0920, 12),
-(302, 3, 'LCA Agronegócio 2028', 0.1050, 24),
-(303, 3, 'LCI Curto Prazo 9M', 0.0800, 9),
-(304, 3, 'LCA Liquidez Mensal', 0.0870, 1),
-(305, 3, 'LCI Alto Retorno 2030', 0.1250, 36),
-(401, 4, 'Fundo Multimercado Dinâmico', 0.1650, 6),
-(402, 4, 'Fundo Agressivo XPTO', 0.1800, 24),
-(403, 4, 'Fundo Renda Fixa Premium', 0.1100, 1),
-(404, 4, 'Fundo Ações Brasil', 0.2200, 12),
-(405, 4, 'Fundo Moderado Equilíbrio', 0.1400, 3);
+INSERT INTO PerfilPontuacaoFrequencia (MinQtd, MaxQtd, Pontos) VALUES 
+(1, 2, 10), 
+(3, 6, 20), 
+(7, 99, 30);
 
-CREATE TABLE Simulacao (
-    Id INT IDENTITY(1,1) PRIMARY KEY,
-    ClienteId INT NOT NULL,
-    ProdutoId INT NOT NULL,
-    ValorInvestido DECIMAL(18,2) NOT NULL,
-    ValorFinal DECIMAL(18,2) NOT NULL,
-    PrazoMeses INT NOT NULL,
-    RentabilidadeEfetiva DECIMAL(10,4) NOT NULL,
-    DataSimulacao DATETIME2 NOT NULL,
+INSERT INTO PerfilPontuacaoRisco (RiscoId, PontosBase, Multiplicador, PontosMaximos) VALUES 
+(1, 10, 1.0, 15),   -- Baixo risco ? até 15
+(2, 20, 1.2, 30),   -- Médio risco ? até 30
+(3, 30, 1.5, 45);   -- Alto risco ? até 45
 
-    FOREIGN KEY (ProdutoId) REFERENCES Produto(Id)
-);
+INSERT INTO PerfilRisco (Nome, Descricao) VALUES 
+('Conservador', 'Perfil conservador com baixa tolerância ao risco'), 
+('Moderado', 'Perfil moderado com tolerância média ao risco'), 
+('Agressivo', 'Perfil agressivo com alta tolerância ao risco');
 
-CREATE TABLE LogTelemetria (
-    Id INT IDENTITY(1,1) PRIMARY KEY,
-    Endpoint VARCHAR(200) NOT NULL,
-    Metodo VARCHAR(10) NOT NULL,
-    TempoRespostaMs INT NOT NULL,
-    Sucesso BIT NOT NULL,
-    DataRegistro DATETIME NOT NULL
-);
-
-CREATE TABLE AspNetUsers (
-	Id uniqueidentifier NOT NULL PRIMARY KEY,
-	UserName NVARCHAR(256) NULL,
-	NormalizedUserName NVARCHAR(256) NULL,
-	Email NVARCHAR(256) NULL,
-	NormalizedEmail NVARCHAR(256) NULL,
-	EmailConfirmed BIT NOT NULL DEFAULT 0,
-	PasswordHash NVARCHAR(MAX) NULL,
-	SecurityStamp NVARCHAR(MAX) NULL,
-	ConcurrencyStamp NVARCHAR(MAX) NULL,
-	PhoneNumber NVARCHAR(MAX) NULL,
-	PhoneNumberConfirmed BIT NOT NULL DEFAULT 0,
-	TwoFactorEnabled BIT NOT NULL DEFAULT 0,
-	LockoutEnd DATETIMEOFFSET NULL,
-	LockoutEnabled BIT NOT NULL DEFAULT 0,
-	AccessFailedCount INT NOT NULL DEFAULT 0
-);
+INSERT INTO PerfilClassificacao (PerfilRiscoId, MinPontuacao, MaxPontuacao) VALUES 
+(1, 0, 40),     -- Conservador
+(2, 41, 75),    -- Moderado
+(3, 76, 100);   -- Agressivo

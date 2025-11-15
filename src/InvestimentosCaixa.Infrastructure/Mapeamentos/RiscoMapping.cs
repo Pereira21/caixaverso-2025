@@ -4,11 +4,11 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace InvestimentosCaixa.Infrastructure.Mapeamentos
 {
-    public class TipoProdutoMapping : IEntityTypeConfiguration<TipoProduto>
+    public class RiscoMapping : IEntityTypeConfiguration<Risco>
     {
-        public void Configure(EntityTypeBuilder<TipoProduto> builder)
+        public void Configure(EntityTypeBuilder<Risco> builder)
         {
-            builder.ToTable("TipoProduto");
+            builder.ToTable("Risco");
 
             builder.HasKey(tp => tp.Id);
 
@@ -16,18 +16,11 @@ namespace InvestimentosCaixa.Infrastructure.Mapeamentos
                 .ValueGeneratedOnAdd();
 
             builder.Property(tp => tp.Nome)
-                .HasColumnType("VARCHAR(50)")
-                .IsRequired();
-
-            builder.Property(tp => tp.RiscoId)                
-                .IsRequired();
-
-            builder.Property(tp => tp.Liquidez)
                 .HasColumnType("VARCHAR(20)")
                 .IsRequired();
 
             builder.Property(tp => tp.Descricao)
-                .HasColumnType("VARCHAR(200)")
+                .HasColumnType("VARCHAR(100)")
                 .IsRequired(false);
         }
     }

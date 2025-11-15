@@ -12,7 +12,6 @@
             PrazoMinimoMeses = prazoMinimoMeses;
         }
 
-        //public int Id { get; private set; }
         public int TipoProdutoId { get; private set; }
         public string Nome { get; private set; }
         public decimal RentabilidadeAnual { get; private set; }

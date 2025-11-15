@@ -36,9 +36,9 @@ namespace InvestimentosCaixa.Api.Controllers
 
         [HttpGet("simulacoes")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> Get()
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        public async Task<IActionResult> Obter()
         {
             var historico = await _simulacaoService.ObterHistorico();
             return CustomResponse(historico);
@@ -46,8 +46,8 @@ namespace InvestimentosCaixa.Api.Controllers
 
         [HttpGet("simulacoes/por-produto-dia")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> ObterPorProdutoDia()
         {
             var resultado = await _simulacaoService.ObterPorProdutoDiaAsync();

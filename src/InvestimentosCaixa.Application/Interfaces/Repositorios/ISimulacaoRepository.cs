@@ -6,6 +6,7 @@ namespace InvestimentosCaixa.Application.Interfaces.Repositorios
     public interface ISimulacaoRepository : IRepository<Simulacao>
     {
         Task<List<Simulacao>> ObterTodosComProdutoAsync();
+        Task<List<Simulacao>> ObterPorClienteId(int clienteId);
 
         Task<List<SimulacaoPorProdutoDiaResponse>> ObterSimulacoesPorProdutoDiaAsync();
     }

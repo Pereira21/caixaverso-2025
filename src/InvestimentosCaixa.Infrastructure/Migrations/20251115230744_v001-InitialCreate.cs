@@ -51,6 +51,64 @@ namespace InvestimentosCaixa.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "PerfilPontuacaoFrequencia",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    MinQtd = table.Column<int>(type: "int", nullable: false),
+                    MaxQtd = table.Column<int>(type: "int", nullable: false),
+                    Pontos = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PerfilPontuacaoFrequencia", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "PerfilPontuacaoVolume",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    MinValor = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    MaxValor = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Pontos = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PerfilPontuacaoVolume", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "PerfilRisco",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Nome = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
+                    Descricao = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PerfilRisco", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Risco",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Nome = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Descricao = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Risco", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Telemetria",
                 columns: table => new
                 {
@@ -65,22 +123,6 @@ namespace InvestimentosCaixa.Infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Telemetria", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "TipoProduto",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Nome = table.Column<string>(type: "VARCHAR(50)", nullable: false),
-                    Risco = table.Column<string>(type: "VARCHAR(20)", nullable: false),
-                    Liquidez = table.Column<string>(type: "VARCHAR(20)", nullable: false),
-                    Descricao = table.Column<string>(type: "VARCHAR(200)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_TipoProduto", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -190,6 +232,71 @@ namespace InvestimentosCaixa.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "PerfilClassificacao",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    PerfilRiscoId = table.Column<int>(type: "int", nullable: false),
+                    MinPontuacao = table.Column<int>(type: "int", nullable: false),
+                    MaxPontuacao = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PerfilClassificacao", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_PerfilClassificacao_PerfilRisco_PerfilRiscoId",
+                        column: x => x.PerfilRiscoId,
+                        principalTable: "PerfilRisco",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "PerfilPontuacaoRisco",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    RiscoId = table.Column<int>(type: "int", nullable: false),
+                    PontosBase = table.Column<int>(type: "int", nullable: false),
+                    Multiplicador = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    PontosMaximos = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PerfilPontuacaoRisco", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_PerfilPontuacaoRisco_Risco_RiscoId",
+                        column: x => x.RiscoId,
+                        principalTable: "Risco",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "TipoProduto",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Nome = table.Column<string>(type: "VARCHAR(50)", nullable: false),
+                    RiscoId = table.Column<int>(type: "int", nullable: false),
+                    Liquidez = table.Column<string>(type: "VARCHAR(20)", nullable: false),
+                    Descricao = table.Column<string>(type: "VARCHAR(200)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TipoProduto", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_TipoProduto_Risco_RiscoId",
+                        column: x => x.RiscoId,
+                        principalTable: "Risco",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Produto",
                 columns: table => new
                 {
@@ -276,6 +383,16 @@ namespace InvestimentosCaixa.Infrastructure.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_PerfilClassificacao_PerfilRiscoId",
+                table: "PerfilClassificacao",
+                column: "PerfilRiscoId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PerfilPontuacaoRisco_RiscoId",
+                table: "PerfilPontuacaoRisco",
+                column: "RiscoId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Produto_TipoProdutoId",
                 table: "Produto",
                 column: "TipoProdutoId");
@@ -285,48 +402,55 @@ namespace InvestimentosCaixa.Infrastructure.Migrations
                 table: "Simulacao",
                 column: "ProdutoId");
 
-            migrationBuilder.InsertData(
+            migrationBuilder.CreateIndex(
+                name: "IX_TipoProduto_RiscoId",
                 table: "TipoProduto",
-                columns: new[] { "Id", "Nome", "Risco", "Liquidez", "Descricao" },
-                values: new object[,]
-                {
-                { 1, "CDB", "Baixo", "vencimento", "Certificado de Depósito Bancário" },
-                { 2, "Tesouro", "Baixo", "diaria", "Títulos públicos federais" },
-                { 3, "LCI", "Médio", "mensal", "Letra de Crédito Imobiliário" },
-                { 4, "Fundo", "Alto", "mensal", "Fundo multimercado" }
-                }
-            );
+                column: "RiscoId");
 
-            migrationBuilder.InsertData(
-                table: "Produto",
-                columns: new[] { "Id", "TipoProdutoId", "Nome", "RentabilidadeAnual", "PrazoMinimoMeses" },
-                values: new object[,]
-                {
-                    { 101, 1, "CDB Caixa 2026", 0.1200m, 12 },
-                    { 102, 1, "CDB Liquidez Diária 2025", 0.1080m, 1 },
-                    { 103, 1, "CDB Longo Prazo 2030", 0.1450m, 36 },
-                    { 104, 1, "CDB Premium 2027", 0.1300m, 18 },
-                    { 105, 1, "CDB Curto Prazo 6M", 0.0950m, 6 },
+            migrationBuilder.Sql(@" 
+            
+                INSERT INTO Risco (Nome, Descricao) VALUES 
+                ('Baixo', 'Perfil de risco baixo'), 
+                ('Médio', 'Perfil de risco médio'), 
+                ('Alto', 'Perfil de risco alto');
 
-                    { 201, 2, "Tesouro Selic 2027", 0.1000m, 1 },
-                    { 202, 2, "Tesouro IPCA+ 2035", 0.0600m, 12 },
-                    { 203, 2, "Tesouro Prefixado 2029", 0.1150m, 24 },
-                    { 204, 2, "Tesouro IPCA Curto 2029", 0.0550m, 6 },
-                    { 205, 2, "Tesouro Prefixado Curto 2026", 0.1020m, 3 },
+                INSERT INTO TipoProduto (Nome, RiscoId, Liquidez, Descricao) VALUES 
+                ('Poupança', 1, 'Diária', 'Conta poupança com liquidez diária e baixo risco'), 
+                ('CDB', 2, 'Mensal', 'Certificado de Depósito Bancário com liquidez mensal e risco moderado'), 
+                ('Ações', 3, 'Variável', 'Investimento em ações com alta volatilidade e maior risco');
 
-                    { 301, 3, "LCI Caixa 2026", 0.0920m, 12 },
-                    { 302, 3, "LCA Agronegócio 2028", 0.1050m, 24 },
-                    { 303, 3, "LCI Curto Prazo 9M", 0.0800m, 9 },
-                    { 304, 3, "LCA Liquidez Mensal", 0.0870m, 1 },
-                    { 305, 3, "LCI Alto Retorno 2030", 0.1250m, 36 },
+                INSERT INTO Produto (TipoProdutoId, Nome, RentabilidadeAnual, PrazoMinimoMeses) VALUES 
+                (1, 'Poupança Caixa', 0.0400, 0), 
+                (2, 'CDB Caixa 12 meses', 0.1200, 12), 
+                (3, 'Ações XPTO', 0.2000, 6);
+                
+                INSERT INTO PerfilPontuacaoVolume (MinValor, MaxValor, Pontos) VALUES 
+                (0.01, 5000.00, 10), 
+                (5000.01, 50000.00, 20), 
+                (50000.01, 99999999.99, 30);
 
-                    { 401, 4, "Fundo Multimercado Dinâmico", 0.1650m, 6 },
-                    { 402, 4, "Fundo Agressivo XPTO", 0.1800m, 24 },
-                    { 403, 4, "Fundo Renda Fixa Premium", 0.1100m, 1 },
-                    { 404, 4, "Fundo Ações Brasil", 0.2200m, 12 },
-                    { 405, 4, "Fundo Moderado Equilíbrio", 0.1400m, 3 }
-                }
-            );
+                INSERT INTO PerfilPontuacaoFrequencia (MinQtd, MaxQtd, Pontos) VALUES 
+                (1, 2, 10), 
+                (3, 6, 20), 
+                (7, 99, 30);
+
+                INSERT INTO PerfilPontuacaoRisco (RiscoId, PontosBase, Multiplicador, PontosMaximos) VALUES 
+                (1, 10, 1.0, 15),   -- Baixo risco → até 15
+                (2, 20, 1.2, 30),   -- Médio risco → até 30
+                (3, 30, 1.5, 45);   -- Alto risco → até 45
+
+                INSERT INTO PerfilRisco (Nome, Descricao) VALUES 
+                ('Conservador', 'Perfil conservador com baixa tolerância ao risco'), 
+                ('Moderado', 'Perfil moderado com tolerância média ao risco'), 
+                ('Agressivo', 'Perfil agressivo com alta tolerância ao risco');
+
+                INSERT INTO PerfilClassificacao (PerfilRiscoId, MinPontuacao, MaxPontuacao) VALUES 
+                (1, 0, 40),     -- Conservador
+                (2, 41, 75),    -- Moderado
+                (3, 76, 100);   -- Agressivo
+            ");
+
+
         }
 
         /// <inheritdoc />
@@ -348,6 +472,18 @@ namespace InvestimentosCaixa.Infrastructure.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "PerfilClassificacao");
+
+            migrationBuilder.DropTable(
+                name: "PerfilPontuacaoFrequencia");
+
+            migrationBuilder.DropTable(
+                name: "PerfilPontuacaoRisco");
+
+            migrationBuilder.DropTable(
+                name: "PerfilPontuacaoVolume");
+
+            migrationBuilder.DropTable(
                 name: "Simulacao");
 
             migrationBuilder.DropTable(
@@ -360,10 +496,16 @@ namespace InvestimentosCaixa.Infrastructure.Migrations
                 name: "AspNetUsers");
 
             migrationBuilder.DropTable(
+                name: "PerfilRisco");
+
+            migrationBuilder.DropTable(
                 name: "Produto");
 
             migrationBuilder.DropTable(
                 name: "TipoProduto");
+
+            migrationBuilder.DropTable(
+                name: "Risco");
         }
     }
 }

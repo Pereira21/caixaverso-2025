@@ -27,6 +27,7 @@ namespace InvestimentosCaixa.Api.Config
             //Servicos
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<ISimulacaoService, SimulacaoService>();
+            services.AddScoped<IPerfilRiscoService, PerfilRiscoService>();
 
             return services;
         }

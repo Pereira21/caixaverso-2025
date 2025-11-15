@@ -34,7 +34,7 @@ namespace InvestimentosCaixa.Application.Services
 
             var response = new SimularInvestimentoResponse
             {
-                ProdutoValidado = new ProdutoDTO { Id = produtoAdequado.Id, Nome = produtoAdequado.Nome, Tipo = produtoAdequado.TipoProduto.Nome, Rentabilidade = produtoAdequado.RentabilidadeAnual, Risco = produtoAdequado.TipoProduto.Risco },
+                ProdutoValidado = new ProdutoDTO { Id = produtoAdequado.Id, Nome = produtoAdequado.Nome, Tipo = produtoAdequado.TipoProduto.Nome, Rentabilidade = produtoAdequado.RentabilidadeAnual, Risco = produtoAdequado.TipoProduto.Risco.Nome },
                 ResultadoSimulacao = new SimulacaoDTO { ValorFinal = decimal.Round(valorFinal, 2), RentabilidadeEfetiva = produtoAdequado.RentabilidadeAnual, PrazoMeses = produtoAdequado.PrazoMinimoMeses },
                 DataSimulacao = DateTime.UtcNow
             };
