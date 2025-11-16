@@ -21,6 +21,7 @@ namespace InvestimentosCaixa.Api.Config
             services.AddScoped<ISimulacaoRepository, SimulacaoRepository>();
             services.AddScoped<ILogTelemetriaRepository, LogTelemetriaRepository>();
             services.AddScoped<IPerfilRiscoRepository, PerfilRiscoRepository>();
+            services.AddScoped<IInvestimentoRepository, InvestimentoRepository>();
 
             // Unit of work
             services.AddScoped<IUnitOfWork, UnitOfWork>();
@@ -29,6 +30,7 @@ namespace InvestimentosCaixa.Api.Config
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<ISimulacaoService, SimulacaoService>();
             services.AddScoped<IPerfilRiscoService, PerfilRiscoService>();
+            services.AddScoped<IInvestimentoService, InvestimentoService>();
 
             return services;
         }

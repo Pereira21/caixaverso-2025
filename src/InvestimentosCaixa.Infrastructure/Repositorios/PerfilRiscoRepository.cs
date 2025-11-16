@@ -8,9 +8,9 @@ namespace InvestimentosCaixa.Infrastructure.Repositorios
     {
         public PerfilRiscoRepository(InvestimentosCaixaDbContext context) : base(context) { }
 
-        public async Task<PerfilRisco?> ObterPorNome(string nome)
+        public async Task<PerfilRisco?> ObterComRiscoPorNome(string nome)
         {
-            return await _context.Set<PerfilRisco>().AsNoTracking().FirstOrDefaultAsync(x => x.Nome == nome);
+            return await _context.Set<PerfilRisco>().Include(x => x.RelPerfilRiscoList).AsNoTracking().FirstOrDefaultAsync(x => x.Nome == nome);
         }
 
         public async Task<PerfilPontuacaoVolume?> ObterPerfilPontuacaoVolume(decimal volumeInvestido)

@@ -34,6 +34,18 @@ builder.Services.AddAutoMapper(cfg =>
     //Entidade -> DTO
     cfg.CreateMap<Simulacao, SimulacaoResponseDTO>()
         .ForMember(dest => dest.Produto, opt => opt.MapFrom(src => src.Produto != null ? src.Produto.Nome : string.Empty));
+
+    cfg.CreateMap<Produto, ProdutoRecomendadoResponse>()
+        .ForMember(dest => dest.Nome, opt => opt.MapFrom(src => src.Nome))
+        .ForMember(dest => dest.Tipo, opt => opt.MapFrom(src => src.TipoProduto != null ? src.TipoProduto.Nome : string.Empty))
+        .ForMember(dest => dest.Rentabilidade, opt => opt.MapFrom(src => src.RentabilidadeAnual))
+        .ForMember(dest => dest.Risco, opt => opt.MapFrom(src => src.TipoProduto != null && src.TipoProduto.Risco != null ? src.TipoProduto.Risco.Nome : string.Empty));
+
+    cfg.CreateMap<Investimento, InvestimentoResponse>()
+        .ForMember(dest => dest.Tipo, opt => opt.MapFrom(src => src.Produto != null && src.Produto.TipoProduto != null ? src.Produto.TipoProduto.Nome : string.Empty))
+        .ForMember(dest => dest.Valor, opt => opt.MapFrom(src => src.Valor))
+        .ForMember(dest => dest.Rentabilidade, opt => opt.MapFrom(src => src.Rentabilidade))
+        .ForMember(dest => dest.Data, opt => opt.MapFrom(src => src.Data.ToString("yyyy-MM-dd")));
 });
 
 builder.Services.AddControllers();

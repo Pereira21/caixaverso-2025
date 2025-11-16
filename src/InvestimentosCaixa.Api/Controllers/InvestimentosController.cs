@@ -1,6 +1,4 @@
 ﻿using AutoMapper;
-using InvestimentosCaixa.Api.Models.Simulacao;
-using InvestimentosCaixa.Application.DTO.Request;
 using InvestimentosCaixa.Application.Interfaces.Services;
 using InvestimentosCaixa.Application.Notificacoes;
 using Microsoft.AspNetCore.Authorization;
@@ -12,46 +10,22 @@ namespace InvestimentosCaixa.Api.Controllers
     [Route("api/[controller]")]
     public class InvestimentosController : MainController
     {
-        private readonly ISimulacaoService _simulacaoService;
+        private readonly IInvestimentoService _investimentoService;
         
-        public InvestimentosController(IMapper mapper, INotificador notificador, ISimulacaoService simulacaoService) : base (mapper, notificador)
+        public InvestimentosController(IMapper mapper, INotificador notificador, IInvestimentoService investimentoService) : base (mapper, notificador)
         {
-            _simulacaoService = simulacaoService;
+            _investimentoService = investimentoService;
         }
 
-        [HttpPost("simular-investimento")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [AllowAnonymous]
-        public async Task<IActionResult> SimularInvestimento([FromBody] SimularInvestimentoModel model)
-        {
-            if (!ModelState.IsValid) return CustomResponse(ModelState);
-
-            var request = _mapper.Map<SimularInvestimentoRequest>(model);
-
-            var simulacao = await _simulacaoService.SimularInvestimento(request);
-
-            return CustomResponse(simulacao);
-        }
-
-        [HttpGet("simulacoes")]
+        [HttpGet("investimentos/{clienteId:int}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<IActionResult> Obter()
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> ObterPorClienteId(int clienteId)
         {
-            var historico = await _simulacaoService.ObterHistorico();
-            return CustomResponse(historico);
-        }
-
-        [HttpGet("simulacoes/por-produto-dia")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<IActionResult> ObterPorProdutoDia()
-        {
-            var resultado = await _simulacaoService.ObterPorProdutoDiaAsync();
-            return Ok(resultado);
+            var investimentos = await _investimentoService.ObterPorClienteId(clienteId);
+            return CustomResponse(investimentos);
         }
     }
 }

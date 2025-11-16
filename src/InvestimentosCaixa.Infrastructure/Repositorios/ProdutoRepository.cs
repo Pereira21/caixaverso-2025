@@ -17,5 +17,14 @@ namespace InvestimentosCaixa.Infrastructure.Repositorios
 
             return await query.FirstOrDefaultAsync(cancellationToken);
         }
+
+        public async Task<List<Produto>> ObterPorRiscoAsync(List<int> riscoIdList)
+        {
+            return await _dbSet
+                .Include(x => x.TipoProduto)
+                    .ThenInclude(x => x.Risco)
+                .Where(p => riscoIdList.Contains(p.TipoProduto.RiscoId))
+                .ToListAsync();
+        }
     }
 }

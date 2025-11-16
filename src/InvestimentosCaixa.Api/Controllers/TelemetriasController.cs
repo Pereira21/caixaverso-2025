@@ -8,11 +8,11 @@ namespace InvestimentosCaixa.Api.Controllers
 {
     [Authorize(Roles = "admin")]
     [Route("api/[controller]")]
-    public class TelemetriaController : MainController
+    public class TelemetriasController : MainController
     {
         private readonly ILogTelemetriaRepository _telemetriaRepository;
 
-        public TelemetriaController(IMapper mapper, INotificador notificador, ILogTelemetriaRepository telemetriaRepository) : base(mapper, notificador)
+        public TelemetriasController(IMapper mapper, INotificador notificador, ILogTelemetriaRepository telemetriaRepository) : base(mapper, notificador)
         {
             _telemetriaRepository = telemetriaRepository;
         }

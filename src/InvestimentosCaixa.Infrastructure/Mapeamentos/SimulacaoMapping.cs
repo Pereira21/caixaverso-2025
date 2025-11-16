@@ -33,7 +33,7 @@ namespace InvestimentosCaixa.Infrastructure.Mapeamentos
                 .IsRequired();
 
             builder.Property(s => s.RentabilidadeEfetiva)
-                .HasColumnType("decimal(10,4)")
+                .HasColumnType("decimal(5,4)")
                 .IsRequired();
 
             builder.Property(s => s.DataSimulacao)

@@ -22,6 +22,54 @@ namespace InvestimentosCaixa.Infrastructure.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("InvestimentosCaixa.Domain.Entidades.Cliente", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Nome")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Cliente", (string)null);
+                });
+
+            modelBuilder.Entity("InvestimentosCaixa.Domain.Entidades.Investimento", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ClienteId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Data")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("ProdutoId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Rentabilidade")
+                        .HasColumnType("decimal(5,4)");
+
+                    b.Property<decimal>("Valor")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ClienteId");
+
+                    b.HasIndex("ProdutoId");
+
+                    b.ToTable("Investimento", (string)null);
+                });
+
             modelBuilder.Entity("InvestimentosCaixa.Domain.Entidades.LogTelemetria", b =>
                 {
                     b.Property<int>("Id")
@@ -199,6 +247,30 @@ namespace InvestimentosCaixa.Infrastructure.Migrations
                     b.ToTable("Produto", (string)null);
                 });
 
+            modelBuilder.Entity("InvestimentosCaixa.Domain.Entidades.RelPerfilRisco", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("PerfilRiscoId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RiscoId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RiscoId");
+
+                    b.HasIndex("PerfilRiscoId", "RiscoId")
+                        .IsUnique();
+
+                    b.ToTable("RelPerfilRisco", (string)null);
+                });
+
             modelBuilder.Entity("InvestimentosCaixa.Domain.Entidades.Risco", b =>
                 {
                     b.Property<int>("Id")
@@ -241,7 +313,7 @@ namespace InvestimentosCaixa.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<decimal>("RentabilidadeEfetiva")
-                        .HasColumnType("decimal(10,4)");
+                        .HasColumnType("decimal(5,4)");
 
                     b.Property<decimal>("ValorFinal")
                         .HasColumnType("decimal(18,2)");
@@ -482,6 +554,25 @@ namespace InvestimentosCaixa.Infrastructure.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("InvestimentosCaixa.Domain.Entidades.Investimento", b =>
+                {
+                    b.HasOne("InvestimentosCaixa.Domain.Entidades.Cliente", "Cliente")
+                        .WithMany()
+                        .HasForeignKey("ClienteId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("InvestimentosCaixa.Domain.Entidades.Produto", "Produto")
+                        .WithMany()
+                        .HasForeignKey("ProdutoId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Cliente");
+
+                    b.Navigation("Produto");
+                });
+
             modelBuilder.Entity("InvestimentosCaixa.Domain.Entidades.PerfilClassificacao", b =>
                 {
                     b.HasOne("InvestimentosCaixa.Domain.Entidades.PerfilRisco", "PerfilRisco")
@@ -513,6 +604,25 @@ namespace InvestimentosCaixa.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("TipoProduto");
+                });
+
+            modelBuilder.Entity("InvestimentosCaixa.Domain.Entidades.RelPerfilRisco", b =>
+                {
+                    b.HasOne("InvestimentosCaixa.Domain.Entidades.PerfilRisco", "PerfilRisco")
+                        .WithMany("RelPerfilRiscoList")
+                        .HasForeignKey("PerfilRiscoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("InvestimentosCaixa.Domain.Entidades.Risco", "Risco")
+                        .WithMany()
+                        .HasForeignKey("RiscoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("PerfilRisco");
+
+                    b.Navigation("Risco");
                 });
 
             modelBuilder.Entity("InvestimentosCaixa.Domain.Entidades.Simulacao", b =>
@@ -586,6 +696,11 @@ namespace InvestimentosCaixa.Infrastructure.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("InvestimentosCaixa.Domain.Entidades.PerfilRisco", b =>
+                {
+                    b.Navigation("RelPerfilRiscoList");
                 });
 
             modelBuilder.Entity("InvestimentosCaixa.Domain.Entidades.Produto", b =>

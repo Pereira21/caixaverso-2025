@@ -17,6 +17,7 @@ namespace InvestimentosCaixa.Infrastructure
         {
             base.OnModelCreating(modelBuilder);
 
+            modelBuilder.ApplyConfiguration(new ClienteMapping());
             modelBuilder.ApplyConfiguration(new ProdutoMapping());
             modelBuilder.ApplyConfiguration(new TipoProdutoMapping());
             modelBuilder.ApplyConfiguration(new SimulacaoMapping());
@@ -26,6 +27,8 @@ namespace InvestimentosCaixa.Infrastructure
             modelBuilder.ApplyConfiguration(new PerfilPontuacaoFrequenciaMapping());
             modelBuilder.ApplyConfiguration(new PerfilPontuacaoRiscoMapping());
             modelBuilder.ApplyConfiguration(new PerfilClassificacaoMapping());
+            modelBuilder.ApplyConfiguration(new RelPerfilRiscoMapping());
+            modelBuilder.ApplyConfiguration(new InvestimentoMapping());
         }
     }
 }

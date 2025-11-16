@@ -22,6 +22,10 @@ namespace InvestimentosCaixa.Infrastructure.Mapeamentos
             builder.Property(p => p.Descricao)
                 .HasMaxLength(100)
                 .IsRequired(false);
+
+            builder.HasMany(p => p.RelPerfilRiscoList)
+                .WithOne(p => p.PerfilRisco)
+                .HasForeignKey(p => p.PerfilRiscoId);
         }
     }
 }

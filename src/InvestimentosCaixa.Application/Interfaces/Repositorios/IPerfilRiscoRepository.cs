@@ -5,7 +5,7 @@ namespace InvestimentosCaixa.Application.Interfaces.Repositorios
 {
     public interface IPerfilRiscoRepository
     {
-        Task<PerfilRisco?> ObterPorNome(string nome);
+        Task<PerfilRisco?> ObterComRiscoPorNome(string nome);
 
         Task<PerfilPontuacaoVolume?> ObterPerfilPontuacaoVolume(decimal volumeInvestido);
         Task<PerfilPontuacaoFrequencia?> ObterPerfilPontuacaoFrequencia(int totalSimulacoes);

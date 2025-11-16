@@ -10,12 +10,14 @@ namespace InvestimentosCaixa.Application.Services
     {
         private readonly ISimulacaoRepository _simulacaoRepository;
         private readonly IPerfilRiscoRepository _perfilRiscoRepository;
+        private readonly IProdutoRepository _produtoRepository;
 
-        public PerfilRiscoService(INotificador notificador, IMapper mapper, IUnitOfWork unitOfWork, ISimulacaoRepository simulacaoRepository, IPerfilRiscoRepository perfilRiscoRepository) :
+        public PerfilRiscoService(INotificador notificador, IMapper mapper, IUnitOfWork unitOfWork, ISimulacaoRepository simulacaoRepository, IPerfilRiscoRepository perfilRiscoRepository, IProdutoRepository produtoRepository) :
             base(notificador, mapper, unitOfWork)
         {
             _simulacaoRepository = simulacaoRepository;
             _perfilRiscoRepository = perfilRiscoRepository;
+            _produtoRepository = produtoRepository;
         }
 
         public async Task<PerfilRiscoResponse?> ObterPorClienteId(int clienteId)
@@ -23,14 +25,19 @@ namespace InvestimentosCaixa.Application.Services
             return await DiagnosticarPerfilRisco(clienteId);
         }
 
-        public Task<IEnumerable<ProdutoRecomendadoResponse>> ObterProdutosRecomendadosPorPerfil(string perfil)
+        public async Task<IEnumerable<ProdutoRecomendadoResponse>> ObterProdutosRecomendadosPorPerfil(string perfil)
         {
-            //var perfilRisco = _perfilRiscoRepository.ObterPorNome(perfil);
-            //if(perfilRisco == null)
-            //{
-            //    Notificar("Perfil não encontrado!");
+            var perfilRisco = await _perfilRiscoRepository.ObterComRiscoPorNome(perfil);
+            if (perfilRisco == null)
+            {
+                Notificar("Perfil não encontrado!");
                 return null;
-            //}
+            }
+
+            var riscosVinculadosPerfilRisco = perfilRisco.RelPerfilRiscoList.Select(x => x.RiscoId).Distinct().ToList();
+            var produtosRecomendados = await _produtoRepository.ObterPorRiscoAsync(riscosVinculadosPerfilRisco);
+
+            return _mapper.Map<List<ProdutoRecomendadoResponse>>(produtosRecomendados);
         }
 
         #region metodos privados
@@ -69,8 +76,6 @@ namespace InvestimentosCaixa.Application.Services
 
             if (perfilPontuacaoRisco != null && perfilPontuacaoRisco.Any())
             {
-                //int pontuacaoRisco = 0;
-
                 foreach (var risco in perfilPontuacaoRisco)
                 {
                     int quantidadeRisco = riscosSimuladosAgrupados.Count(x => x.RiscoId == risco.Id);
