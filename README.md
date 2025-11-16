@@ -1,16 +1,14 @@
-1.0 Endpoints + Explicações 
-1.1 Massa de Testes
-2.0 Arquitetura + Features 
+<h1>1.0 Endpoints + Explicações</h1></br>
+<h1>1.1 Massa de Testes</h1></br>
+<h1>2.0 Arquitetura + Features</h1></br></br>
 
-1.0 Endpoints + Explicações:
-[POST] /api/Auth/login
-Acesso: Público
-
-Finalidade: Atender exigência de uso de autenticação no sistema. Para demonstrar domínio do tema, alguns endpoints são públicos, outros exigem token, sendo telemetria a única a exigir 'role'.
-
-Massa de teste:
-E-mail: admin@admin.com / Senha: @Admin123   <- Usuário com role admin.
-E-mail: usuario@teste.com / Senha: @User123  <- Usuário sem role para endpoints internos.
+<h3>1.0 Endpoints + Explicações:</h3></br>
+<h5>[POST] /api/Auth/login</h5></br>
+<b>Acesso</b>: Público</br>
+<b>Finalidade</b>: Atender exigência de uso de autenticação no sistema. Para demonstrar domínio do tema, alguns endpoints são públicos, outros exigem token, sendo telemetria a única a exigir 'role'.</br>
+<b>Massa de teste</b>:</br>
+E-mail: admin@admin.com / Senha: @Admin123   <- Usuário com role admin.</br>
+E-mail: usuario@teste.com / Senha: @User123  <- Usuário sem role para endpoints internos.</br></br>
 
 [GET]  /api/PerfisRisco/perfil-risco/{clienteId}
 Acesso: Público para todos os brasileiros acessarem.
@@ -18,7 +16,7 @@ Acesso: Público para todos os brasileiros acessarem.
 Finalidade: Através do motor de recomendação traçar o Perfil de Risco do Cliente. Como o desafio pede um algoritmo simples focado em 'vol. de <b>investimentos</b> e frequência de <b>movimentações</b> interpretei que o motor deve analisar os investimentos concretizados e não as simulações. Entretanto, como não há endpoint de investir, inseri a regra abaixo para caso queira, o avaliador possa gerar dados e testar o motor de recomendação:
 Motor prioriza análise de investimentos do cliente. Caso o cliente informado não tenha investimentos, o motor analisará simulações.
 
-Massa de teste de investimentos na sessão de massa de testes.
+<b>Massa de teste</b> de investimentos na sessão de massa de testes.
 
 Lógica escolhida <b>Motor de Recomendações</b>:
 Usando as movimentações ou simulações como base, o motor insere uma pontuação score para o cliente a partir de três parâmetros: Volume total investido, Frequência de movimentações e Risco dos Produtos movimentados. No fim, os três scores são somados para se ter um score final do cliente e esse score é usado para determinar qual o perfil correspondente. Todas as informações de pontuação estão parametrizadas no banco de dados como boa prática para deixar a alteração dos dados dinâmica.
