@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace InvestimentosCaixa.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class v001InitialCreate : Migration
+    public partial class v001InicioEstrutura : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -260,7 +260,7 @@ namespace InvestimentosCaixa.Infrastructure.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     RiscoId = table.Column<int>(type: "int", nullable: false),
                     PontosBase = table.Column<int>(type: "int", nullable: false),
-                    Multiplicador = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Multiplicador = table.Column<decimal>(type: "decimal(2,1)", nullable: false),
                     PontosMaximos = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -449,8 +449,6 @@ namespace InvestimentosCaixa.Infrastructure.Migrations
                 (2, 41, 75),    -- Moderado
                 (3, 76, 100);   -- Agressivo
             ");
-
-
         }
 
         /// <inheritdoc />

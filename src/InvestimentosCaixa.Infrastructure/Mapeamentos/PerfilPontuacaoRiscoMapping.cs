@@ -22,7 +22,7 @@ namespace InvestimentosCaixa.Infrastructure.Mapeamentos
                 .IsRequired();
 
             builder.Property(p => p.Multiplicador)
-                .HasColumnType("decimal(5,2)")
+                .HasColumnType("decimal(2,1)")
                 .IsRequired();
 
             builder.Property(p => p.PontosMaximos)

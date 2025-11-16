@@ -20,6 +20,7 @@ namespace InvestimentosCaixa.Api.Config
             services.AddScoped<IProdutoRepository, ProdutoRepository>();
             services.AddScoped<ISimulacaoRepository, SimulacaoRepository>();
             services.AddScoped<ILogTelemetriaRepository, LogTelemetriaRepository>();
+            services.AddScoped<IPerfilRiscoRepository, PerfilRiscoRepository>();
 
             // Unit of work
             services.AddScoped<IUnitOfWork, UnitOfWork>();

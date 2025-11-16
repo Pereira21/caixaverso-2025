@@ -14,9 +14,12 @@ namespace InvestimentosCaixa.Infrastructure.Repositorios
             return await _dbSet.Include(x => x.Produto).ToListAsync();
         }
 
-        public async Task<List<Simulacao>> ObterPorClienteId(int clienteId)
+        public async Task<List<Simulacao>> ObterComProdutoPorClienteId(int clienteId)
         {
-            return await _dbSet.Where(x => x.ClienteId == clienteId).ToListAsync();
+            return await _dbSet
+                .Include(x => x.Produto)
+                    .ThenInclude(x => x.TipoProduto)
+                .Where(x => x.ClienteId == clienteId).ToListAsync();
         }
 
         public async Task<List<SimulacaoPorProdutoDiaResponse>> ObterSimulacoesPorProdutoDiaAsync()

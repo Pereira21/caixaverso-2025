@@ -12,6 +12,7 @@ namespace InvestimentosCaixa.Infrastructure.Repositorios
         {
             var query = _dbSet
                 .Include(p => p.TipoProduto)
+                    .ThenInclude(p => p.Risco)
                 .Where(p => p.TipoProduto.Nome == tipoProduto && p.PrazoMinimoMeses <= prazoMeses);
 
             return await query.FirstOrDefaultAsync(cancellationToken);

@@ -183,6 +183,4 @@ static async Task SeedIdentityAsync(IServiceProvider services)
     {
         await userManager.AddToRoleAsync(admin, roleName);
     }
-
-
 }

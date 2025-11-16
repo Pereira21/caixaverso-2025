@@ -109,7 +109,7 @@ namespace InvestimentosCaixa.Infrastructure.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<decimal>("Multiplicador")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("decimal(2,1)");
 
                     b.Property<int>("PontosBase")
                         .HasColumnType("int");

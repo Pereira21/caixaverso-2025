@@ -27,5 +27,16 @@ namespace InvestimentosCaixa.Api.Controllers
             var perfilRisco = await _perfilRiscoService.ObterPorClienteId(clienteId);
             return CustomResponse(perfilRisco);
         }
+
+        //[HttpGet("/produtos-recomendados/{perfil}")]
+        //[ProducesResponseType(StatusCodes.Status200OK)]
+        //[ProducesResponseType(StatusCodes.Status400BadRequest)]
+        //[ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        //[ProducesResponseType(StatusCodes.Status404NotFound)]
+        //public async Task<IActionResult> ObterProdutosRecomendadosPorPerfil(string perfil)
+        //{
+        //    var produtosRecomendados = await _perfilRiscoService.ObterProdutosRecomendadosPorPerfil(perfil);
+        //    return CustomResponse(produtosRecomendados);
+        //}
     }
 }

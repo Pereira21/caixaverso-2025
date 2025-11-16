@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace InvestimentosCaixa.Infrastructure.Migrations
 {
     [DbContext(typeof(InvestimentosCaixaDbContext))]
-    [Migration("20251115230744_v001-InitialCreate")]
-    partial class v001InitialCreate
+    [Migration("20251116140656_v001-InicioEstrutura")]
+    partial class v001InicioEstrutura
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -112,7 +112,7 @@ namespace InvestimentosCaixa.Infrastructure.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<decimal>("Multiplicador")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("decimal(2,1)");
 
                     b.Property<int>("PontosBase")
                         .HasColumnType("int");
