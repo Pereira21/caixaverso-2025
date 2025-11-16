@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using InvestimentosCaixa.Application.DTO;
 using InvestimentosCaixa.Application.DTO.Response;
 using InvestimentosCaixa.Application.Interfaces.Repositorios;
 using InvestimentosCaixa.Application.Interfaces.Services;
@@ -44,15 +45,19 @@ namespace InvestimentosCaixa.Application.Services
         }
 
         #region metodos privados
+        /// <summary>
+        /// Obtém o Perfil de Risco do cliente a partir do seu histórico de investimentos ou simulações
+        /// </summary>
+        /// <param name="clienteId"></param>
+        /// <returns></returns>
         private async Task<PerfilRiscoResponse?> DiagnosticarPerfilRisco(int clienteId)
         {
             int pontuacaoCliente = 0;
             var simulacoesPorCliente = new List<Simulacao>();
 
-            // 1. Obtém os investimentos do cliente (ou simulações caso o cliente não tiver investimentos)
             var investimentosPorCliente = await _investimentoRepository.ObterComProdutoPorClienteId(clienteId);
             bool temInvestimentos = investimentosPorCliente != null && investimentosPorCliente.Count != 0;
-            if (!temInvestimentos)
+            if (!temInvestimentos) // caso não haja investimentos, procuro simulações por cliente
             {
                 simulacoesPorCliente = await _simulacaoRepository.ObterComProdutoPorClienteId(clienteId);
                 if (simulacoesPorCliente == null || !simulacoesPorCliente.Any())
@@ -62,34 +67,79 @@ namespace InvestimentosCaixa.Application.Services
                 }
             }
 
-            // 2. Obtém o score do cliente baseado no volume investido ou simulado
             decimal valorInvestido = temInvestimentos ? investimentosPorCliente.Sum(x => x.Valor) : simulacoesPorCliente.Sum(x => x.ValorInvestido);
-            var perfilPontuacaoVolume = await _perfilRiscoRepository.ObterPerfilPontuacaoVolume(valorInvestido);
+            pontuacaoCliente += await ObtemScoreClienteVolume(valorInvestido);
 
-            if (perfilPontuacaoVolume != null)
-                pontuacaoCliente += perfilPontuacaoVolume.Pontos;
-
-            // 3. Obtém o score do cliente baseado na frequência de investimentos ou simulações
             int quantidadeMovimentacoes = temInvestimentos ? investimentosPorCliente.Count() : simulacoesPorCliente.Count();
-            var perfilPontuacaoFrequencia = await _perfilRiscoRepository.ObterPerfilPontuacaoFrequencia(quantidadeMovimentacoes);
-            if (perfilPontuacaoFrequencia != null)
-                pontuacaoCliente += perfilPontuacaoFrequencia.Pontos;
+            pontuacaoCliente += await ObtemScoreClienteFrequencia(quantidadeMovimentacoes);
 
-            // 4. Obtém o score do cliente baseado no risco dos produtos investidos ou simulados
             var riscosMovimentadosAgrupados = temInvestimentos ?
                                              investimentosPorCliente.GroupBy(x => x.Produto.TipoProduto.RiscoId)
-                                                    .Select(g => new
+                                                    .Select(g => new RiscoAgrupadoDTO()
                                                     {
                                                         RiscoId = g.Key,
                                                         Quantidade = g.Count()
                                                     }).ToList() :
                                               simulacoesPorCliente.GroupBy(x => x.Produto.TipoProduto.RiscoId)
-                                                     .Select(g => new
+                                                     .Select(g => new RiscoAgrupadoDTO()
                                                      {
                                                          RiscoId = g.Key,
                                                          Quantidade = g.Count()
                                                      }).ToList();
 
+            pontuacaoCliente += await ObtemScoreClienteRisco(riscosMovimentadosAgrupados);
+
+            PerfilClassificacao perfilClassificacao = await ObtemPerfilClassificacao(pontuacaoCliente);
+
+            if (_notificador.TemNotificacao())
+                return null;
+
+            return new PerfilRiscoResponse
+            {
+                ClienteId = clienteId,
+                Pontuacao = pontuacaoCliente,
+                Perfil = perfilClassificacao.PerfilRisco.Nome,
+                Descricao = perfilClassificacao.PerfilRisco.Descricao
+            };
+        }
+
+        /// <summary>
+        /// Obtém o score do cliente baseado no volume investido ou simulado
+        /// </summary>
+        /// <param name="valorInvestido">Valor total investido ou simulado pelo cliente</param>
+        /// <returns></returns>
+        private async Task<int> ObtemScoreClienteVolume(decimal valorInvestido)
+        {
+            var perfilPontuacaoVolume = await _perfilRiscoRepository.ObterPerfilPontuacaoVolume(valorInvestido);
+
+            if (perfilPontuacaoVolume != null)
+                return perfilPontuacaoVolume.Pontos;
+
+            return 0;
+        }
+
+        /// <summary>
+        /// Obtém o score do cliente baseado na frequência de investimentos ou simulações
+        /// </summary>
+        /// <param name="quantidadeMovimentacoes">Quantidade totall investimentos ou simulações do cliente</param>
+        /// <returns></returns>
+        private async Task<int> ObtemScoreClienteFrequencia(int quantidadeMovimentacoes)
+        {
+            var perfilPontuacaoFrequencia = await _perfilRiscoRepository.ObterPerfilPontuacaoFrequencia(quantidadeMovimentacoes);
+            if (perfilPontuacaoFrequencia != null)
+                return perfilPontuacaoFrequencia.Pontos;
+
+            return 0;
+        }
+
+        /// <summary>
+        /// Obtém o score do cliente baseado no risco dos produtos investidos ou simulados
+        /// </summary>
+        /// <param name="riscosMovimentadosAgrupados">Através do risco do produto investido ou simulado, tenho um agrupamento deles com a quantidade</param>
+        /// <returns></returns>
+        private async Task<int> ObtemScoreClienteRisco(List<RiscoAgrupadoDTO> riscosMovimentadosAgrupados)
+        {
+            int scoreTotalRiscoProdutos = 0;
             var perfilPontuacaoRisco = await _perfilRiscoRepository.ObterPerfilPontuacaoRiscoPorRiscos(riscosMovimentadosAgrupados.Select(x => x.RiscoId).Distinct().ToList());
             if (perfilPontuacaoRisco != null && perfilPontuacaoRisco.Any())
             {
@@ -108,24 +158,27 @@ namespace InvestimentosCaixa.Application.Services
                     // aplica teto máximo
                     totalRisco = Math.Min(totalRisco, risco.PontosMaximos);
 
-                    pontuacaoCliente += totalRisco;
+                    scoreTotalRiscoProdutos += totalRisco;
                 }
             }
 
-            // 5. Obtém a classificação do perfil de risco baseado na pontuação total do cliente
+            return scoreTotalRiscoProdutos;
+        }
+
+        /// <summary>
+        /// Obtém a classificação do perfil de risco baseado na pontuação total do cliente
+        /// </summary>
+        /// <param name="pontuacaoCliente">Pontuação final do cliente após análises do histórico de investimentos/simulações</param>
+        /// <returns></returns>
+        private async Task<PerfilClassificacao> ObtemPerfilClassificacao(int pontuacaoCliente)
+        {
             var perfilClassificacao = await _perfilRiscoRepository.ObterPerfilClassificacaoPorPontuacao(pontuacaoCliente);
             if (perfilClassificacao == null)
             {
                 Notificar("Não foi possível determinar o Perfil de Risco do cliente!");
             }
 
-            return new PerfilRiscoResponse
-            {
-                ClienteId = clienteId,
-                Pontuacao = pontuacaoCliente,
-                Perfil = perfilClassificacao.PerfilRisco.Nome,
-                Descricao = perfilClassificacao.PerfilRisco.Descricao
-            };
+            return perfilClassificacao;
         }
         #endregion
     }
