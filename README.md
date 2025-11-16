@@ -1,10 +1,60 @@
-Endpoints:
-[GET]  /api/PerfisRisco/perfil-risco/{clienteId} -> Acesso público para todos os brasileiros acessarem.
+1.0 Endpoints + Explicações 
+1.1 Massa de Testes
+2.0 Arquitetura + Features 
+
+1.0 Endpoints + Explicações:
+[POST] /api/Auth/login
+Acesso: Público
+
+Finalidade: Atender exigência de uso de autenticação no sistema. Para demonstrar domínio do tema, alguns endpoints são públicos, outros exigem token, sendo telemetria a única a exigir 'role'.
+
+Massa de teste:
+E-mail: admin@admin.com / Senha: @Admin123   <- Usuário com role admin.
+E-mail: usuario@teste.com / Senha: @User123  <- Usuário sem role para endpoints internos.
+
+[GET]  /api/PerfisRisco/perfil-risco/{clienteId}
+Acesso: Público para todos os brasileiros acessarem.
+
+Finalidade: Através do motor de recomendação traçar o Perfil de Risco do Cliente. Como o desafio pede um algoritmo simples focado em 'vol. de <b>investimentos</b> e frequência de <b>movimentações</b> interpretei que o motor deve analisar os investimentos concretizados e não as simulações. Entretanto, como não há endpoint de investir, inseri a regra abaixo para caso queira, o avaliador possa gerar dados e testar o motor de recomendação:
+Motor prioriza análise de investimentos do cliente. Caso o cliente informado não tenha investimentos, o motor analisará simulações.
+
+Massa de teste de investimentos na sessão de massa de testes.
+
+Lógica escolhida <b>Motor de Recomendações</b>:
+Usando as movimentações ou simulações como base, o motor insere uma pontuação score para o cliente a partir de três parâmetros: Volume total investido, Frequência de movimentações e Risco dos Produtos movimentados. No fim, os três scores são somados para se ter um score final do cliente e esse score é usado para determinar qual o perfil correspondente. Todas as informações de pontuação estão parametrizadas no banco de dados como boa prática para deixar a alteração dos dados dinâmica.
+
+1. Volume Total Investido
+A soma dos valores investidos em todas as movimentações é usada para encontrar a faixa correspondente na tabela PerfilPontuacaoVolume. Faixas maiores de investimento contribuem com mais pontos.
+
+2. Frequência de Movimentações
+A quantidade de movimentações do cliente é comparada às faixas de PerfilPontuacaoFrequencia. Quanto mais simulações, maior a pontuação atribuída.
+
+3. Risco dos Produtos Simulados
+As movimentações são agrupadas pelo risco dos produtos (Baixo, Médio ou Alto), e para cada grupo é aplicado o seguinte cálculo:
+- Atributo PontosBase define a pontuação inicial para cada tipo de risco.
+- O Multiplicador aumenta a pontuação para múltiplas movimentações do mesmo risco.
+- Existe ainda um teto máximo (PontosMaximos) para evitar pontuação desproporcional.
+
+Esta combinação permite capturar tanto a diversidade quanto a intensidade das escolhas de risco do investidor. As faixas são encontradas na tabela PerfilPontuacaoRisco.
+
+4. Classificação Final
+Com a pontuação final consolidada, o sistema consulta a tabela PerfilClassificacao para determinar o perfil:
+- 0 a 40 pontos → Conservador
+- 41 a 75 pontos → Moderado
+- 76 a 100 pontos → Agressivo
+
+Esse processo garante uma análise consistente, transparente e baseada em critérios objetivos definidos pela instituição.
+
 [GET]  /api/PerfisRisco/produtos-recomendados/{perfil} -> Acesso público para todos os brasileiros acessarem.
+
 [GET]  /api/Investimentos/investimentos/{clienteId} -> Acesso exige autenticação mínima. Visualização interna.
+
 [POST] /api/Simulacoes/simular-investimento -> Acesso público para todos os brasileiros simularem.
+
 [GET]  /api/Simulacoes/simulacoes -> Acesso exige autenticação mínima. Visualização interna.
+
 [GET]  /api/Simulacoes/simulacoes/por-produto-dia -> Acesso exige autenticação mínima. Visualização interna.
+
 [GET]  /api/Telemetrias/telemetria -> Acesso exige autenticação de usuário com role admin. 
 
 
@@ -24,8 +74,8 @@ Motor Recomendar Produtos
 
 
 
-
-
+dotnet-reportgenerator-globaltool
+coverage-report/index.html Testes
 
 
 Tecnologias abordadas no projeto:

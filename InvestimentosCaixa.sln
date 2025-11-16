@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InvestimentosCaixa.Api", "s
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InvestimentosCaixa.Application", "src\InvestimentosCaixa.Application\InvestimentosCaixa.Application.csproj", "{B0D0274B-0800-4ED8-A0B7-53DECED1DA6C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InvestimentosCaixa.Tests", "tests\InvestimentosCaixa.Tests\InvestimentosCaixa.Tests.csproj", "{05E52BDF-E912-4E0A-AA9C-156B001B5453}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{B0D0274B-0800-4ED8-A0B7-53DECED1DA6C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B0D0274B-0800-4ED8-A0B7-53DECED1DA6C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B0D0274B-0800-4ED8-A0B7-53DECED1DA6C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{05E52BDF-E912-4E0A-AA9C-156B001B5453}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{05E52BDF-E912-4E0A-AA9C-156B001B5453}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{05E52BDF-E912-4E0A-AA9C-156B001B5453}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{05E52BDF-E912-4E0A-AA9C-156B001B5453}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

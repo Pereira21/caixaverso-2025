@@ -509,15 +509,15 @@ namespace InvestimentosCaixa.Infrastructure.Migrations
 
                 INSERT INTO Produto (TipoProdutoId, Nome, RentabilidadeAnual, PrazoMinimoMeses) VALUES
                     (1, 'Poupança Caixa', 0.0650, 0),
-                    (1, 'Poupança Bradesco', 0.0640, 0),
-                    (2, 'CDB Banco Inter 100% CDI', 0.1180, 6),
-                    (2, 'CDB Santander 110% CDI', 0.1220, 12),
-                    (2, 'CDB Liquidez Diária BTG', 0.1150, 0),
+                    (1, 'Poupança Caixa 2', 0.0640, 0),
+                    (2, 'CDB Caixa 100% CDI', 0.1180, 6),
+                    (2, 'CDB Caixa 110% CDI', 0.1220, 12),
+                    (2, 'CDB Liquidez Diária Caixa', 0.1150, 0),
                     (3, 'Ações Petrobras (PETR4)', 0.1800, 0),
                     (3, 'Ações Vale (VALE3)', 0.1750, 0),
                     (3, 'Ações Magazine Luiza (MGLU3)', 0.2500, 0),
                     (3, 'ETF BOVA11', 0.1300, 0),
-                    (2, 'CDB Banco do Brasil 102% CDI', 0.1190, 3);
+                    (2, 'CDB Caixa 102% CDI', 0.1190, 3);
     
                 INSERT INTO PerfilPontuacaoVolume (MinValor, MaxValor, Pontos) VALUES 
                     (0.01, 5000.00, 10), 
@@ -560,7 +560,7 @@ namespace InvestimentosCaixa.Infrastructure.Migrations
 
                 INSERT INTO Investimento (ClienteId, ProdutoId, Valor, Rentabilidade, Data) VALUES
                     (1, 1, 1500.00, 0.0650, '2025-01-12'),
-                    (1, 3, 5000.00, 0.1180, '2025-02-05'),
+                    (1, 3, 890.00, 0.1180, '2025-02-05'),
                     (2, 4, 3000.00, 0.1220, '2025-03-10'),
                     (2, 6, 2000.00, 0.1800, '2025-03-22'),
                     (3, 8, 1200.00, 0.2500, '2025-04-01'),
