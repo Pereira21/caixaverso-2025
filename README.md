@@ -3,16 +3,16 @@
 <h1>2.0 Arquitetura + Features</h1></br>
 
 <h3>1.0 Endpoints + Explicações:</h3>
-<h5>[POST] /api/Auth/login</h5>
+<h5>(POST) /api/Auth/login</h5>
 <b>Acesso</b>: Público</br>
 <b>Finalidade</b>: Atender exigência de uso de autenticação no sistema. Para demonstrar domínio do tema, alguns endpoints são públicos, outros exigem token, sendo telemetria a única a exigir 'role'.</br>
 <b>Massa de teste</b>:</br>
 E-mail: admin@admin.com / Senha: @Admin123   <- Usuário com role admin.</br>
 E-mail: usuario@teste.com / Senha: @User123  <- Usuário sem role para endpoints internos.</br></br>
 
-<h5>[GET]  /api/PerfisRisco/perfil-risco/{clienteId}</h5>
+<h5>(GET)  /api/PerfisRisco/perfil-risco/{clienteId} </h5>
 <b>Acesso</b>: Público para todos os brasileiros acessarem.</br>
-<b>Finalidade</b>: Através do motor de recomendação traçar o Perfil de Risco do Cliente. Como o desafio pede um algoritmo simples focado em 'vol. de <b>investimentos</b> e frequência de <b>movimentações</b> interpretei que o motor deve analisar os investimentos concretizados e não as simulações. Entretanto, como não há endpoint de investir, inseri a regra abaixo para caso queira, o avaliador possa gerar dados e testar o motor de recomendação:</br>
+<b>Finalidade</b>: Através do motor de recomendação traçar o Perfil de Risco do Cliente. Como o desafio pede um algoritmo simples focado em 'vol. de <b>investimentos</b>' e 'frequência de <b>movimentações</b>' interpretei que o motor deve analisar os investimentos concretizados e não as simulações. Entretanto, como não há endpoint de investir, inseri a regra abaixo para caso queira, o avaliador possa gerar simulações e testar o motor de recomendação:</br>
 Motor prioriza análise de investimentos do cliente. Caso o cliente informado não tenha investimentos, o motor analisará simulações.</br>
 <b>Massa de teste</b> de investimentos na sessão de massa de testes.</br></br>
 Lógica escolhida <b>Motor de Recomendações</b>:
