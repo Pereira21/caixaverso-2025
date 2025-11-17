@@ -1,92 +1,177 @@
-<h1>1.0 Endpoints + Explicações</h1>
-<h1>1.1 Massa de Testes</h1>
-<h1>2.0 Arquitetura + Features</h1></br>
+# 📌 API de Investimentos – Documentação de Endpoints
 
-<h3>1.0 Endpoints + Explicações:</h3>
-<h5>[POST] /api/Auth/login</h5>
-<b>Acesso</b>: Público</br>
-<b>Finalidade</b>: Atender exigência de uso de autenticação no sistema. Para demonstrar domínio do tema, alguns endpoints são públicos, outros exigem token, sendo telemetria a única a exigir 'role'.</br>
-<b>Massa de teste</b>:</br>
-E-mail: admin@admin.com / Senha: @Admin123   <- Usuário com role admin.</br>
-E-mail: usuario@teste.com / Senha: @User123  <- Usuário sem role para endpoints internos.</br></br>
+Este documento apresenta os endpoints disponíveis na API, suas finalidades, níveis de acesso e massa de testes.  
+A arquitetura aplicada e o motor de recomendação também são descritos de forma clara e objetiva.
 
-<h5>[GET]  /api/PerfisRisco/perfil-risco/{clienteId} </h5>
-<b>Acesso</b>: Público para todos os brasileiros traçarem seu perfil.</br>
-<b>Finalidade</b>: Através do motor de recomendação traçar o Perfil de Risco do Cliente. Como o desafio pede um algoritmo simples focado em 'vol. de <b>investimentos</b>' e 'frequência de <b>movimentações</b>' interpretei que o motor deve analisar os investimentos concretizados e não as simulações. Entretanto, como não há endpoint de investir, inseri a regra abaixo para caso queira, o avaliador possa gerar simulações e testar o motor de recomendação:</br>
-Motor prioriza análise de investimentos do cliente. Caso o cliente informado não tenha investimentos, o motor analisará simulações.</br>
-<b>Massa de teste</b> de investimentos na sessão de massa de testes.</br></br>
-Lógica escolhida <b>Motor de Recomendações</b>:
-Usando as movimentações ou simulações como base, o motor insere uma pontuação score para o cliente a partir de três parâmetros: Volume total investido, Frequência de movimentações e Risco dos Produtos movimentados. No fim, os três scores são somados para se ter um score final do cliente e esse score é usado para determinar qual o perfil correspondente. Todas as informações de pontuação estão parametrizadas no banco de dados como boa prática para deixar a alteração dos dados dinâmica.</br>
-1. Volume Total Investido</br>
-A soma dos valores investidos em todas as movimentações é usada para encontrar a faixa correspondente na tabela PerfilPontuacaoVolume. Faixas maiores de investimento contribuem com mais pontos.</br></br>
-- 0,01 a 5000,00 volume -> 10 pontos</br>
-- 5000,01 a 50000,00 -> 20 pontos</br>
-- 50000,01 a 99999999,99 -> 30 pontos</br>
-2. Frequência de Movimentações</br>
-A quantidade de movimentações do cliente é comparada às faixas de PerfilPontuacaoFrequencia. Quanto mais simulações, maior a pontuação atribuída.</br></br>
-- 1 a 2 quantidades -> 10 pontos</br>
-- 3 a 6 quantidades -> 20 pontos</br>
-- 7 a 99 quantidades -> 30 pontos</br>
-3. Risco dos Produtos Simulados</br>
-As movimentações são agrupadas pelo risco dos produtos (Baixo, Médio ou Alto), e para cada grupo é aplicado o seguinte cálculo:</br>
-- Atributo PontosBase define a pontuação inicial para cada tipo de risco.</br>
-- O Multiplicador aumenta a pontuação para múltiplas movimentações do mesmo risco.</br>
-- Existe ainda um teto máximo (PontosMaximos) para evitar pontuação desproporcional.</br></br>
-Esta combinação permite capturar tanto a diversidade quanto a intensidade das escolhas de risco do investidor. As faixas são encontradas na tabela PerfilPontuacaoRisco.</br></br>
-4. Classificação Final</br>
-Com a pontuação final consolidada, o sistema consulta a tabela PerfilClassificacao para determinar o perfil:</br>
-- 0 a 40 pontos → Conservador</br>
-- 41 a 75 pontos → Moderado</br>
-- 76 a 100 pontos → Agressivo</br></br>
+---
 
-Esse processo garante uma análise consistente, transparente e baseada em critérios objetivos definidos pela instituição.</br></br>
+# 1. Endpoints + Explicações
 
-<h5>[GET]  /api/PerfisRisco/produtos-recomendados/{perfil} -> Acesso público para todos os brasileiros acessarem.</h5>
-<strong>Acesso</strong>: Público para todos os brasileiros consultarem produtos recomendados.</br>
-<strong>Finalidade</strong>: Usuários consultarem uma lista de produtos recomendados à partir do perfil de risco informado.</br>
-<strong>Massa de Teste</strong>:</br>
+## 🔐 1.1 Autenticação
+
+### **[POST] /api/Auth/login**
+**Acesso:** Público  
+**Finalidade:** Atende a exigência de autenticação no sistema. Alguns endpoints são públicos, outros exigem token, e apenas o endpoint de telemetria requer *role* específica.
+
+**Massa de Teste**  
+- **Admin:**  
+  - Email: `admin@admin.com`  
+  - Senha: `@Admin123`
+- **Usuário comum:**  
+  - Email: `usuario@teste.com`  
+  - Senha: `@User123`
+
+---
+
+## 📊 1.2 Perfil de Risco
+
+### **[GET] /api/PerfisRisco/perfil-risco/{clienteId}**
+**Acesso:** Público  
+**Finalidade:** Retorna o Perfil de Risco do cliente por meio do motor de recomendação.
+
+Como o desafio solicita um algoritmo simples baseado em:
+- **volume de investimentos**, e  
+- **frequência de movimentações**  
+
+→ o motor prioriza **investimentos concretizados**.  
+Caso o cliente **não tenha investimentos**, a análise recai sobre **simulações**, permitindo que o avaliador teste o motor sem depender de um endpoint de "investir".
+
+### 🔧 Lógica do Motor de Recomendações
+
+O score do cliente é calculado a partir de três componentes:
+
+---
+
+#### **1. Volume Total Investido**
+A soma dos valores investidos é comparada à tabela `PerfilPontuacaoVolume`:
+
+| Faixa (R$) | Pontos |
+|------------|--------|
+| 0,01 – 5.000,00 | 10 |
+| 5.000,01 – 50.000,00 | 20 |
+| 50.000,01 – 99.999.999,99 | 30 |
+
+---
+
+#### **2. Frequência de Movimentações**
+Quantidade de movimentações → tabela `PerfilPontuacaoFrequencia`:
+
+| Qtd. Movimentações | Pontos |
+|--------------------|--------|
+| 1 – 2 | 10 |
+| 3 – 6 | 20 |
+| 7 – 99 | 30 |
+
+---
+
+#### **3. Risco dos Produtos**
+Com base na tabela `PerfilPontuacaoRisco`:
+
+- Produtos são agrupados por risco (Baixo, Médio, Alto).
+- Cada grupo recebe:
+  - **PontosBase**
+  - **Multiplicador** por quantidade
+  - **PontosMáximos** como limite superior
+
+Essa combinação captura diversidade + intensidade das escolhas de risco.
+
+---
+
+#### **4. Classificação Final**
+
+| Score Final | Perfil |
+|-------------|--------|
+| 0 – 40 | Conservador |
+| 41 – 75 | Moderado |
+| 76 – 100 | Agressivo |
+
+Esse processo garante análise objetiva e auditável.
+
+---
+
+## 🎯 1.3 Produtos Recomendados
+
+### **[GET] /api/PerfisRisco/produtos-recomendados/{perfil}**
+**Acesso:** Público  
+**Finalidade:** Retorna os produtos recomendados com base no perfil informado.
+
+**Massa de Teste** – tabela `PerfilRisco`:
+```sql
 INSERT INTO PerfilRisco (Nome, Descricao) VALUES 
-	('Conservador', 'Perfil conservador com baixa tolerância ao risco'), 
-	('Moderado', 'Perfil moderado com tolerância média ao risco'), 
-	('Agressivo', 'Perfil agressivo com alta tolerância ao risco');
-Através da tabela de relacionamento RelPerfilRisco que cria um vínculo entre o Perfil e o Risco, o sistema retorna Produtos que possuem o risco relacionado com o perfil.</br></br>
+('Conservador', 'Perfil conservador com baixa tolerância ao risco'), 
+('Moderado', 'Perfil moderado com tolerância média ao risco'), 
+('Agressivo', 'Perfil agressivo com alta tolerância ao risco');```
 
-<h5>[GET]  /api/Investimentos/investimentos/{clienteId}</h5>
-<strong>Acesso</strong>: Acesso exige autenticação mínima. Visualização interna.</br>
-<strong>Finalidade</strong>: Úsuarios logados (internos) podem visualizar os investimentos realizados de um cliente específico.</br>
-<strong>Massa de Teste</strong>:
+---
+
+## 🎯 1.4 Investimentos
+
+### **[GET] /api/Investimentos/investimentos/{clienteId}**
+**Acesso:** Exige autenticação mínima  
+**Finalidade:** Usuários internos podem visualizar os investimentos de um cliente.
+
+**Massa de Teste** – tabela `PerfilRisco`:
+```sql
 INSERT INTO Investimento (ClienteId, ProdutoId, Valor, Rentabilidade, Data) VALUES
-	(1, 1, 1500.00, 0.0650, '2025-01-12'),
-	(1, 3, 890.00, 0.1180, '2025-02-05'),
-	(2, 4, 3000.00, 0.1220, '2025-03-10'),
-	(2, 6, 2000.00, 0.1800, '2025-03-22'),
-	(3, 8, 1200.00, 0.2500, '2025-04-01'),
-	(3, 9, 2500.00, 0.1300, '2025-04-15'),
-	(4, 2, 900.00, 0.0640, '2025-01-25'),
-	(4, 5, 4000.00, 0.1150, '2025-02-18'),
-	(5, 7, 3200.00, 0.1750, '2025-03-28'),
-	(5, 10, 2000.00, 0.1190, '2025-04-05');
+(1, 1, 1500.00, 0.0650, '2025-01-12'),
+(1, 3, 890.00, 0.1180, '2025-02-05'),
+(2, 4, 3000.00, 0.1220, '2025-03-10'),
+(2, 6, 2000.00, 0.1800, '2025-03-22'),
+(3, 8, 1200.00, 0.2500, '2025-04-01'),
+(3, 9, 2500.00, 0.1300, '2025-04-15'),
+(4, 2, 900.00, 0.0640, '2025-01-25'),
+(4, 5, 4000.00, 0.1150, '2025-02-18'),
+(5, 7, 3200.00, 0.1750, '2025-03-28'),
+(5, 10, 2000.00, 0.1190, '2025-04-05');```
 
-<h5>[POST] /api/Simulacoes/simular-investimento</h5>
-<strong>Acesso</strong>: Acesso público para todos os brasileiros simularem um investimento</br>
-<strong>Finalidade</strong>: Todos os brasileiros terem a opção de simularem um investimento</br>
-<strong>Massa de Teste</strong>: N/A</br>
+---
 
-<h5>[GET]  /api/Simulacoes/simulacoes</h5>
-<strong>Acesso</strong>: Acesso exige autenticação mínima. Visualização interna.</br>
-<strong>Finalidade</strong>: Usuários logados (internos) podem visualizar todas as simulações realizadas.
-<strong>Massa de Teste</strong>: N/A</br>
+## 🎯 1.5 Simulações
 
-<h5>[GET]  /api/Simulacoes/simulacoes/por-produto-dia </h5>
-<strong>Acesso</strong>: Acesso exige autenticação mínima. Visualização interna.</br>
-<strong>Finalidade</strong>: Usuários logados (internos) podem visualizar uma lista de simulações agrupadas por dia/produto.</br>
-<strong>Massa de Teste</strong>: N/A</br>
+### **[POST] /api/Simulacoes/simular-investimento**
+**Acesso:** Público
+**Finalidade:** Permite simular investimentos.
 
-<h5>[GET]  /api/Telemetrias/telemetria</h5>
-<strong>Acesso</strong>: Acesso exige autenticação de usuário com role admin.</br>
-<strong>Finalidade</strong>: Como se trata de um assunto mais gerencial/técnico, somente usuários logados com a role admin tem acesso ao endpoint.</br>
-<strong>Massa de Teste</strong>:</br>
-E-mail: admin@admin.com / Senha: @Admin123   <- Usuário com role admin.</br>
+**Massa de Teste** – N/A
+
+---
+
+### **[GET] /api/Simulacoes/simulacoes**
+**Acesso:** Exige autenticação mínima
+**Finalidade:** Usuários internos podem visualizar todas as simulações.
+
+**Massa de Teste** – N/A
+
+---
+
+### **[GET] /api/Simulacoes/simulacoes/por-produto-dia**
+**Acesso:** Exige autenticação mínima
+**Finalidade:** Lista simulações agrupadas por produto e dia.
+
+**Massa de Teste** – N/A
+
+---
+
+### **[GET] /api/Simulacoes/simulacoes/por-produto-dia**
+**Acesso:** Exige autenticação mínima
+**Finalidade:** Lista simulações agrupadas por produto e dia.
+
+**Massa de Teste** – N/A
+
+---
+
+## 🎯 1.6 Telemetria
+
+### **[GET] /api/Telemetrias/telemetria**
+**Acesso:** Exige usuário com role admin
+**Finalidade:** Endpoint técnico/gerencial para consultas internas.
+
+**Massa de Teste** – N/A
+Email: admin@admin.com
+Senha: @Admin123
+
+
+
 
 
 
