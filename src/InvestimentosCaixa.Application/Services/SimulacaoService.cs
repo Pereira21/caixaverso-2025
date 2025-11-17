@@ -12,16 +12,20 @@ namespace InvestimentosCaixa.Application.Services
     {
         private readonly IProdutoRepository _produtoRepository;
         private readonly ISimulacaoRepository _simulacaoRepository;
+        private readonly IClienteRepository _clienteRepository;
 
-        public SimulacaoService(INotificador notificador, IMapper mapper, IUnitOfWork unitOfWork, IProdutoRepository produtoRepository, ISimulacaoRepository simulacaoRepository) : base (notificador, mapper, unitOfWork)
+        public SimulacaoService(INotificador notificador, IMapper mapper, IUnitOfWork unitOfWork, IProdutoRepository produtoRepository, ISimulacaoRepository simulacaoRepository, IClienteRepository clienteRepository) 
+            : base (notificador, mapper, unitOfWork)
         {
             _produtoRepository = produtoRepository;
             _simulacaoRepository = simulacaoRepository;            
+            _clienteRepository = clienteRepository;
         }
 
         public async Task<SimularInvestimentoResponse> SimularInvestimento(SimularInvestimentoRequest request)
         {
             var produtoAdequado = await _produtoRepository.ObterAdequadoAsync(request.PrazoMeses, request.TipoProduto);
+            var cliente = await _clienteRepository.ObterPeloIdAsync(request.ClienteId);
 
             if (produtoAdequado == null)
                 Notificar("Nenhum produto encontrado para essa simulação!");
@@ -38,6 +42,9 @@ namespace InvestimentosCaixa.Application.Services
                 ResultadoSimulacao = new SimulacaoDTO { ValorFinal = decimal.Round(valorFinal, 2), RentabilidadeEfetiva = produtoAdequado.RentabilidadeAnual, PrazoMeses = produtoAdequado.PrazoMinimoMeses },
                 DataSimulacao = DateTime.UtcNow
             };
+
+            if (cliente == null)
+                await _clienteRepository.AdicionarAsync(new Cliente(request.ClienteId));
 
             await _simulacaoRepository.AdicionarAsync(new Simulacao(request.ClienteId, produtoAdequado.Id, request.Valor, valorFinal, request.PrazoMeses, produtoAdequado.RentabilidadeAnual, DateTime.UtcNow));
             await _unitOfWork.SaveChangesAsync();

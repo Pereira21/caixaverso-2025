@@ -12,6 +12,9 @@ namespace InvestimentosCaixa.Infrastructure.Mapeamentos
 
             builder.HasKey(i => i.Id);
 
+            builder.Property(x => x.Id)
+                .ValueGeneratedNever();
+
             builder.Property(i => i.Nome)
                    .IsRequired(false);
         }

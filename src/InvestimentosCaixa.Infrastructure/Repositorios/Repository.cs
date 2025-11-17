@@ -33,7 +33,7 @@ namespace InvestimentosCaixa.Infrastructure.Repositorios
 
         public virtual async Task<T?> ObterPeloIdAsync(int id)
         {
-            return await _dbSet.FindAsync(new { id });
+            return await _dbSet.FindAsync(id);
         }
 
         public virtual async Task<IEnumerable<T>> ObterAsync(Expression<Func<T, bool>> predicate)

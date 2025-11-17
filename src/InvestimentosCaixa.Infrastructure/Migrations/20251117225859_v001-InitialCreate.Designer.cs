@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace InvestimentosCaixa.Infrastructure.Migrations
 {
     [DbContext(typeof(InvestimentosCaixaDbContext))]
-    [Migration("20251116201112_v001-InicioEstrutura")]
-    partial class v001InicioEstrutura
+    [Migration("20251117225859_v001-InitialCreate")]
+    partial class v001InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -28,10 +28,7 @@ namespace InvestimentosCaixa.Infrastructure.Migrations
             modelBuilder.Entity("InvestimentosCaixa.Domain.Entidades.Cliente", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Nome")
                         .HasColumnType("nvarchar(max)");

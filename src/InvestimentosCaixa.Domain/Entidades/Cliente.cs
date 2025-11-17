@@ -4,7 +4,7 @@
     {
         public Cliente() { }
 
-        public Cliente(string nome)
+        public Cliente(int id, string nome = "") : base(id)
         {
             Nome = nome;
         }

@@ -12,6 +12,9 @@ namespace InvestimentosCaixa.Infrastructure.Mapeamentos
 
             builder.HasKey(i => i.Id);
 
+            builder.Property(p => p.Id)
+                .ValueGeneratedOnAdd();
+
             builder.Property(i => i.Valor)
                    .HasColumnType("decimal(18,2)")
                    .IsRequired();

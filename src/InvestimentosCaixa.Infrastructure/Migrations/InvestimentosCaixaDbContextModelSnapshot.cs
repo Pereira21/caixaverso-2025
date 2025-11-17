@@ -25,10 +25,7 @@ namespace InvestimentosCaixa.Infrastructure.Migrations
             modelBuilder.Entity("InvestimentosCaixa.Domain.Entidades.Cliente", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Nome")
                         .HasColumnType("nvarchar(max)");

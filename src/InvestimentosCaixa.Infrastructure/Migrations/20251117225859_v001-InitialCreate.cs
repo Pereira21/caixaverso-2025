@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace InvestimentosCaixa.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class v001InicioEstrutura : Migration
+    public partial class v001InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -54,8 +54,7 @@ namespace InvestimentosCaixa.Infrastructure.Migrations
                 name: "Cliente",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<int>(type: "int", nullable: false),
                     Nome = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
@@ -551,12 +550,12 @@ namespace InvestimentosCaixa.Infrastructure.Migrations
                     (3, 2),  -- Agressivo associado a Médio risco
                     (3, 3);  -- Agressivo associado a Alto risco
 
-                INSERT INTO Cliente (Nome) VALUES 
-                    ('Lucas Pereira'),
-                    ('Mariana Silva'),
-                    ('João Ferreira'),
-                    ('Ana Moreira'),
-                    ('Bruno Almeida');
+                INSERT INTO Cliente (Id, Nome) VALUES 
+                    (1, 'Lucas Pereira'),
+                    (2, 'Mariana Silva'),
+                    (3, 'João Ferreira'),
+                    (4, 'Ana Moreira'),
+                    (5, 'Bruno Almeida');
 
                 INSERT INTO Simulacao (ClienteId, ProdutoId, ValorInvestido, ValorFinal, PrazoMeses, RentabilidadeEfetiva, DataSimulacao) VALUES
                     (1, 1, 1500.00, 1597.50, 12, 0.0650, '2025-01-11'),
