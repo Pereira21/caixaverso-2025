@@ -55,7 +55,6 @@ namespace InvestimentosCaixa.Application.Services
         public async Task<List<SimulacaoResponseDTO>> ObterHistorico()
         {
             var simulacoes = await _simulacaoRepository.ObterTodosComProdutoAsync();
-
             return _mapper.Map<List<SimulacaoResponseDTO>>(simulacoes);
         }
 

@@ -19,7 +19,6 @@ namespace InvestimentosCaixa.Application.Services
         public async Task<List<InvestimentoResponse>> ObterPorClienteId(int clienteId)
         {
             List<Investimento> investimentos = await _investimentoRepository.ObterComProdutoPorClienteId(clienteId);
-
             return _mapper.Map<List<InvestimentoResponse>>(investimentos);
         }
     }

@@ -539,9 +539,9 @@ namespace InvestimentosCaixa.Infrastructure.Migrations
                     ('Agressivo', 'Perfil agressivo com alta tolerância ao risco');
 
                 INSERT INTO PerfilClassificacao (PerfilRiscoId, MinPontuacao, MaxPontuacao) VALUES 
-                    (1, 0, 40),     -- Conservador
-                    (2, 41, 75),    -- Moderado
-                    (3, 76, 100);   -- Agressivo
+                    (1, 0, 50),     -- Conservador
+                    (2, 51, 85),    -- Moderado
+                    (3, 86, 100);   -- Agressivo
 
                 INSERT INTO RelPerfilRisco (PerfilRiscoId, RiscoId) VALUES 
                     (1, 1),  -- Conservador associado a Baixo risco
@@ -583,7 +583,8 @@ namespace InvestimentosCaixa.Infrastructure.Migrations
                     (4, 2, 900.00, 0.0640, '2025-01-25'),
                     (4, 5, 4000.00, 0.1150, '2025-02-18'),
                     (5, 7, 3200.00, 0.1750, '2025-03-28'),
-                    (5, 10, 2000.00, 0.1190, '2025-04-05');
+                    (5, 10, 2000.00, 0.1190, '2025-04-05'),
+                    (5, 10, 3000.00, 0.1190, '2025-04-05');
             ");
         }
 

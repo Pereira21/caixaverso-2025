@@ -1,30 +1,50 @@
 ﻿using InvestimentosCaixa.Application.Interfaces.Repositorios;
 using InvestimentosCaixa.Domain.Entidades;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace InvestimentosCaixa.Infrastructure.Repositorios
 {
     public class ProdutoRepository : Repository<Produto>, IProdutoRepository
     {
-        public ProdutoRepository(InvestimentosCaixaDbContext context) : base(context) { }
-
-        public async Task<Produto?> ObterAdequadoAsync(short prazoMeses, string tipoProduto, CancellationToken cancellationToken = default)
+        private readonly IMemoryCache _memoryCache;
+        private const string ProdutosCache = "ProdutosCache";
+        public ProdutoRepository(InvestimentosCaixaDbContext context, IMemoryCache memoryCache) : base(context)
         {
-            var query = _dbSet
-                .Include(p => p.TipoProduto)
-                    .ThenInclude(p => p.Risco)
-                .Where(p => p.TipoProduto.Nome == tipoProduto && p.PrazoMinimoMeses <= prazoMeses);
+            _memoryCache = memoryCache;
+        }
 
-            return await query.FirstOrDefaultAsync(cancellationToken);
+        public async Task<Produto?> ObterAdequadoAsync(short prazoMeses, string tipoProduto)
+        {
+            var produtos = await _memoryCache.GetOrCreateAsync(ProdutosCache, async entry =>
+            {
+                entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(12);
+                return await ObterProdutosComTipoAsync();
+            });
+
+            return produtos
+                .Where(p => p.TipoProduto.Nome == tipoProduto && p.PrazoMinimoMeses <= prazoMeses)
+                .FirstOrDefault();
         }
 
         public async Task<List<Produto>> ObterPorRiscoAsync(List<int> riscoIdList)
         {
-            return await _dbSet
+            return await _dbSet.AsNoTracking()
                 .Include(x => x.TipoProduto)
                     .ThenInclude(x => x.Risco)
                 .Where(p => riscoIdList.Contains(p.TipoProduto.RiscoId))
                 .ToListAsync();
         }
+
+        #region metodos privados
+        private async Task<List<Produto>> ObterProdutosComTipoAsync()
+        {
+            return await _context.Produtos
+                .AsNoTracking()
+                .Include(p => p.TipoProduto)
+                    .ThenInclude(tp => tp.Risco)
+                .ToListAsync();
+        }
+        #endregion        
     }
 }

@@ -33,6 +33,8 @@ namespace InvestimentosCaixa.Api.Config
             services.AddScoped<IPerfilRiscoService, PerfilRiscoService>();
             services.AddScoped<IInvestimentoService, InvestimentoService>();
 
+            services.AddMemoryCache();
+
             return services;
         }
     }
