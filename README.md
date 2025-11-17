@@ -96,15 +96,17 @@ Esse processo garante análise objetiva e auditável.
 **Finalidade:** Retorna os produtos recomendados com base no perfil informado.
 
 **Massa de Teste** – tabela `PerfilRisco`:
+
 ```sql
 INSERT INTO PerfilRisco (Nome, Descricao) VALUES 
 ('Conservador', 'Perfil conservador com baixa tolerância ao risco'), 
 ('Moderado', 'Perfil moderado com tolerância média ao risco'), 
-('Agressivo', 'Perfil agressivo com alta tolerância ao risco');```
+('Agressivo', 'Perfil agressivo com alta tolerância ao risco');
+```
 
 ---
 
-## 🎯 1.4 Investimentos
+## 💰 1.4 Investimentos
 
 ### **[GET] /api/Investimentos/investimentos/{clienteId}**
 **Acesso:** Exige autenticação mínima  
@@ -122,7 +124,8 @@ INSERT INTO Investimento (ClienteId, ProdutoId, Valor, Rentabilidade, Data) VALU
 (4, 2, 900.00, 0.0640, '2025-01-25'),
 (4, 5, 4000.00, 0.1150, '2025-02-18'),
 (5, 7, 3200.00, 0.1750, '2025-03-28'),
-(5, 10, 2000.00, 0.1190, '2025-04-05');```
+(5, 10, 2000.00, 0.1190, '2025-04-05');
+```
 
 ---
 
@@ -166,9 +169,9 @@ INSERT INTO Investimento (ClienteId, ProdutoId, Valor, Rentabilidade, Data) VALU
 **Acesso:** Exige usuário com role admin
 **Finalidade:** Endpoint técnico/gerencial para consultas internas.
 
-**Massa de Teste** – N/A
-Email: admin@admin.com
-Senha: @Admin123
+**Massa de Teste** 
+- Email: admin@admin.com
+- Senha: @Admin123
 
 
 
