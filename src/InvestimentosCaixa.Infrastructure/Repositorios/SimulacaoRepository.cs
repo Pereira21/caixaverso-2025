@@ -29,17 +29,17 @@ namespace InvestimentosCaixa.Infrastructure.Repositorios
                 .GroupBy(s => new
                 {
                     s.Produto.Nome,
-                    Dia = s.DataSimulacao.Date
+                    Dia = DateOnly.FromDateTime(s.DataSimulacao)
                 })
                 .Select(g => new SimulacaoPorProdutoDiaResponse
                 {
                     Produto = g.Key.Nome,
                     Data = g.Key.Dia,
                     QuantidadeSimulacoes = g.Count(),
-                    MediaValorFinal = Math.Round(g.Average(x => x.ValorFinal), 2)
+                    MediaValorFinal = Math.Round(g.Average(x => x.ValorInvestido), 2)
                 })
-                .OrderBy(x => x.Produto)
-                .ThenBy(x => x.Data)
+                .OrderByDescending(x => x.Data)
+                    .ThenBy(x => x.Produto)
                 .ToListAsync();
         }
     }

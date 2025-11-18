@@ -2,12 +2,12 @@
 {
     public class SimularInvestimentoResponse
     {
-        public ProdutoDTO ProdutoValidado { get; set; }
-        public SimulacaoDTO ResultadoSimulacao { get; set; }
+        public ProdutoValidadoResponse ProdutoValidado { get; set; }
+        public ResultadoSimulacaoResponse ResultadoSimulacao { get; set; }
         public DateTime DataSimulacao { get; set; }
     }
 
-    public class ProdutoDTO
+    public class ProdutoValidadoResponse
     {
         public int Id { get; set; }
         public string Nome { get; set; }
@@ -16,7 +16,7 @@
         public string Risco { get; set; }
     }
 
-    public class SimulacaoDTO
+    public class ResultadoSimulacaoResponse
     {
         public decimal ValorFinal { get; set; }
         public decimal RentabilidadeEfetiva { get; set; }

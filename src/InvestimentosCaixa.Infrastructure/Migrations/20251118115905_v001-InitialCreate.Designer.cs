@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace InvestimentosCaixa.Infrastructure.Migrations
 {
     [DbContext(typeof(InvestimentosCaixaDbContext))]
-    [Migration("20251117225859_v001-InitialCreate")]
+    [Migration("20251118115905_v001-InitialCreate")]
     partial class v001InitialCreate
     {
         /// <inheritdoc />
@@ -231,8 +231,8 @@ namespace InvestimentosCaixa.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("VARCHAR(100)");
 
-                    b.Property<int>("PrazoMinimoMeses")
-                        .HasColumnType("int");
+                    b.Property<short>("PrazoMinimoMeses")
+                        .HasColumnType("smallint");
 
                     b.Property<decimal>("RentabilidadeAnual")
                         .HasColumnType("DECIMAL(5,4)");
@@ -306,8 +306,8 @@ namespace InvestimentosCaixa.Infrastructure.Migrations
                     b.Property<DateTime>("DataSimulacao")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("PrazoMeses")
-                        .HasColumnType("int");
+                    b.Property<short>("PrazoMeses")
+                        .HasColumnType("smallint");
 
                     b.Property<int>("ProdutoId")
                         .HasColumnType("int");

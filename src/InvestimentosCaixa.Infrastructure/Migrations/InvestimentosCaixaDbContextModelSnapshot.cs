@@ -228,8 +228,8 @@ namespace InvestimentosCaixa.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("VARCHAR(100)");
 
-                    b.Property<int>("PrazoMinimoMeses")
-                        .HasColumnType("int");
+                    b.Property<short>("PrazoMinimoMeses")
+                        .HasColumnType("smallint");
 
                     b.Property<decimal>("RentabilidadeAnual")
                         .HasColumnType("DECIMAL(5,4)");
@@ -303,8 +303,8 @@ namespace InvestimentosCaixa.Infrastructure.Migrations
                     b.Property<DateTime>("DataSimulacao")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("PrazoMeses")
-                        .HasColumnType("int");
+                    b.Property<short>("PrazoMeses")
+                        .HasColumnType("smallint");
 
                     b.Property<int>("ProdutoId")
                         .HasColumnType("int");

@@ -343,7 +343,7 @@ namespace InvestimentosCaixa.Infrastructure.Migrations
                     TipoProdutoId = table.Column<int>(type: "int", nullable: false),
                     Nome = table.Column<string>(type: "VARCHAR(100)", nullable: false),
                     RentabilidadeAnual = table.Column<decimal>(type: "DECIMAL(5,4)", nullable: false),
-                    PrazoMinimoMeses = table.Column<int>(type: "int", nullable: false)
+                    PrazoMinimoMeses = table.Column<short>(type: "smallint", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -395,7 +395,7 @@ namespace InvestimentosCaixa.Infrastructure.Migrations
                     ProdutoId = table.Column<int>(type: "int", nullable: false),
                     ValorInvestido = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     ValorFinal = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    PrazoMeses = table.Column<int>(type: "int", nullable: false),
+                    PrazoMeses = table.Column<short>(type: "smallint", nullable: false),
                     RentabilidadeEfetiva = table.Column<decimal>(type: "decimal(5,4)", nullable: false),
                     DataSimulacao = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },

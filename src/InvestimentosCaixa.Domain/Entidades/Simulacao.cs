@@ -4,7 +4,7 @@
     {
         protected Simulacao() { }
 
-        public Simulacao(int clienteId, int produtoId, decimal valorInvestido, decimal valorFinal, int prazoMeses, decimal rentabilidadeEfetiva, DateTime dataSimulacao)
+        public Simulacao(int clienteId, int produtoId, decimal valorInvestido, decimal valorFinal, short prazoMeses, decimal rentabilidadeEfetiva, DateTime dataSimulacao)
         {
             ClienteId = clienteId;
             ProdutoId = produtoId;
@@ -19,7 +19,7 @@
         public int ProdutoId { get; private set; }
         public decimal ValorInvestido { get; private set; }
         public decimal ValorFinal { get; private set; }
-        public int PrazoMeses { get; private set; }
+        public short PrazoMeses { get; private set; }
         public decimal RentabilidadeEfetiva { get; private set; }
         public DateTime DataSimulacao { get; private set; }
 
