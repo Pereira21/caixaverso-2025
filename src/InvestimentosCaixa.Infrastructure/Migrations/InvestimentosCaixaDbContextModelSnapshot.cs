@@ -96,7 +96,7 @@ namespace InvestimentosCaixa.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Telemetria", (string)null);
+                    b.ToTable("LogTelemetria", (string)null);
                 });
 
             modelBuilder.Entity("InvestimentosCaixa.Domain.Entidades.PerfilClassificacao", b =>

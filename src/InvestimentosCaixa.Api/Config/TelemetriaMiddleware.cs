@@ -22,7 +22,7 @@ namespace InvestimentosCaixa.Api.Config
             stopwatch.Stop();
 
             var registro = new LogTelemetria(
-                endpoint: context.Request.Path,
+                endpoint: context.Request.Path.Value?.TrimStart('/'),
                 metodo: context.Request.Method,
                 tempoRespostaMs: (int)stopwatch.ElapsedMilliseconds,
                 sucesso: context.Response.StatusCode < 400,

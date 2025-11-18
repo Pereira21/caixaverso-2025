@@ -167,12 +167,16 @@ INSERT INTO Investimento (ClienteId, ProdutoId, Valor, Rentabilidade, Data) VALU
 ## 🎯 1.6 Telemetria
 
 ### **[GET] /api/Telemetrias/telemetria**
-**Acesso:** Exige usuário com role admin
+**Acesso:** Exige usuário com role admin. [Usuário pré-cadastrado: admin@admin.com / @Admin123]
 **Finalidade:** Endpoint técnico/gerencial para consultas internas.
 
-**Massa de Teste** 
-- Email: admin@admin.com
-- Senha: @Admin123
+**Massa de Teste**  – tabela `LogTelemetria`:
+Como o endpoint agrupa por mês, o registro abaixo foi criado com um mês anterior para que se possa provar que o endpoint está cumprindo o papel.
+```sql
+INSERT INTO LogTelemetria VALUES
+('telemetria', 'GET', 250, 1, '2025-10-18 12:00:00.1945291');
+```
+
 
 
 

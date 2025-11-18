@@ -1,4 +1,5 @@
-﻿using InvestimentosCaixa.Application.Interfaces.Repositorios;
+﻿using InvestimentosCaixa.Application.DTO.Response;
+using InvestimentosCaixa.Application.Interfaces.Repositorios;
 using InvestimentosCaixa.Domain.Entidades;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,21 +9,48 @@ namespace InvestimentosCaixa.Infrastructure.Repositorios
     {
         public LogTelemetriaRepository(InvestimentosCaixaDbContext context) : base(context) { }
 
-        public async Task<IEnumerable<dynamic>> ObterResumoAsync()
+        public async Task<List<TelemetriaResponse>> ObterTelemetriaMensalAsync()
         {
-            return await _context.Set<LogTelemetria>()
-                .GroupBy(t => new { t.Endpoint, t.Metodo })
+            var registros = await _dbSet
+                .GroupBy(r => new
+                {
+                    r.Endpoint,
+                    Ano = r.DataRegistro.Year,
+                    Mes = r.DataRegistro.Month
+                })
                 .Select(g => new
                 {
-                    Endpoint = g.Key.Endpoint,
-                    Metodo = g.Key.Metodo,
-                    TotalRequisicoes = g.Count(),
-                    Sucesso = g.Count(x => x.Sucesso),
-                    Erros = g.Count(x => !x.Sucesso),
-                    TempoMedioMs = g.Average(x => x.TempoRespostaMs),
-                    UltimaRequisicao = g.Max(x => x.DataRegistro)
+                    Nome = g.Key.Endpoint,
+                    Ano = g.Key.Ano,
+                    Mes = g.Key.Mes,
+                    QuantidadeChamadas = g.Count(),
+                    MediaTempoRespostaMs = Math.Round(g.Average(x => x.TempoRespostaMs), 2)
                 })
                 .ToListAsync();
+
+            // trnasformando resultado em mês
+            var resposta = registros
+                .GroupBy(r => new { r.Ano, r.Mes })
+                .Select(g => new TelemetriaResponse
+                {
+                    Servicos = g.Select(x => new ServicoResponse
+                    {
+                        Nome = x.Nome,
+                        QuantidadeChamadas = x.QuantidadeChamadas,
+                        MediaTempoRespostaMs = x.MediaTempoRespostaMs
+                    }).ToList(),
+                    Periodo = new PeriodoResponse
+                    {
+                        Inicio = new DateOnly(g.Key.Ano, g.Key.Mes, 1),
+                        Fim = new DateOnly(g.Key.Ano, g.Key.Mes,
+                            DateTime.DaysInMonth(g.Key.Ano, g.Key.Mes))
+                    }
+                })
+                .OrderByDescending(x => x.Periodo.Inicio)
+                .ToList();
+
+            return resposta;
         }
+
     }
 }

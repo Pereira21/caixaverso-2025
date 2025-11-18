@@ -1,9 +1,10 @@
-﻿using InvestimentosCaixa.Domain.Entidades;
+﻿using InvestimentosCaixa.Application.DTO.Response;
+using InvestimentosCaixa.Domain.Entidades;
 
 namespace InvestimentosCaixa.Application.Interfaces.Repositorios
 {
     public interface ILogTelemetriaRepository : IRepository<LogTelemetria>
     {
-        Task<IEnumerable<dynamic>> ObterResumoAsync();
+        Task<List<TelemetriaResponse>> ObterTelemetriaMensalAsync();
     }
 }

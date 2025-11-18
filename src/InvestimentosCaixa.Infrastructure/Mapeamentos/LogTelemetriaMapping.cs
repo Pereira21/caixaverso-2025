@@ -8,7 +8,7 @@ namespace InvestimentosCaixa.Infrastructure.Mapeamentos
     {
         public void Configure(EntityTypeBuilder<LogTelemetria> builder)
         {
-            builder.ToTable("Telemetria");
+            builder.ToTable("LogTelemetria");
 
             builder.HasKey(x => x.Id);
 

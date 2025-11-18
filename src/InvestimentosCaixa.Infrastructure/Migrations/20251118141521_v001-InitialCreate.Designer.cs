@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace InvestimentosCaixa.Infrastructure.Migrations
 {
     [DbContext(typeof(InvestimentosCaixaDbContext))]
-    [Migration("20251118115905_v001-InitialCreate")]
+    [Migration("20251118141521_v001-InitialCreate")]
     partial class v001InitialCreate
     {
         /// <inheritdoc />
@@ -99,7 +99,7 @@ namespace InvestimentosCaixa.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Telemetria", (string)null);
+                    b.ToTable("LogTelemetria", (string)null);
                 });
 
             modelBuilder.Entity("InvestimentosCaixa.Domain.Entidades.PerfilClassificacao", b =>

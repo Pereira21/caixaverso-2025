@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace InvestimentosCaixa.Api.Controllers
 {
-    [Route("api/[controller]")]
     public class AuthController : MainController
     {
         private readonly IAuthService _authService;

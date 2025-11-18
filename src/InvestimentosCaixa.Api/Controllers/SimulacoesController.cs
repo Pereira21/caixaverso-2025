@@ -9,7 +9,6 @@ using Microsoft.AspNetCore.Mvc;
 namespace InvestimentosCaixa.Api.Controllers
 {
     [Authorize]
-    [Route("api/[controller]")]
     public class SimulacoesController : MainController
     {
         private readonly ISimulacaoService _simulacaoService;

@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using InvestimentosCaixa.Application.Interfaces.Repositorios;
+using InvestimentosCaixa.Application.Interfaces.Services;
 using InvestimentosCaixa.Application.Notificacoes;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -7,14 +7,13 @@ using Microsoft.AspNetCore.Mvc;
 namespace InvestimentosCaixa.Api.Controllers
 {
     [Authorize(Roles = "admin")]
-    [Route("api/[controller]")]
     public class TelemetriasController : MainController
     {
-        private readonly ILogTelemetriaRepository _telemetriaRepository;
+        private readonly ILogTelemetriaService _logTelemetriaService;
 
-        public TelemetriasController(IMapper mapper, INotificador notificador, ILogTelemetriaRepository telemetriaRepository) : base(mapper, notificador)
+        public TelemetriasController(IMapper mapper, INotificador notificador, ILogTelemetriaService logTelemetriaService) : base(mapper, notificador)
         {
-            _telemetriaRepository = telemetriaRepository;
+            _logTelemetriaService = logTelemetriaService;
         }
 
         [HttpGet("telemetria")]
@@ -22,8 +21,8 @@ namespace InvestimentosCaixa.Api.Controllers
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> Obter()
         {
-            var dados = await _telemetriaRepository.ObterResumoAsync();
-            return CustomResponse(dados);
+            var logTelemetria = await _logTelemetriaService.ObterPeriodoMensalAsync();
+            return CustomResponse(logTelemetria);
         }
     }
 }

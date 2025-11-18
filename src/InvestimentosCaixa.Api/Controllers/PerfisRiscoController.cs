@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace InvestimentosCaixa.Api.Controllers
 {
-    [Route("api/[controller]")]
     public class PerfisRiscoController : MainController
     {
         private readonly IPerfilRiscoService _perfilRiscoService;

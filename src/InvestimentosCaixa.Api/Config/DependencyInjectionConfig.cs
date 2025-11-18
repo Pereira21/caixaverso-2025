@@ -32,6 +32,7 @@ namespace InvestimentosCaixa.Api.Config
             services.AddScoped<ISimulacaoService, SimulacaoService>();
             services.AddScoped<IPerfilRiscoService, PerfilRiscoService>();
             services.AddScoped<IInvestimentoService, InvestimentoService>();
+            services.AddScoped<ILogTelemetriaService, LogTelemetriaService>();
 
             services.AddMemoryCache();
 

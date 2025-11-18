@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Mvc;
 namespace InvestimentosCaixa.Api.Controllers
 {
     [Authorize]
-    [Route("api/[controller]")]
     public class InvestimentosController : MainController
     {
         private readonly IInvestimentoService _investimentoService;

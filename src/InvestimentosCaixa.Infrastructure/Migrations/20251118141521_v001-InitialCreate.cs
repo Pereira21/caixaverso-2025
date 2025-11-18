@@ -63,6 +63,23 @@ namespace InvestimentosCaixa.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "LogTelemetria",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Endpoint = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    Metodo = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
+                    TempoRespostaMs = table.Column<int>(type: "int", nullable: false),
+                    Sucesso = table.Column<bool>(type: "bit", nullable: false),
+                    DataRegistro = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_LogTelemetria", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "PerfilPontuacaoFrequencia",
                 columns: table => new
                 {
@@ -118,23 +135,6 @@ namespace InvestimentosCaixa.Infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Risco", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Telemetria",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Endpoint = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
-                    Metodo = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
-                    TempoRespostaMs = table.Column<int>(type: "int", nullable: false),
-                    Sucesso = table.Column<bool>(type: "bit", nullable: false),
-                    DataRegistro = table.Column<DateTime>(type: "datetime2", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Telemetria", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -585,6 +585,9 @@ namespace InvestimentosCaixa.Infrastructure.Migrations
                     (5, 7, 3200.00, 0.1750, '2025-03-28'),
                     (5, 10, 2000.00, 0.1190, '2025-04-05'),
                     (5, 10, 3000.00, 0.1190, '2025-04-05');
+
+                INSERT INTO LogTelemetria VALUES
+                    ('telemetria', 'GET', 250, 1, '2025-10-18 12:00:00.1945291');
             ");
         }
 
@@ -610,6 +613,9 @@ namespace InvestimentosCaixa.Infrastructure.Migrations
                 name: "Investimento");
 
             migrationBuilder.DropTable(
+                name: "LogTelemetria");
+
+            migrationBuilder.DropTable(
                 name: "PerfilClassificacao");
 
             migrationBuilder.DropTable(
@@ -626,9 +632,6 @@ namespace InvestimentosCaixa.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "Simulacao");
-
-            migrationBuilder.DropTable(
-                name: "Telemetria");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
