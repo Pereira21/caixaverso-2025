@@ -5,6 +5,8 @@ using InvestimentosCaixa.Application.Interfaces.Services;
 using InvestimentosCaixa.Application.Notificacoes;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 
 namespace InvestimentosCaixa.Api.Controllers
 {
@@ -40,7 +42,7 @@ namespace InvestimentosCaixa.Api.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> Obter()
         {
-            var historico = await _simulacaoService.ObterHistorico();
+            var historico = await _simulacaoService.ObterHistorico(UserId.Value, UserEmail);
             return CustomResponse(historico);
         }
 
@@ -51,7 +53,7 @@ namespace InvestimentosCaixa.Api.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> ObterPorProdutoDia()
         {
-            var resultado = await _simulacaoService.ObterPorProdutoDiaAsync();
+            var resultado = await _simulacaoService.ObterPorProdutoDiaAsync(UserId.Value, UserEmail);
             return Ok(resultado);
         }
     }

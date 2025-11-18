@@ -50,8 +50,9 @@ namespace InvestimentosCaixa.Application.Services
         private async Task<string> GerarTokenJWT(IdentityUser<Guid> user)
         {
             var claims = new List<Claim>
-{
-                new Claim("username", user.UserName)
+            {
+                new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
+                new Claim(JwtRegisteredClaimNames.Email, user.Email)
             };
 
             var roles = await _userManager.GetRolesAsync(user);

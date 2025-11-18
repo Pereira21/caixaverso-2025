@@ -21,7 +21,7 @@ namespace InvestimentosCaixa.Api.Controllers
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> Obter()
         {
-            var logTelemetria = await _logTelemetriaService.ObterPeriodoMensalAsync();
+            var logTelemetria = await _logTelemetriaService.ObterPeriodoMensalAsync(UserId.Value, UserEmail);
 
             return CustomResponse(logTelemetria);
         }

@@ -2,6 +2,7 @@
 using InvestimentosCaixa.Application.Notificacoes;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using System.Security.Claims;
 
 namespace InvestimentosCaixa.Api.Controllers
 {
@@ -10,6 +11,9 @@ namespace InvestimentosCaixa.Api.Controllers
     {
         protected readonly INotificador _notificador;
         protected readonly IMapper _mapper;
+
+        protected Guid? UserId => Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+        protected string UserEmail => User.FindFirst(ClaimTypes.Email)?.Value;
 
         public MainController(IMapper mapper, INotificador notificador)
         {

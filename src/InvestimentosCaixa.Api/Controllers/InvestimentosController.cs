@@ -24,7 +24,7 @@ namespace InvestimentosCaixa.Api.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> ObterPorClienteId(int clienteId)
         {
-            var investimentos = await _investimentoService.ObterPorClienteId(clienteId);
+            var investimentos = await _investimentoService.ObterPorClienteId(UserId.Value, UserEmail, clienteId);
 
             if(investimentos == null || !investimentos.Any())
                 return NoContent();

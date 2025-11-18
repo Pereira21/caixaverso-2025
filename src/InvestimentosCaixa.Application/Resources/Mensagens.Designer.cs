@@ -79,6 +79,15 @@ namespace InvestimentosCaixa.Application.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Nenhum produto encontrado para essa simulação!.
+        /// </summary>
+        internal static string NenhumProdutoEncontradoSimulacao {
+            get {
+                return ResourceManager.GetString("NenhumProdutoEncontradoSimulacao", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Perfil não encontrado!.
         /// </summary>
         internal static string PerfilNaoEncontrado {

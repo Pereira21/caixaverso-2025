@@ -123,6 +123,9 @@
   <data name="NaoFoiPossivelDeterminarPerfilRisco" xml:space="preserve">
     <value>Não foi possível determinar o Perfil de Risco do cliente!</value>
   </data>
+  <data name="NenhumProdutoEncontradoSimulacao" xml:space="preserve">
+    <value>Nenhum produto encontrado para essa simulação!</value>
+  </data>
   <data name="PerfilNaoEncontrado" xml:space="preserve">
     <value>Perfil não encontrado!</value>
   </data>

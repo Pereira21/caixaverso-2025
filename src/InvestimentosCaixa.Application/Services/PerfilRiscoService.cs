@@ -6,19 +6,22 @@ using InvestimentosCaixa.Application.Interfaces.Services;
 using InvestimentosCaixa.Application.Notificacoes;
 using InvestimentosCaixa.Application.Resources;
 using InvestimentosCaixa.Domain.Entidades;
+using Microsoft.Extensions.Logging;
 
 namespace InvestimentosCaixa.Application.Services
 {
     public class PerfilRiscoService : BaseService, IPerfilRiscoService
     {
+        private readonly ILogger<PerfilRiscoService> _logger;
         private readonly ISimulacaoRepository _simulacaoRepository;
         private readonly IPerfilRiscoRepository _perfilRiscoRepository;
         private readonly IProdutoRepository _produtoRepository;
         private readonly IInvestimentoRepository _investimentoRepository;
 
-        public PerfilRiscoService(INotificador notificador, IMapper mapper, IUnitOfWork unitOfWork, ISimulacaoRepository simulacaoRepository, IPerfilRiscoRepository perfilRiscoRepository, IProdutoRepository produtoRepository,
-            IInvestimentoRepository investimentoRepository) : base(notificador, mapper, unitOfWork)
+        public PerfilRiscoService(ILogger<PerfilRiscoService> logger, INotificador notificador, IMapper mapper, IUnitOfWork unitOfWork, ISimulacaoRepository simulacaoRepository, IPerfilRiscoRepository perfilRiscoRepository, 
+            IProdutoRepository produtoRepository, IInvestimentoRepository investimentoRepository) : base(notificador, mapper, unitOfWork)
         {
+            _logger = logger;
             _simulacaoRepository = simulacaoRepository;
             _perfilRiscoRepository = perfilRiscoRepository;
             _produtoRepository = produtoRepository;
@@ -30,6 +33,7 @@ namespace InvestimentosCaixa.Application.Services
             var perfilRisco = await _perfilRiscoRepository.ObterComRiscoPorNome(perfil);
             if (perfilRisco == null)
             {
+                _logger.LogWarning($"Perfil solicitado para obter produtos recomendados não existe!. Perfil: {perfil}!");
                 Notificar(Mensagens.PerfilNaoEncontrado);
                 return null;
             }
@@ -63,6 +67,7 @@ namespace InvestimentosCaixa.Application.Services
                 simulacoesPorCliente = await _simulacaoRepository.ObterComProdutoPorClienteId(clienteId);
                 if (simulacoesPorCliente == null || !simulacoesPorCliente.Any())
                 {
+                    _logger.LogWarning($"Cliente não possui investimentos para determinar Perfil de Risco!. Cliente: {clienteId}!");
                     Notificar(Mensagens.ClienteSemInvestimentosDeterminarPerfilRisco);
                     return null;
                 }
@@ -176,6 +181,7 @@ namespace InvestimentosCaixa.Application.Services
             var perfilClassificacaoDto = await _perfilRiscoRepository.ObterPerfilClassificacaoPorPontuacao(pontuacaoCliente);
             if (perfilClassificacaoDto == null)
             {
+                _logger.LogWarning($"Não foi encontrado um Perfil Risco para a pontuação {pontuacaoCliente}!");
                 Notificar(Mensagens.NaoFoiPossivelDeterminarPerfilRisco);
             }
 

@@ -5,6 +5,6 @@ namespace InvestimentosCaixa.Application.Interfaces.Services
 {
     public interface IInvestimentoService
     {
-        Task<List<InvestimentoResponse>> ObterPorClienteId(int clienteId);
+        Task<List<InvestimentoResponse>> ObterPorClienteId(Guid userId, string userEmail, int clienteId);
     }
 }

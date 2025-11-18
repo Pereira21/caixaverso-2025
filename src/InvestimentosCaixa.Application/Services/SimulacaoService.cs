@@ -4,19 +4,25 @@ using InvestimentosCaixa.Application.DTO.Response;
 using InvestimentosCaixa.Application.Interfaces.Repositorios;
 using InvestimentosCaixa.Application.Interfaces.Services;
 using InvestimentosCaixa.Application.Notificacoes;
+using InvestimentosCaixa.Application.Resources;
 using InvestimentosCaixa.Domain.Entidades;
+using Microsoft.Extensions.Logging;
 
 namespace InvestimentosCaixa.Application.Services
 {
     public class SimulacaoService : BaseService, ISimulacaoService
     {
+        private readonly ILogger<SimulacaoService> _logger;
+
         private readonly IProdutoRepository _produtoRepository;
         private readonly ISimulacaoRepository _simulacaoRepository;
         private readonly IClienteRepository _clienteRepository;
 
-        public SimulacaoService(INotificador notificador, IMapper mapper, IUnitOfWork unitOfWork, IProdutoRepository produtoRepository, ISimulacaoRepository simulacaoRepository, IClienteRepository clienteRepository)
+        public SimulacaoService(ILogger<SimulacaoService> logger, INotificador notificador, IMapper mapper, IUnitOfWork unitOfWork, IProdutoRepository produtoRepository, ISimulacaoRepository simulacaoRepository, IClienteRepository clienteRepository)
             : base(notificador, mapper, unitOfWork)
         {
+            _logger = logger;
+
             _produtoRepository = produtoRepository;
             _simulacaoRepository = simulacaoRepository;
             _clienteRepository = clienteRepository;
@@ -30,7 +36,8 @@ namespace InvestimentosCaixa.Application.Services
 
             if (produtoBaseDto == null)
             {
-                Notificar("Nenhum produto encontrado para essa simulação!");
+                _logger.LogWarning($"Nenhum produto encontrado para a simulação. PrazoMeses: {request.PrazoMeses} , TipoProduto: {request.TipoProduto}!");
+                Notificar(Mensagens.NenhumProdutoEncontradoSimulacao);
                 return null;
             }
 
@@ -53,14 +60,18 @@ namespace InvestimentosCaixa.Application.Services
             return response;
         }
 
-        public async Task<List<SimulacaoResponseDTO>> ObterHistorico()
+        public async Task<List<SimulacaoResponseDTO>> ObterHistorico(Guid userId, string userEmail)
         {
+            _logger.LogInformation($"O analista {userId} - Email: {userEmail} está obtendo o histórico de todas as simulações!");
+
             var simulacoes = await _simulacaoRepository.ObterTodosComProdutoAsync();
             return _mapper.Map<List<SimulacaoResponseDTO>>(simulacoes);
         }
 
-        public async Task<List<SimulacaoPorProdutoDiaResponse>> ObterPorProdutoDiaAsync()
+        public async Task<List<SimulacaoPorProdutoDiaResponse>> ObterPorProdutoDiaAsync(Guid userId, string userEmail)
         {
+            _logger.LogInformation($"O analista {userId} - Email: {userEmail} está obtendo o histórico de simulações por produto/dia!");
+
             return await _simulacaoRepository.ObterSimulacoesPorProdutoDiaAsync();
         }
 

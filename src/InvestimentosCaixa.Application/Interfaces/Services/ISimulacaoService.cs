@@ -7,7 +7,7 @@ namespace InvestimentosCaixa.Application.Interfaces.Services
     {        
         Task<SimularInvestimentoResponse> SimularInvestimento(SimularInvestimentoRequest request);
 
-        Task<List<SimulacaoResponseDTO>> ObterHistorico();
-        Task<List<SimulacaoPorProdutoDiaResponse>> ObterPorProdutoDiaAsync();
+        Task<List<SimulacaoResponseDTO>> ObterHistorico(Guid userId, string userEmail);
+        Task<List<SimulacaoPorProdutoDiaResponse>> ObterPorProdutoDiaAsync(Guid userId, string userEmail);
     }
 }
