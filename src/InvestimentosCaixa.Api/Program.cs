@@ -8,7 +8,6 @@ using InvestimentosCaixa.Infrastructure;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
@@ -79,9 +78,25 @@ builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddSwaggerGen(options =>
 {
-    options.SwaggerDoc("v1", new OpenApiInfo { Title = "JWT API", Version = "v1" });
+    options.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Title = "InvestimentosCaixa API",
+        Version = "v1",
+        Description = "API para simulação e gestão de investimentos da Caixa Econômica Federal",
+        Contact = new OpenApiContact
+        {
+            Name = "Equipe CaixaInvestimentos",
+            Email = "dev@investimentos-caixa.com",
+            Url = new Uri("https://github.com/Pereira21/caixaverso-2025")
+        },
+        License = new OpenApiLicense
+        {
+            Name = "MIT",
+            Url = new Uri("https://opensource.org/licenses/MIT")
+        }
+    });
 
-    // Adiciona o esquema de seguranca para JWT
+    // Adiciona o esquema de segurança para JWT
     options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         Name = "Authorization",
@@ -92,7 +107,7 @@ builder.Services.AddSwaggerGen(options =>
         Description = "Insira somente o token"
     });
 
-    // Adiciona a exigencia de seguranca global
+    // Adiciona a exigência de segurança global
     options.AddSecurityRequirement(new OpenApiSecurityRequirement
     {
         {
@@ -104,10 +119,15 @@ builder.Services.AddSwaggerGen(options =>
                     Id = "Bearer"
                 }
             },
-            new string[] {}
+            new List<string>() // versão 10 exige ICollection<string>
         }
     });
+
+    var xmlFile = $"{System.Reflection.Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+    options.IncludeXmlComments(xmlPath, includeControllerXmlComments: true);
 });
+
 
 builder.Services.AddAuthentication(options =>
 {
@@ -145,7 +165,11 @@ using (var scope = app.Services.CreateScope())
 
 
 app.UseSwagger();
-app.UseSwaggerUI();
+app.UseSwaggerUI(c =>
+{
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Investimentos Caixa API v1");
+    c.RoutePrefix = "swagger";
+});
 
 app.UseHttpsRedirection();
 
@@ -184,7 +208,7 @@ static async Task SeedIdentityAsync(IServiceProvider services)
         await roleManager.CreateAsync(role);
     }
 
-    // 2) Cria usu�rio analista
+    // 2) Cria usuário analista
     var analistaEmail = "usuario@analista.com";
     var analista = await userManager.FindByEmailAsync(analistaEmail);
     if (analista == null)
@@ -203,11 +227,11 @@ static async Task SeedIdentityAsync(IServiceProvider services)
         if (!createResult.Succeeded)
         {
             var errors = string.Join("; ", createResult.Errors.Select(e => e.Description));
-            throw new Exception($"Erro ao criar usu�rio 'analista': {errors}");
+            throw new Exception($"Erro ao criar usuário 'analista': {errors}");
         }
     }
 
-    // 3) Cria usu�rio admin
+    // 3) Cria usuário admin
     var adminEmail = "usuario@admin.com";
     var admin = await userManager.FindByEmailAsync(adminEmail);
     if (admin == null)
@@ -227,13 +251,13 @@ static async Task SeedIdentityAsync(IServiceProvider services)
             throw new Exception("Erro ao criar admin: " + string.Join("; ", createAdmin.Errors.Select(e => e.Description)));
     }
 
-    // Vincula analista � role analista
+    // Vincula analista à role analista
     if (!await userManager.IsInRoleAsync(analista, roleAnalistaName))
     {
         await userManager.AddToRoleAsync(analista, roleAnalistaName);
     }
 
-    // Vincula admin � role admin
+    // Vincula admin à role admin
     if (!await userManager.IsInRoleAsync(admin, roleAdminName))
     {
         await userManager.AddToRoleAsync(admin, roleAdminName);

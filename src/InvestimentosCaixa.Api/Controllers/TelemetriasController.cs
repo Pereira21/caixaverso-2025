@@ -16,8 +16,15 @@ namespace InvestimentosCaixa.Api.Controllers
             _logTelemetriaService = logTelemetriaService;
         }
 
+        /// <summary>
+        /// Obter Telemetria Mensal
+        /// </summary>
+        /// <response code="200">Registros de Telemetria retornados com sucesso</response>
+        /// <response code="401">Acesso não autorizado. Verifique suas credenciais ou o token JWT</response>
+        /// <response code="403">Permissão insuficiente para acessar este recurso</response>
         [HttpGet("telemetria")]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> Obter()
         {

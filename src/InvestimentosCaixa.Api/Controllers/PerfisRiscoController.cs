@@ -14,6 +14,14 @@ namespace InvestimentosCaixa.Api.Controllers
             _perfilRiscoService = perfilRiscoService;
         }
 
+        /// <summary>
+        /// Obter Perfil de Risco do Cliente
+        /// </summary>
+        /// <param name="clienteId">ID do cliente</param>
+        /// <response code="200">Perfil encontrado com sucesso</response>
+        /// <response code="400">Não foi possível processar a requisição devido a parâmetros inválidos</response>
+        /// <response code="401">Acesso não autorizado. Verifique suas credenciais ou o token JWT</response>
+        /// <response code="404">O registro solicitado não existe na base de dados</response>
         [HttpGet("perfil-risco/{clienteId:int}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -25,6 +33,14 @@ namespace InvestimentosCaixa.Api.Controllers
             return CustomResponse(perfilRisco);
         }
 
+        /// <summary>
+        /// Obter Produtos Recomendados para um Perfil específico
+        /// </summary>
+        /// <param name="perfil">Perfil de Risco</param>
+        /// <response code="200">Produtos retornados com sucesso</response>
+        /// <response code="400">Não foi possível processar a requisição devido a parâmetros inválidos</response>
+        /// <response code="401">Acesso não autorizado. Verifique suas credenciais ou o token JWT</response>
+        /// <response code="404">O registro solicitado não existe na base de dados</response>
         [HttpGet("produtos-recomendados/{perfil}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
