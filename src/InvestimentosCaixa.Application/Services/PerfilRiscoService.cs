@@ -4,6 +4,7 @@ using InvestimentosCaixa.Application.DTO.Response;
 using InvestimentosCaixa.Application.Interfaces.Repositorios;
 using InvestimentosCaixa.Application.Interfaces.Services;
 using InvestimentosCaixa.Application.Notificacoes;
+using InvestimentosCaixa.Application.Resources;
 using InvestimentosCaixa.Domain.Entidades;
 
 namespace InvestimentosCaixa.Application.Services
@@ -29,7 +30,7 @@ namespace InvestimentosCaixa.Application.Services
             var perfilRisco = await _perfilRiscoRepository.ObterComRiscoPorNome(perfil);
             if (perfilRisco == null)
             {
-                Notificar("Perfil não encontrado!");
+                Notificar(Mensagens.PerfilNaoEncontrado);
                 return null;
             }
 
@@ -62,7 +63,7 @@ namespace InvestimentosCaixa.Application.Services
                 simulacoesPorCliente = await _simulacaoRepository.ObterComProdutoPorClienteId(clienteId);
                 if (simulacoesPorCliente == null || !simulacoesPorCliente.Any())
                 {
-                    Notificar("Cliente não possui investimentos para determinar um Perfil de Risco!");
+                    Notificar(Mensagens.ClienteSemInvestimentosDeterminarPerfilRisco);
                     return null;
                 }
             }
@@ -175,7 +176,7 @@ namespace InvestimentosCaixa.Application.Services
             var perfilClassificacao = await _perfilRiscoRepository.ObterPerfilClassificacaoPorPontuacao(pontuacaoCliente);
             if (perfilClassificacao == null)
             {
-                Notificar("Não foi possível determinar o Perfil de Risco do cliente!");
+                Notificar(Mensagens.NaoFoiPossivelDeterminarPerfilRisco);
             }
 
             return perfilClassificacao;

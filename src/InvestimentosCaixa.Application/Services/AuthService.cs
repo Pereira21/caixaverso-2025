@@ -2,6 +2,7 @@
 using InvestimentosCaixa.Application.Interfaces.Repositorios;
 using InvestimentosCaixa.Application.Interfaces.Services;
 using InvestimentosCaixa.Application.Notificacoes;
+using InvestimentosCaixa.Application.Resources;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -31,14 +32,14 @@ namespace InvestimentosCaixa.Application.Services
             var identityUser = await _userManager.FindByEmailAsync(email);
             if (identityUser == null)
             {
-                Notificar("Usuário não cadastrado!");
+                Notificar(Mensagens.UsuarioNaoCadastrado);
                 return string.Empty;
             }
 
             var result = await _signInManager.CheckPasswordSignInAsync(identityUser, password, false);
             if (!result.Succeeded)
             {
-                Notificar("Usuário ou senha inválidos!");
+                Notificar(Mensagens.UsuarioOuSenhaInvalidos);
                 return string.Empty;
             }
 

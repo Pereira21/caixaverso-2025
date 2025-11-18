@@ -22,6 +22,7 @@ namespace InvestimentosCaixa.Api.Controllers
         public async Task<IActionResult> Obter()
         {
             var logTelemetria = await _logTelemetriaService.ObterPeriodoMensalAsync();
+
             return CustomResponse(logTelemetria);
         }
     }

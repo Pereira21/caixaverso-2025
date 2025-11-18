@@ -34,6 +34,7 @@ namespace InvestimentosCaixa.Api.Controllers
         }
 
         [HttpGet("simulacoes")]
+        [Authorize(Roles = "analista")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -44,6 +45,7 @@ namespace InvestimentosCaixa.Api.Controllers
         }
 
         [HttpGet("simulacoes/por-produto-dia")]
+        [Authorize(Roles = "analista")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]

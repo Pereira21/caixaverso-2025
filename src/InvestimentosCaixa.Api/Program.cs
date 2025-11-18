@@ -23,17 +23,19 @@ builder.Services.AddIdentity<IdentityUser<Guid>, IdentityRole<Guid>>()
     .AddEntityFrameworkStores<InvestimentosCaixaDbContext>()
     .AddDefaultTokenProviders();
 
+//Dependencias
 builder.Services.ResolveDependencies(builder.Configuration);
 
 //AutoMapper
 builder.Services.AddAutoMapper(cfg =>
 {
-    //Model -> DTO
+    #region Model -> DTO
     cfg.CreateMap<SimularInvestimentoModel, SimularInvestimentoRequest>();
+    #endregion    
 
-    //Entidade -> DTO
+    #region Entidade -> DTO
     cfg.CreateMap<Simulacao, SimulacaoResponseDTO>()
-        .ForMember(dest => dest.Produto, opt => opt.MapFrom(src => src.Produto != null ? src.Produto.Nome : string.Empty));
+    .ForMember(dest => dest.Produto, opt => opt.MapFrom(src => src.Produto != null ? src.Produto.Nome : string.Empty));
 
     cfg.CreateMap<Produto, ProdutoRecomendadoResponse>()
         .ForMember(dest => dest.Nome, opt => opt.MapFrom(src => src.Nome))
@@ -46,6 +48,7 @@ builder.Services.AddAutoMapper(cfg =>
         .ForMember(dest => dest.Valor, opt => opt.MapFrom(src => src.Valor))
         .ForMember(dest => dest.Rentabilidade, opt => opt.MapFrom(src => src.Rentabilidade))
         .ForMember(dest => dest.Data, opt => opt.MapFrom(src => src.Data.ToString("yyyy-MM-dd")));
+    #endregion
 });
 
 builder.Services.AddControllers();
@@ -135,49 +138,58 @@ static async Task SeedIdentityAsync(IServiceProvider services)
     var userManager = services.GetRequiredService<UserManager<IdentityUser<Guid>>>();
     var roleManager = services.GetRequiredService<RoleManager<IdentityRole<Guid>>>();
 
-    var usuarioId = Guid.Parse("3f9c4c9e-5c42-48d0-bb42-2adcb324fa73");
-    var adminId = Guid.Parse("f27d5c20-6a7e-4b75-9e2f-5c4e99f93712");
+    var analistaRoleId = Guid.Parse("D0149110-916F-475E-ACFE-6DE68929DB7F");
+    var adminRoleId = Guid.Parse("A072D7DC-F5BA-43B0-8B1E-12591FD3585C");
 
     // 1) Cria role admin
-    var roleName = "admin";
-    if (!await roleManager.RoleExistsAsync(roleName))
+    var roleAdminName = "admin";
+    if (!await roleManager.RoleExistsAsync(roleAdminName))
     {
-        var role = new IdentityRole<Guid>(roleName);
-        role.Id = adminId;
+        var role = new IdentityRole<Guid>(roleAdminName);
+        role.Id = adminRoleId;
         await roleManager.CreateAsync(role);
     }
 
-    // 2) Cria usuário padrão (usuario)
-    var usuarioEmail = "usuario@teste.com";
-    var usuario = await userManager.FindByEmailAsync(usuarioEmail);
-    if (usuario == null)
+    // 2) Cria role analista
+    var roleAnalistaName = "analista";
+    if (!await roleManager.RoleExistsAsync(roleAnalistaName))
     {
-        usuario = new IdentityUser<Guid>
+        var role = new IdentityRole<Guid>(roleAnalistaName);
+        role.Id = analistaRoleId;
+        await roleManager.CreateAsync(role);
+    }
+
+    // 2) Cria usuário analista
+    var analistaEmail = "usuario@analista.com";
+    var analista = await userManager.FindByEmailAsync(analistaEmail);
+    if (analista == null)
+    {
+        analista = new IdentityUser<Guid>
         {
-            Id = usuarioId,
-            UserName = "usuario",
-            NormalizedUserName = "USUARIO",
-            Email = usuarioEmail,
-            NormalizedEmail = usuarioEmail.ToUpperInvariant(),
+            Id = Guid.Parse("3966F0D0-B722-4D13-BB21-0E91CF8B6901"),
+            UserName = "analista",
+            NormalizedUserName = "ANALISTA",
+            Email = analistaEmail,
+            NormalizedEmail = analistaEmail.ToUpperInvariant(),
             EmailConfirmed = true
         };
 
-        var createResult = await userManager.CreateAsync(usuario, "@User123");
+        var createResult = await userManager.CreateAsync(analista, "@Analista123");
         if (!createResult.Succeeded)
         {
             var errors = string.Join("; ", createResult.Errors.Select(e => e.Description));
-            throw new Exception($"Erro ao criar usuário 'usuario': {errors}");
+            throw new Exception($"Erro ao criar usuário 'analista': {errors}");
         }
     }
 
-    // 3) (opcional) Cria um usuário admin e vincula role admin
-    var adminEmail = "admin@admin.com";
+    // 3) Cria usuário admin
+    var adminEmail = "usuario@admin.com";
     var admin = await userManager.FindByEmailAsync(adminEmail);
     if (admin == null)
     {
         admin = new IdentityUser<Guid>
         {
-            Id = adminId,
+            Id = Guid.Parse("46ECE551-FEB3-45D7-A800-4980EC840D9B"),
             UserName = "admin",
             NormalizedUserName = "ADMIN",
             Email = adminEmail,
@@ -190,9 +202,15 @@ static async Task SeedIdentityAsync(IServiceProvider services)
             throw new Exception("Erro ao criar admin: " + string.Join("; ", createAdmin.Errors.Select(e => e.Description)));
     }
 
-    // Vincula admin à role admin
-    if (!await userManager.IsInRoleAsync(admin, roleName))
+    // Vincula analista à role analista
+    if (!await userManager.IsInRoleAsync(analista, roleAnalistaName))
     {
-        await userManager.AddToRoleAsync(admin, roleName);
+        await userManager.AddToRoleAsync(analista, roleAnalistaName);
+    }
+
+    // Vincula admin à role admin
+    if (!await userManager.IsInRoleAsync(admin, roleAdminName))
+    {
+        await userManager.AddToRoleAsync(admin, roleAdminName);
     }
 }
