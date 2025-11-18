@@ -76,13 +76,13 @@ namespace InvestimentosCaixa.Application.Services
 
             var riscosMovimentadosAgrupados = temInvestimentos ?
                                              investimentosPorCliente.GroupBy(x => x.Produto.TipoProduto.RiscoId)
-                                                    .Select(g => new RiscoAgrupadoDTO()
+                                                    .Select(g => new RiscoAgrupadoDto()
                                                     {
                                                         RiscoId = g.Key,
                                                         Quantidade = g.Count()
                                                     }).ToList() :
                                               simulacoesPorCliente.GroupBy(x => x.Produto.TipoProduto.RiscoId)
-                                                     .Select(g => new RiscoAgrupadoDTO()
+                                                     .Select(g => new RiscoAgrupadoDto()
                                                      {
                                                          RiscoId = g.Key,
                                                          Quantidade = g.Count()
@@ -138,7 +138,7 @@ namespace InvestimentosCaixa.Application.Services
         /// </summary>
         /// <param name="riscosMovimentadosAgrupados">Através do risco do produto investido ou simulado, tenho um agrupamento deles com a quantidade</param>
         /// <returns></returns>
-        private async Task<int> ObtemScoreClienteRisco(List<RiscoAgrupadoDTO> riscosMovimentadosAgrupados)
+        private async Task<int> ObtemScoreClienteRisco(List<RiscoAgrupadoDto> riscosMovimentadosAgrupados)
         {
             int scoreTotalRiscoProdutos = 0;
             var perfilPontuacaoRisco = await _perfilRiscoRepository.ObterPerfilPontuacaoRiscoPorRiscos(riscosMovimentadosAgrupados.Select(x => x.RiscoId).Distinct().ToList());
@@ -173,13 +173,13 @@ namespace InvestimentosCaixa.Application.Services
         /// <returns></returns>
         private async Task<PerfilClassificacao> ObtemPerfilClassificacao(int pontuacaoCliente)
         {
-            var perfilClassificacao = await _perfilRiscoRepository.ObterPerfilClassificacaoPorPontuacao(pontuacaoCliente);
-            if (perfilClassificacao == null)
+            var perfilClassificacaoDto = await _perfilRiscoRepository.ObterPerfilClassificacaoPorPontuacao(pontuacaoCliente);
+            if (perfilClassificacaoDto == null)
             {
                 Notificar(Mensagens.NaoFoiPossivelDeterminarPerfilRisco);
             }
 
-            return perfilClassificacao;
+            return _mapper.Map<PerfilClassificacao>(perfilClassificacaoDto);
         }
         #endregion
     }

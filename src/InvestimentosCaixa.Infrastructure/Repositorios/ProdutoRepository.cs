@@ -1,30 +1,28 @@
-﻿using InvestimentosCaixa.Application.Interfaces.Repositorios;
+﻿using InvestimentosCaixa.Application.DTO;
+using InvestimentosCaixa.Application.Helpers;
+using InvestimentosCaixa.Application.Interfaces.Repositorios;
 using InvestimentosCaixa.Domain.Entidades;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Caching.Memory;
+using System.Text.Json;
 
 namespace InvestimentosCaixa.Infrastructure.Repositorios
 {
     public class ProdutoRepository : Repository<Produto>, IProdutoRepository
     {
-        private readonly IMemoryCache _memoryCache;
         private const string ProdutosCache = "ProdutosCache";
-        public ProdutoRepository(InvestimentosCaixaDbContext context, IMemoryCache memoryCache) : base(context)
-        {
-            _memoryCache = memoryCache;
-        }
+        public ProdutoRepository(InvestimentosCaixaDbContext context, IDistributedCache distributedCache) : base(context, distributedCache) { }
 
-        public async Task<Produto?> ObterAdequadoAsync(short prazoMeses, string tipoProduto)
+        public async Task<ProdutoDto?> ObterAdequadoAsync(short prazoMeses, string tipoProduto)
         {
-            var produtos = await _memoryCache.GetOrCreateAsync(ProdutosCache, async entry =>
-            {
-                entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(12);
-                return await ObterProdutosComTipoAsync();
-            });
+            List<ProdutoDto> list = await RedisHelper.GetOrSetCacheAsync(_distributedCache,
+                ProdutosCache,
+                ObterProdutosComTipoAsync
+            );
 
-            return produtos
-                .Where(p => p.TipoProduto.Nome == tipoProduto && p.PrazoMinimoMeses <= prazoMeses)
-                .FirstOrDefault();
+            return list
+                .FirstOrDefault(p => p.TipoProduto.Nome == tipoProduto && p.PrazoMinimoMeses <= prazoMeses);
         }
 
         public async Task<List<Produto>> ObterPorRiscoAsync(List<int> riscoIdList)
@@ -37,12 +35,29 @@ namespace InvestimentosCaixa.Infrastructure.Repositorios
         }
 
         #region metodos privados
-        private async Task<List<Produto>> ObterProdutosComTipoAsync()
+        private async Task<List<ProdutoDto>> ObterProdutosComTipoAsync()
         {
             return await _context.Produtos
                 .AsNoTracking()
                 .Include(p => p.TipoProduto)
-                    .ThenInclude(tp => tp.Risco)
+                .ThenInclude(tp => tp.Risco)
+                .Select(p => new ProdutoDto
+                {
+                    Id = p.Id,
+                    Nome = p.Nome,
+                    PrazoMinimoMeses = p.PrazoMinimoMeses,
+                    RentabilidadeAnual = p.RentabilidadeAnual,
+                    TipoProduto = new TipoProdutoDto
+                    {
+                        Id = p.TipoProduto.Id,
+                        Nome = p.TipoProduto.Nome,
+                        Risco = new RiscoDto
+                        {
+                            Id = p.TipoProduto.Risco.Id,
+                            Nome = p.TipoProduto.Risco.Nome
+                        }
+                    }
+                })
                 .ToListAsync();
         }
         #endregion        

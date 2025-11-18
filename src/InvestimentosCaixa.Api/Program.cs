@@ -1,5 +1,6 @@
 using InvestimentosCaixa.Api.Config;
 using InvestimentosCaixa.Api.Models.Simulacao;
+using InvestimentosCaixa.Application.DTO;
 using InvestimentosCaixa.Application.DTO.Request;
 using InvestimentosCaixa.Application.DTO.Response;
 using InvestimentosCaixa.Domain.Entidades;
@@ -7,6 +8,7 @@ using InvestimentosCaixa.Infrastructure;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
@@ -33,7 +35,7 @@ builder.Services.AddAutoMapper(cfg =>
     cfg.CreateMap<SimularInvestimentoModel, SimularInvestimentoRequest>();
     #endregion    
 
-    #region Entidade -> DTO
+    #region Entidade <-> DTO
     cfg.CreateMap<Simulacao, SimulacaoResponseDTO>()
     .ForMember(dest => dest.Produto, opt => opt.MapFrom(src => src.Produto != null ? src.Produto.Nome : string.Empty));
 
@@ -48,8 +50,28 @@ builder.Services.AddAutoMapper(cfg =>
         .ForMember(dest => dest.Valor, opt => opt.MapFrom(src => src.Valor))
         .ForMember(dest => dest.Rentabilidade, opt => opt.MapFrom(src => src.Rentabilidade))
         .ForMember(dest => dest.Data, opt => opt.MapFrom(src => src.Data.ToString("yyyy-MM-dd")));
+
+    cfg.CreateMap<Produto, ProdutoDto>().ReverseMap();
+    cfg.CreateMap<TipoProduto, TipoProdutoDto>().ReverseMap();
+    cfg.CreateMap<Risco, RiscoDto>().ReverseMap();
+    cfg.CreateMap<PerfilClassificacao, PerfilClassificacaoDto>().ReverseMap();
+    cfg.CreateMap<PerfilRisco, PerfilRiscoDto>().ReverseMap();
+    cfg.CreateMap<PerfilPontuacaoVolume, PerfilPontuacaoVolumeDto>().ReverseMap();
+    cfg.CreateMap<PerfilPontuacaoFrequencia, PerfilPontuacaoFrequenciaDto>().ReverseMap();
+    cfg.CreateMap<PerfilPontuacaoRisco, PerfilPontuacaoRiscoDto>().ReverseMap();
     #endregion
 });
+
+#region Redis
+var redisConn = builder.Configuration["Redis:Connection"];
+var redisInstance = builder.Configuration["Redis:InstanceName"];
+
+builder.Services.AddStackExchangeRedisCache(options =>
+{
+    options.Configuration = redisConn;
+    options.InstanceName = redisInstance;
+});
+#endregion
 
 builder.Services.AddControllers();
 
@@ -114,7 +136,10 @@ using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
     var db = services.GetRequiredService<InvestimentosCaixaDbContext>();
-    db.Database.Migrate();
+    if (db.Database.GetPendingMigrations().Any())
+    {
+        db.Database.Migrate();
+    }
     await SeedIdentityAsync(services);
 }
 

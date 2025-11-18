@@ -22,7 +22,7 @@
         public string Liquidez { get; private set; }
         public string Descricao { get; private set; }
 
-        public Risco Risco { get; set; }
+        public Risco Risco { get; private set; }
         public ICollection<Produto> Produtos { get; private set; }
     }
 }

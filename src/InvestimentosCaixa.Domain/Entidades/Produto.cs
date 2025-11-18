@@ -18,7 +18,7 @@
         public short PrazoMinimoMeses { get; private set; }
 
         public TipoProduto TipoProduto { get; private set; }
-        public ICollection<Simulacao> Simulacoes { get; set; }
+        public ICollection<Simulacao> Simulacoes { get; private set; }
 
         public decimal CalcularValorFinal(decimal valor, short prazoMeses)
         {

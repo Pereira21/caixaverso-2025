@@ -2,10 +2,8 @@
 {
     public class BaseEntity
     {
-        protected BaseEntity()
-        {
-            
-        }
+        protected BaseEntity() { }
+
         protected BaseEntity(int id)
         {
             Id = id;

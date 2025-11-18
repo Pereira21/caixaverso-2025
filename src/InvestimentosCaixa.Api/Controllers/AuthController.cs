@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using InvestimentosCaixa.Api.Models.Auth;
+using InvestimentosCaixa.Application.Interfaces.Repositorios;
 using InvestimentosCaixa.Application.Interfaces.Services;
 using InvestimentosCaixa.Application.Notificacoes;
 using Microsoft.AspNetCore.Mvc;

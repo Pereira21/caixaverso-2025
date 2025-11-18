@@ -2,10 +2,12 @@
 {
     public class PerfilClassificacao : BaseEntity
     {
-        public int PerfilRiscoId { get; set; }
+        public PerfilClassificacao() { }
+
+        public int PerfilRiscoId { get; private set; }
         public int MinPontuacao { get; private set; }
         public int MaxPontuacao { get; private set; }
 
-        public PerfilRisco PerfilRisco { get; set; }
+        public PerfilRisco PerfilRisco { get; private set; }
     }
 }

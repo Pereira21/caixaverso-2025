@@ -2,11 +2,13 @@
 {
     public class RelPerfilRisco : BaseEntity
     {
-        public int PerfilRiscoId { get; set; }
-        public int RiscoId { get; set; }
+        public RelPerfilRisco() { }
+
+        public int PerfilRiscoId { get; private set; }
+        public int RiscoId { get; private set; }
 
 
-        public Risco Risco { get; set; }
-        public PerfilRisco PerfilRisco { get; set; }
+        public Risco Risco { get; private set; }
+        public PerfilRisco PerfilRisco { get; private set; }
     }
 }

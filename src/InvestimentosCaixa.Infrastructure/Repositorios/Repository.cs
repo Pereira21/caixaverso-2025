@@ -1,6 +1,7 @@
 ﻿using InvestimentosCaixa.Application.Interfaces.Repositorios;
 using InvestimentosCaixa.Domain.Entidades;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Distributed;
 using System.Linq.Expressions;
 
 namespace InvestimentosCaixa.Infrastructure.Repositorios
@@ -8,12 +9,14 @@ namespace InvestimentosCaixa.Infrastructure.Repositorios
     public class Repository<T> : IRepository<T> where T : BaseEntity
     {
         protected readonly InvestimentosCaixaDbContext _context;
+        protected readonly IDistributedCache _distributedCache;
         protected readonly DbSet<T> _dbSet;
 
-        public Repository(InvestimentosCaixaDbContext context)
+        public Repository(InvestimentosCaixaDbContext context, IDistributedCache distributedCache)
         {
             _context = context;
             _dbSet = context.Set<T>();
+            _distributedCache = distributedCache;
         }
 
         public virtual async Task AdicionarAsync(T entity)

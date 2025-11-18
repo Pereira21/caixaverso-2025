@@ -1,4 +1,5 @@
 ﻿
+using InvestimentosCaixa.Application.DTO;
 using InvestimentosCaixa.Domain.Entidades;
 
 namespace InvestimentosCaixa.Application.Interfaces.Repositorios
@@ -7,9 +8,9 @@ namespace InvestimentosCaixa.Application.Interfaces.Repositorios
     {
         Task<PerfilRisco?> ObterComRiscoPorNome(string nome);
 
-        Task<PerfilPontuacaoVolume?> ObterPerfilPontuacaoVolume(decimal volumeInvestido);
-        Task<PerfilPontuacaoFrequencia?> ObterPerfilPontuacaoFrequencia(int totalSimulacoes);
-        Task<List<PerfilPontuacaoRisco>> ObterPerfilPontuacaoRiscoPorRiscos(List<int> riscoIdList);
-        Task<PerfilClassificacao?> ObterPerfilClassificacaoPorPontuacao(int pontuacaoCliente);        
+        Task<PerfilPontuacaoVolumeDto?> ObterPerfilPontuacaoVolume(decimal volumeInvestido);
+        Task<PerfilPontuacaoFrequenciaDto?> ObterPerfilPontuacaoFrequencia(int totalSimulacoes);
+        Task<List<PerfilPontuacaoRiscoDto>> ObterPerfilPontuacaoRiscoPorRiscos(List<int> riscoIdList);
+        Task<PerfilClassificacaoDto?> ObterPerfilClassificacaoPorPontuacao(int pontuacaoCliente);        
     }
 }

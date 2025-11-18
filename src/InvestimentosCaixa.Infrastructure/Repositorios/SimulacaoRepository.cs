@@ -2,12 +2,13 @@
 using InvestimentosCaixa.Application.Interfaces.Repositorios;
 using InvestimentosCaixa.Domain.Entidades;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Distributed;
 
 namespace InvestimentosCaixa.Infrastructure.Repositorios
 {
     public class SimulacaoRepository : Repository<Simulacao>, ISimulacaoRepository
     {
-        public SimulacaoRepository(InvestimentosCaixaDbContext context) : base(context) { }
+        public SimulacaoRepository(InvestimentosCaixaDbContext context, IDistributedCache distributedCache) : base(context, distributedCache) { }
 
         public async Task<List<Simulacao>> ObterTodosComProdutoAsync()
         {

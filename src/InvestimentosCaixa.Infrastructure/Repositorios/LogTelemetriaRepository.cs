@@ -2,12 +2,13 @@
 using InvestimentosCaixa.Application.Interfaces.Repositorios;
 using InvestimentosCaixa.Domain.Entidades;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Distributed;
 
 namespace InvestimentosCaixa.Infrastructure.Repositorios
 {
     public class LogTelemetriaRepository : Repository<LogTelemetria>, ILogTelemetriaRepository
     {
-        public LogTelemetriaRepository(InvestimentosCaixaDbContext context) : base(context) { }
+        public LogTelemetriaRepository(InvestimentosCaixaDbContext context, IDistributedCache distributedCache) : base(context, distributedCache) { }
 
         public async Task<List<TelemetriaResponse>> ObterTelemetriaMensalAsync()
         {

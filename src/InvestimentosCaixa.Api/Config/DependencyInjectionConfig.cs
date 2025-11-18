@@ -34,8 +34,6 @@ namespace InvestimentosCaixa.Api.Config
             services.AddScoped<IInvestimentoService, InvestimentoService>();
             services.AddScoped<ILogTelemetriaService, LogTelemetriaService>();
 
-            services.AddMemoryCache();
-
             return services;
         }
     }

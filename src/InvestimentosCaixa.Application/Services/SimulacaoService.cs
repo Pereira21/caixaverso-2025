@@ -22,18 +22,19 @@ namespace InvestimentosCaixa.Application.Services
             _clienteRepository = clienteRepository;
         }
 
-        public async Task<SimularInvestimentoResponse> SimularInvestimento(SimularInvestimentoRequest request)
+        public async Task<SimularInvestimentoResponse?> SimularInvestimento(SimularInvestimentoRequest request)
         {
             var dataSimulacao = DateTime.UtcNow;
-            var produtoAdequado = await _produtoRepository.ObterAdequadoAsync(request.PrazoMeses, request.TipoProduto);
+            var produtoBaseDto = await _produtoRepository.ObterAdequadoAsync(request.PrazoMeses, request.TipoProduto);
             var cliente = await _clienteRepository.ObterPeloIdAsync(request.ClienteId);
 
-            if (produtoAdequado == null)
+            if (produtoBaseDto == null)
             {
                 Notificar("Nenhum produto encontrado para essa simulação!");
                 return null;
             }
 
+            var produtoAdequado = _mapper.Map<Produto>(produtoBaseDto);
             var valorFinal = produtoAdequado.CalcularValorFinal(request.Valor, request.PrazoMeses);
 
             var response = new SimularInvestimentoResponse
@@ -80,9 +81,9 @@ namespace InvestimentosCaixa.Application.Services
             {
                 Id = produtoAdequado.Id,
                 Nome = produtoAdequado.Nome,
-                Tipo = produtoAdequado.TipoProduto.Nome,
+                Tipo = produtoAdequado.TipoProduto != null ? produtoAdequado.TipoProduto.Nome : string.Empty,
                 Rentabilidade = produtoAdequado.RentabilidadeAnual,
-                Risco = produtoAdequado.TipoProduto.Risco.Nome
+                Risco = produtoAdequado.TipoProduto != null ? produtoAdequado.TipoProduto.Risco != null ? produtoAdequado.TipoProduto.Risco.Nome : string.Empty : string.Empty,
             };
         }
         #endregion
