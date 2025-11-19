@@ -73,7 +73,7 @@ namespace InvestimentosCaixa.Tests.Integracao
             };
 
             var mock = new Mock<IPerfilRiscoService>();
-            mock.Setup(s => s.ObterProdutosRecomendadosPorPerfil(perfil))
+            mock.Setup(s => s.ObterProdutosRecomendadosPorPerfil(perfil, 1, 200))
                 .ReturnsAsync(produtos.ToList());
 
             var client = _factory.WithWebHostBuilder(builder =>

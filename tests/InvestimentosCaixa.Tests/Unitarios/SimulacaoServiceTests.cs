@@ -246,18 +246,18 @@ namespace InvestimentosCaixa.Tests.Unitarios
             };
 
             _simulacaoRepoMock
-                .Setup(x => x.ObterSimulacoesPorProdutoDiaAsync())
+                .Setup(x => x.ObterPaginadoSimulacoesPorProdutoDiaAsync(1, 200))
                 .ReturnsAsync(listaEsperada);
 
             // Act
-            var resultado = await _service.ObterPorProdutoDiaAsync(userId, email);
+            var resultado = await _service.ObterPorProdutoDiaAsync(userId, email, 1, 200);
 
             // Assert
             Assert.NotNull(resultado);
             Assert.Equal(listaEsperada, resultado);
 
             _simulacaoRepoMock.Verify(
-                x => x.ObterSimulacoesPorProdutoDiaAsync(),
+                x => x.ObterPaginadoSimulacoesPorProdutoDiaAsync(1, 200),
                 Times.Once);
         }
     }

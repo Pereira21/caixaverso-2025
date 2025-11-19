@@ -57,7 +57,7 @@ namespace InvestimentosCaixa.Tests.Unitarios
             var service = CreateService();
 
             // Act
-            var result = await service.ObterProdutosRecomendadosPorPerfil("Conservador");
+            var result = await service.ObterProdutosRecomendadosPorPerfil("Conservador", 1, 200);
 
             // Assert
             Assert.Null(result);
@@ -87,7 +87,7 @@ namespace InvestimentosCaixa.Tests.Unitarios
                 .ReturnsAsync(perfil);
 
             _produtoRepositoryMock
-                .Setup(r => r.ObterPorRiscoAsync(It.IsAny<List<int>>()))
+                .Setup(r => r.ObterPaginadoPorRiscoAsync(It.IsAny<List<int>>(), 1, 200))
                 .ReturnsAsync(produtos);
 
             _mapperMock
@@ -97,7 +97,7 @@ namespace InvestimentosCaixa.Tests.Unitarios
             var service = CreateService();
 
             // Act
-            var result = await service.ObterProdutosRecomendadosPorPerfil("Moderado");
+            var result = await service.ObterProdutosRecomendadosPorPerfil("Moderado", 1, 200);
 
             // Assert
             Assert.NotNull(result);
@@ -105,7 +105,7 @@ namespace InvestimentosCaixa.Tests.Unitarios
             Assert.Equal("CDB XPTO", result.First().Nome);
 
             _perfilRiscoRepositoryMock.Verify(r => r.ObterComRiscoPorNome("Moderado"), Times.Once);
-            _produtoRepositoryMock.Verify(r => r.ObterPorRiscoAsync(It.IsAny<List<int>>()), Times.Once);
+            _produtoRepositoryMock.Verify(r => r.ObterPaginadoPorRiscoAsync(It.IsAny<List<int>>(), 1, 200), Times.Once);
             _mapperMock.Verify(m => m.Map<List<ProdutoRecomendadoResponse>>(produtos), Times.Once);
         }
 

@@ -49,11 +49,11 @@ namespace InvestimentosCaixa.Tests.Unitarios
             var userId = Guid.NewGuid();
             var email = "user@email.com";
 
-            _repoMock.Setup(r => r.ObterTelemetriaMensalAsync())
+            _repoMock.Setup(r => r.ObterPaginadoTelemetriaMensalAsync(1, 200))
                      .ReturnsAsync(new List<TelemetriaResponse>());
 
             // Act
-            await _service.ObterPeriodoMensalAsync(userId, email);
+            await _service.ObterPeriodoMensalAsync(userId, email, 1, 200);
 
             // Assert
             _loggerMock.Verify(
@@ -80,14 +80,14 @@ namespace InvestimentosCaixa.Tests.Unitarios
 
             var retornoEsperado = new List<TelemetriaResponse>();
 
-            _repoMock.Setup(r => r.ObterTelemetriaMensalAsync())
+            _repoMock.Setup(r => r.ObterPaginadoTelemetriaMensalAsync(1, 200))
                      .ReturnsAsync(retornoEsperado);
 
             // Act
-            var result = await _service.ObterPeriodoMensalAsync(userId, email);
+            var result = await _service.ObterPeriodoMensalAsync(userId, email, 1, 200);
 
             // Assert
-            _repoMock.Verify(r => r.ObterTelemetriaMensalAsync(), Times.Once);
+            _repoMock.Verify(r => r.ObterPaginadoTelemetriaMensalAsync(1, 200), Times.Once);
             Assert.Equal(retornoEsperado, result);
         }
 
@@ -95,11 +95,11 @@ namespace InvestimentosCaixa.Tests.Unitarios
         public async Task ObterPeriodoMensalAsync_DeveRetornarListaVaziaSeRepositorioRetornarVazio()
         {
             // Arrange
-            _repoMock.Setup(r => r.ObterTelemetriaMensalAsync())
+            _repoMock.Setup(r => r.ObterPaginadoTelemetriaMensalAsync(1, 200))
                      .ReturnsAsync(new List<TelemetriaResponse>());
 
             // Act
-            var result = await _service.ObterPeriodoMensalAsync(Guid.NewGuid(), "teste@teste.com");
+            var result = await _service.ObterPeriodoMensalAsync(Guid.NewGuid(), "teste@teste.com",1 , 200);
 
             // Assert
             Assert.NotNull(result);
