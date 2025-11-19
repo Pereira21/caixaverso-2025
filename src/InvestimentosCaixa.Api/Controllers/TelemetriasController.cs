@@ -26,9 +26,9 @@ namespace InvestimentosCaixa.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        public async Task<IActionResult> Obter()
+        public async Task<IActionResult> Obter([FromQuery] int pagina = 1, [FromQuery] int tamanhoPagina = 200)
         {
-            var logTelemetria = await _logTelemetriaService.ObterPeriodoMensalAsync(UserId.Value, UserEmail);
+            var logTelemetria = await _logTelemetriaService.ObterPeriodoMensalAsync(UserId.Value, UserEmail, pagina, tamanhoPagina);
 
             return CustomResponse(logTelemetria);
         }

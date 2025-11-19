@@ -10,7 +10,7 @@ namespace InvestimentosCaixa.Infrastructure.Repositorios
     {
         public SimulacaoRepository(InvestimentosCaixaDbContext context, IDistributedCache distributedCache) : base(context, distributedCache) { }
 
-        public async Task<List<Simulacao>> ObterTodosComProdutoAsync(int pagina, int tamanhoPagina)
+        public async Task<List<Simulacao>> ObterTodosPaginadoComProdutoAsync(int pagina, int tamanhoPagina)
         {
             return await _dbSet.Include(x => x.Produto)
                 .OrderByDescending(x => x.DataSimulacao)
@@ -27,7 +27,7 @@ namespace InvestimentosCaixa.Infrastructure.Repositorios
                 .Where(x => x.ClienteId == clienteId).ToListAsync();
         }
 
-        public async Task<List<SimulacaoPorProdutoDiaResponse>> ObterSimulacoesPorProdutoDiaAsync()
+        public async Task<List<SimulacaoPorProdutoDiaResponse>> ObterPaginadoSimulacoesPorProdutoDiaAsync(int pagina, int tamanhoPagina)
         {
             return await _dbSet
                 .Include(s => s.Produto)
@@ -45,6 +45,8 @@ namespace InvestimentosCaixa.Infrastructure.Repositorios
                 })
                 .OrderByDescending(x => x.Data)
                     .ThenBy(x => x.Produto)
+                .Skip((pagina - 1) * tamanhoPagina)
+                .Take(tamanhoPagina)
                 .ToListAsync();
         }
     }

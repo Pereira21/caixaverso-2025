@@ -11,7 +11,26 @@ namespace InvestimentosCaixa.Infrastructure.Repositorios
 
         public async Task<List<Investimento>> ObterComProdutoPorClienteId(int clienteId)
         {
-            return await _dbSet.Include(x => x.Produto).ThenInclude(x => x.TipoProduto).Where(i => i.ClienteId == clienteId).AsNoTracking().ToListAsync();
+            return await _dbSet
+                .AsNoTracking()
+                .Include(x => x.Produto)
+                    .ThenInclude(x => x.TipoProduto)
+                .Where(i => i.ClienteId == clienteId)
+                .OrderByDescending(x => x.Data)
+                .ToListAsync();
+        }
+
+        public async Task<List<Investimento>> ObterPaginadoComProdutoPorClienteId(int clienteId, int pagina = 1, int tamanhoPagina = 200)
+        {
+            return await _dbSet
+                .AsNoTracking()
+                .Include(x => x.Produto)
+                    .ThenInclude(x => x.TipoProduto)
+                .Where(i => i.ClienteId == clienteId)
+                .OrderByDescending(x => x.Data)
+                .Skip((pagina - 1) * tamanhoPagina)
+                .Take(tamanhoPagina)
+                .ToListAsync();
         }
     }
 }

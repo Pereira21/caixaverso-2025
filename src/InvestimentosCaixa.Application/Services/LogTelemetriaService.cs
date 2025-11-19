@@ -21,11 +21,11 @@ namespace InvestimentosCaixa.Application.Services
             _logTelemetriaRepository = logTelemetriaRepository;
         }
 
-        public async Task<List<TelemetriaResponse>> ObterPeriodoMensalAsync(Guid userId, string userEmail)
+        public async Task<List<TelemetriaResponse>> ObterPeriodoMensalAsync(Guid userId, string userEmail, int pagina, int tamanhoPagina)
         {
             _logger.LogInformation($"O técnico {userId} - Email: {userEmail} está obtendo os registros de Telemetria Mensal do sistema!");
 
-            return await _logTelemetriaRepository.ObterTelemetriaMensalAsync();
+            return await _logTelemetriaRepository.ObterPaginadoTelemetriaMensalAsync(pagina, tamanhoPagina);
         }
 
         public async Task AdicionarAsync(LogTelemetriaRequest request)

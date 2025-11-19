@@ -17,7 +17,7 @@ namespace InvestimentosCaixa.Api.Controllers
         /// <summary>
         /// Obter Perfil de Risco do Cliente
         /// </summary>
-        /// <param name="clienteId">ID do cliente</param>
+        /// <param name="clienteId"></param>
         /// <response code="200">Perfil encontrado com sucesso</response>
         /// <response code="400">Não foi possível processar a requisição devido a parâmetros inválidos</response>
         /// <response code="401">Acesso não autorizado. Verifique suas credenciais ou o token JWT</response>
@@ -30,13 +30,14 @@ namespace InvestimentosCaixa.Api.Controllers
         public async Task<IActionResult> ObterPerfilRisco(int clienteId)
         {
             var perfilRisco = await _perfilRiscoService.ObterPorClienteId(clienteId);
+
             return CustomResponse(perfilRisco);
         }
 
         /// <summary>
         /// Obter Produtos Recomendados para um Perfil específico
         /// </summary>
-        /// <param name="perfil">Perfil de Risco</param>
+        /// <param name="perfil"></param>
         /// <response code="200">Produtos retornados com sucesso</response>
         /// <response code="400">Não foi possível processar a requisição devido a parâmetros inválidos</response>
         /// <response code="401">Acesso não autorizado. Verifique suas credenciais ou o token JWT</response>
@@ -46,9 +47,9 @@ namespace InvestimentosCaixa.Api.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> ObterProdutosRecomendadosPorPerfil(string perfil)
+        public async Task<IActionResult> ObterProdutosRecomendadosPorPerfil(string perfil, [FromQuery] int pagina = 1, [FromQuery] int tamanhoPagina = 200)
         {
-            var produtosRecomendados = await _perfilRiscoService.ObterProdutosRecomendadosPorPerfil(perfil);
+            var produtosRecomendados = await _perfilRiscoService.ObterProdutosRecomendadosPorPerfil(perfil, pagina, tamanhoPagina);
             return CustomResponse(produtosRecomendados);
         }
     }

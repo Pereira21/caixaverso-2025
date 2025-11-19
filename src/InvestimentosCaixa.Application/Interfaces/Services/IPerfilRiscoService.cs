@@ -6,6 +6,6 @@ namespace InvestimentosCaixa.Application.Interfaces.Services
     {
         Task<PerfilRiscoResponse?> ObterPorClienteId(int clienteId);
 
-        Task<IEnumerable<ProdutoRecomendadoResponse>> ObterProdutosRecomendadosPorPerfil(string perfil);
+        Task<IEnumerable<ProdutoRecomendadoResponse>> ObterProdutosRecomendadosPorPerfil(string perfil, int pagina, int tamanhoPagina);
     }
 }

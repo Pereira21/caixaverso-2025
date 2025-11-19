@@ -10,7 +10,7 @@ namespace InvestimentosCaixa.Infrastructure.Repositorios
     {
         public LogTelemetriaRepository(InvestimentosCaixaDbContext context, IDistributedCache distributedCache) : base(context, distributedCache) { }
 
-        public async Task<List<TelemetriaResponse>> ObterTelemetriaMensalAsync()
+        public async Task<List<TelemetriaResponse>> ObterPaginadoTelemetriaMensalAsync(int pagina, int tamanhoPagina)
         {
             var registros = await _dbSet
                 .GroupBy(r => new
@@ -48,6 +48,8 @@ namespace InvestimentosCaixa.Infrastructure.Repositorios
                     }
                 })
                 .OrderByDescending(x => x.Periodo.Inicio)
+                .Skip((pagina - 1) * tamanhoPagina)
+                .Take(tamanhoPagina)
                 .ToList();
 
             return resposta;

@@ -19,7 +19,7 @@ namespace InvestimentosCaixa.Api.Controllers
         /// <summary>
         /// Obter Investimentos por ClienteId
         /// </summary>
-        /// <param name="clienteId">Id do Cliente</param>
+        /// <param name="clienteId"></param>
         /// <response code="200">Investimentos retornados com sucesso</response>
         /// <response code="200">Não há investimentos para o Cliente solicitado</response>
         /// <response code="400">Não foi possível processar a requisição devido a parâmetros inválidos</response>
@@ -33,9 +33,9 @@ namespace InvestimentosCaixa.Api.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> ObterPorClienteId(int clienteId)
+        public async Task<IActionResult> ObterPorClienteId(int clienteId, [FromQuery] int pagina = 1, [FromQuery] int tamanhoPagina = 200)
         {
-            var investimentos = await _investimentoService.ObterPorClienteId(UserId.Value, UserEmail, clienteId);
+            var investimentos = await _investimentoService.ObterPorClienteId(UserId.Value, UserEmail, clienteId, pagina, tamanhoPagina);
 
             if(investimentos == null || !investimentos.Any())
                 return NoContent();

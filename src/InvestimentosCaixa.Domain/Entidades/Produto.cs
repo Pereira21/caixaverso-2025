@@ -12,6 +12,15 @@
             PrazoMinimoMeses = prazoMinimoMeses;
         }
 
+        public Produto(int tipoProdutoId, string nome, decimal rentabilidadeAnual, short prazoMinimoMeses, TipoProduto tipoProduto)
+        {
+            TipoProdutoId = tipoProdutoId;
+            Nome = nome;
+            RentabilidadeAnual = rentabilidadeAnual;
+            PrazoMinimoMeses = prazoMinimoMeses;
+            TipoProduto = tipoProduto;
+        }
+
         public int TipoProdutoId { get; private set; }
         public string Nome { get; private set; }
         public decimal RentabilidadeAnual { get; private set; }

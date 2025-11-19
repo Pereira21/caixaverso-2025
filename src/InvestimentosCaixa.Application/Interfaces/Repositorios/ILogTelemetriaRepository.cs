@@ -5,6 +5,6 @@ namespace InvestimentosCaixa.Application.Interfaces.Repositorios
 {
     public interface ILogTelemetriaRepository : IRepository<LogTelemetria>
     {
-        Task<List<TelemetriaResponse>> ObterTelemetriaMensalAsync();
+        Task<List<TelemetriaResponse>> ObterPaginadoTelemetriaMensalAsync(int pagina, int tamanhoPagina);
     }
 }

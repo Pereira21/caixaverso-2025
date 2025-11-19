@@ -13,6 +13,17 @@
             Data = data;
         }
 
+        public Investimento(int id, int clienteId, int produtoId, decimal valor, decimal rentabilidade, DateTime data, Cliente cliente, Produto produto)
+        {
+            ClienteId = clienteId;
+            ProdutoId = produtoId;
+            Valor = valor;
+            Rentabilidade = rentabilidade;
+            Data = data;
+            Cliente = cliente;
+            Produto = produto;
+        }
+
         public int ClienteId { get; private set; }
         public int ProdutoId { get; private set; }        
         public decimal Valor { get; private set; }

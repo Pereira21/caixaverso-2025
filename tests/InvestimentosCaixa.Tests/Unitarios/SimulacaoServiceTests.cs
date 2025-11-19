@@ -10,7 +10,7 @@ using InvestimentosCaixa.Domain.Entidades;
 using Microsoft.Extensions.Logging;
 using Moq;
 
-namespace InvestimentosCaixa.Tests
+namespace InvestimentosCaixa.Tests.Unitarios
 {
     public class SimulacaoServiceTests
     {
@@ -204,7 +204,7 @@ namespace InvestimentosCaixa.Tests
             };
 
             _simulacaoRepoMock
-                .Setup(x => x.ObterTodosComProdutoAsync(1, 10))
+                .Setup(x => x.ObterTodosPaginadoComProdutoAsync(1, 10))
                 .ReturnsAsync(simulacoes);
 
             _mapperMock
@@ -219,7 +219,7 @@ namespace InvestimentosCaixa.Tests
             Assert.Equal(simulacoesDTO, result);
 
             _simulacaoRepoMock.Verify(
-                x => x.ObterTodosComProdutoAsync(1, 10),
+                x => x.ObterTodosPaginadoComProdutoAsync(1, 10),
                 Times.Once);
 
             _mapperMock.Verify(

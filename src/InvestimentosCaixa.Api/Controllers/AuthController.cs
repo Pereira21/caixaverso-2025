@@ -18,7 +18,7 @@ namespace InvestimentosCaixa.Api.Controllers
         /// <summary>
         /// Retorna credencial para utilizar serviços protegidos da API.
         /// </summary>
-        /// <param name="model">E-mail e senha para realizar login</param>
+        /// <param name="model"></param>
         /// <response code="200">Login realizado com sucesso</response>
         /// <response code="400">Não foi possível processar a requisição devido a parâmetros inválidos</response>
         [HttpPost("login")]

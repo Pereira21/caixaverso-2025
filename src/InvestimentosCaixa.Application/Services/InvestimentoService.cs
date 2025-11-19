@@ -19,11 +19,11 @@ namespace InvestimentosCaixa.Application.Services
             _investimentoRepository = investimentoRepository;
         }
 
-        public async Task<List<InvestimentoResponse>> ObterPorClienteId(Guid userId, string userEmail, int clienteId)
+        public async Task<List<InvestimentoResponse>> ObterPorClienteId(Guid userId, string userEmail, int clienteId, int pagina, int tamanhoPagina)
         {
             _logger.LogInformation($"O analista {userId} - Email: {userEmail} está obtendo todos os investimentos do cliente {clienteId}!");
 
-            List<Investimento> investimentos = await _investimentoRepository.ObterComProdutoPorClienteId(clienteId);
+            List<Investimento> investimentos = await _investimentoRepository.ObterPaginadoComProdutoPorClienteId(clienteId, pagina, tamanhoPagina);
             return _mapper.Map<List<InvestimentoResponse>>(investimentos);
         }
     }

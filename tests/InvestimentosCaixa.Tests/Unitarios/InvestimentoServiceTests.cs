@@ -7,7 +7,7 @@ using InvestimentosCaixa.Domain.Entidades;
 using Microsoft.Extensions.Logging;
 using Moq;
 
-namespace InvestimentosCaixa.Tests
+namespace InvestimentosCaixa.Tests.Unitarios
 {
     public class InvestimentoServiceTests
     {

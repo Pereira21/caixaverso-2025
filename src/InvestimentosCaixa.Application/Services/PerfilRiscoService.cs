@@ -28,7 +28,7 @@ namespace InvestimentosCaixa.Application.Services
             _investimentoRepository = investimentoRepository;
         }
 
-        public async Task<IEnumerable<ProdutoRecomendadoResponse>> ObterProdutosRecomendadosPorPerfil(string perfil)
+        public async Task<IEnumerable<ProdutoRecomendadoResponse>> ObterProdutosRecomendadosPorPerfil(string perfil, int pagina, int tamanhoPagina)
         {
             var perfilRisco = await _perfilRiscoRepository.ObterComRiscoPorNome(perfil);
             if (perfilRisco == null)
@@ -39,7 +39,7 @@ namespace InvestimentosCaixa.Application.Services
             }
 
             var riscosVinculadosPerfilRisco = perfilRisco.RelPerfilRiscoList.Select(x => x.RiscoId).Distinct().ToList();
-            var produtosRecomendados = await _produtoRepository.ObterPorRiscoAsync(riscosVinculadosPerfilRisco);
+            var produtosRecomendados = await _produtoRepository.ObterPaginadoPorRiscoAsync(riscosVinculadosPerfilRisco, pagina, tamanhoPagina);
 
             return _mapper.Map<List<ProdutoRecomendadoResponse>>(produtosRecomendados);
         }
@@ -154,13 +154,13 @@ namespace InvestimentosCaixa.Application.Services
                 // Ordeno decrescente pelo risco de maior peso pra ser a base do cálculo
                 perfilPontuacaoRisco = perfilPontuacaoRisco.OrderByDescending(x => x.PontosBase).ToList();
 
-                bool naoAdicionarBase = false;
+                bool naoAdicionarPontuacaoBase = false;
                 foreach (var risco in perfilPontuacaoRisco)
                 {
                     int quantidadeRisco = riscosMovimentadosAgrupados.FirstOrDefault(x => x.RiscoId == risco.Id).Quantidade;
                     int totalRisco = 0;
 
-                    if (naoAdicionarBase)
+                    if (naoAdicionarPontuacaoBase)
                     {
                         totalRisco = 0;
 
@@ -182,7 +182,7 @@ namespace InvestimentosCaixa.Application.Services
                     totalRisco = Math.Min(totalRisco, risco.PontosMaximos);
 
                     scoreTotalRiscoProdutos += totalRisco;
-                    naoAdicionarBase = true;
+                    naoAdicionarPontuacaoBase = true;
                 }
             }
 

@@ -64,15 +64,15 @@ namespace InvestimentosCaixa.Application.Services
         {
             _logger.LogInformation($"O analista {userId} - Email: {userEmail} está obtendo o histórico de todas as simulações!");
 
-            var simulacoes = await _simulacaoRepository.ObterTodosComProdutoAsync(pagina, tamanhoPagina);
+            var simulacoes = await _simulacaoRepository.ObterTodosPaginadoComProdutoAsync(pagina, tamanhoPagina);
             return _mapper.Map<List<SimulacaoResponseDTO>>(simulacoes);
         }
 
-        public async Task<List<SimulacaoPorProdutoDiaResponse>> ObterPorProdutoDiaAsync(Guid userId, string userEmail)
+        public async Task<List<SimulacaoPorProdutoDiaResponse>> ObterPorProdutoDiaAsync(Guid userId, string userEmail, int pagina, int tamanhoPagina)
         {
             _logger.LogInformation($"O analista {userId} - Email: {userEmail} está obtendo o histórico de simulações por produto/dia!");
 
-            return await _simulacaoRepository.ObterSimulacoesPorProdutoDiaAsync();
+            return await _simulacaoRepository.ObterPaginadoSimulacoesPorProdutoDiaAsync(pagina, tamanhoPagina);
         }
 
         #region metodos privados

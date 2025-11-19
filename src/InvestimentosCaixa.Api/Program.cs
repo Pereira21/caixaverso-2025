@@ -159,18 +159,17 @@ builder.Services.AddAuthentication(options =>
 
 var app = builder.Build();
 
-// Aplica todas as migrations no banco
+
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
     var db = services.GetRequiredService<InvestimentosCaixaDbContext>();
+
     if (db.Database.GetPendingMigrations().Any())
-    {
         db.Database.Migrate();
-    }
+
     await SeedIdentityAsync(services);
 }
-
 
 app.UseSwagger();
 app.UseSwaggerUI(c =>
@@ -271,3 +270,5 @@ static async Task SeedIdentityAsync(IServiceProvider services)
         await userManager.AddToRoleAsync(tecnico, roleTecnicoName);
     }
 }
+
+public partial class Program { }

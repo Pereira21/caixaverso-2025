@@ -21,7 +21,7 @@ namespace InvestimentosCaixa.Api.Controllers
         /// <summary>
         /// Simular investimentos
         /// </summary>
-        /// <param name="model">Parâmetros para simulação de investimento</param>
+        /// <param name="model"></param>
         /// <response code="200">Simulação realizada com sucesso</response>
         /// <response code="400">Não foi possível processar a requisição devido a parâmetros inválidos</response>
         [HttpPost("simular-investimento")]
@@ -71,9 +71,9 @@ namespace InvestimentosCaixa.Api.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        public async Task<IActionResult> ObterPorProdutoDia()
+        public async Task<IActionResult> ObterPorProdutoDia([FromQuery] int pagina = 1, [FromQuery] int tamanhoPagina = 200)
         {
-            var resultado = await _simulacaoService.ObterPorProdutoDiaAsync(UserId.Value, UserEmail);
+            var resultado = await _simulacaoService.ObterPorProdutoDiaAsync(UserId.Value, UserEmail, pagina, tamanhoPagina);
             return Ok(resultado);
         }
     }

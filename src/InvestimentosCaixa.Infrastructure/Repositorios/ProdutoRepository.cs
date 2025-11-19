@@ -25,12 +25,15 @@ namespace InvestimentosCaixa.Infrastructure.Repositorios
                 .FirstOrDefault(p => p.TipoProduto.Nome == tipoProduto && p.PrazoMinimoMeses <= prazoMeses);
         }
 
-        public async Task<List<Produto>> ObterPorRiscoAsync(List<int> riscoIdList)
+        public async Task<List<Produto>> ObterPaginadoPorRiscoAsync(List<int> riscoIdList, int pagina, int tamanhoPagina)
         {
             return await _dbSet.AsNoTracking()
                 .Include(x => x.TipoProduto)
                     .ThenInclude(x => x.Risco)
                 .Where(p => riscoIdList.Contains(p.TipoProduto.RiscoId))
+                .OrderBy(p => p.Nome)
+                .Skip((pagina - 1) * tamanhoPagina)
+                .Take(tamanhoPagina)
                 .ToListAsync();
         }
 

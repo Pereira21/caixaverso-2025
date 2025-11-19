@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Moq;
 
-namespace InvestimentosCaixa.Tests
+namespace InvestimentosCaixa.Tests.Unitarios
 {
     public class AuthServiceTests
     {
@@ -137,7 +137,7 @@ namespace InvestimentosCaixa.Tests
                   userManager,
                   new Mock<IHttpContextAccessor>().Object,
                   new Mock<IUserClaimsPrincipalFactory<IdentityUser<Guid>>>().Object,
-                  null, null, null) { }
+                  null, null, null, null) { }
 
         public SignInResult ResultadoEsperado { get; set; } = SignInResult.Failed;
 
