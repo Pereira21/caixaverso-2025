@@ -21,7 +21,7 @@ namespace InvestimentosCaixa.Application.Services
 
         public async Task<List<TelemetriaResponse>> ObterPeriodoMensalAsync(Guid userId, string userEmail)
         {
-            _logger.LogInformation($"O admin {userId} - Email: {userEmail} está obtendo os registros de Telemetria Mensal do sistema!");
+            _logger.LogInformation($"O técnico {userId} - Email: {userEmail} está obtendo os registros de Telemetria Mensal do sistema!");
 
             return await _logTelemetriaRepository.ObterTelemetriaMensalAsync();
         }

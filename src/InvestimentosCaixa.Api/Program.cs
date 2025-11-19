@@ -188,14 +188,14 @@ static async Task SeedIdentityAsync(IServiceProvider services)
     var roleManager = services.GetRequiredService<RoleManager<IdentityRole<Guid>>>();
 
     var analistaRoleId = Guid.Parse("D0149110-916F-475E-ACFE-6DE68929DB7F");
-    var adminRoleId = Guid.Parse("A072D7DC-F5BA-43B0-8B1E-12591FD3585C");
+    var tecnicoRoleId = Guid.Parse("A072D7DC-F5BA-43B0-8B1E-12591FD3585C");
 
-    // 1) Cria role admin
-    var roleAdminName = "admin";
-    if (!await roleManager.RoleExistsAsync(roleAdminName))
+    // 1) Cria role tecnico
+    var roleTecnicoName = "tecnico";
+    if (!await roleManager.RoleExistsAsync(roleTecnicoName))
     {
-        var role = new IdentityRole<Guid>(roleAdminName);
-        role.Id = adminRoleId;
+        var role = new IdentityRole<Guid>(roleTecnicoName);
+        role.Id = tecnicoRoleId;
         await roleManager.CreateAsync(role);
     }
 
@@ -231,22 +231,22 @@ static async Task SeedIdentityAsync(IServiceProvider services)
         }
     }
 
-    // 3) Cria usuário admin
-    var adminEmail = "usuario@admin.com";
-    var admin = await userManager.FindByEmailAsync(adminEmail);
-    if (admin == null)
+    // 3) Cria usuário tecnico
+    var tecnicoEmail = "usuario@tecnico.com";
+    var tecnico = await userManager.FindByEmailAsync(tecnicoEmail);
+    if (tecnico == null)
     {
-        admin = new IdentityUser<Guid>
+        tecnico = new IdentityUser<Guid>
         {
             Id = Guid.Parse("46ECE551-FEB3-45D7-A800-4980EC840D9B"),
-            UserName = "admin",
-            NormalizedUserName = "ADMIN",
-            Email = adminEmail,
-            NormalizedEmail = adminEmail.ToUpperInvariant(),
+            UserName = "tecnico",
+            NormalizedUserName = "TECNICO",
+            Email = tecnicoEmail,
+            NormalizedEmail = tecnicoEmail.ToUpperInvariant(),
             EmailConfirmed = true
         };
 
-        var createAdmin = await userManager.CreateAsync(admin, "@Admin123");
+        var createAdmin = await userManager.CreateAsync(tecnico, "@Tecnico123");
         if (!createAdmin.Succeeded)
             throw new Exception("Erro ao criar admin: " + string.Join("; ", createAdmin.Errors.Select(e => e.Description)));
     }
@@ -257,9 +257,9 @@ static async Task SeedIdentityAsync(IServiceProvider services)
         await userManager.AddToRoleAsync(analista, roleAnalistaName);
     }
 
-    // Vincula admin à role admin
-    if (!await userManager.IsInRoleAsync(admin, roleAdminName))
+    // Vincula admin à role tecnico
+    if (!await userManager.IsInRoleAsync(tecnico, roleTecnicoName))
     {
-        await userManager.AddToRoleAsync(admin, roleAdminName);
+        await userManager.AddToRoleAsync(tecnico, roleTecnicoName);
     }
 }

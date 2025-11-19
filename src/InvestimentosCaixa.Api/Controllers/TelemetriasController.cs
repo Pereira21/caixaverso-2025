@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace InvestimentosCaixa.Api.Controllers
 {
-    [Authorize(Roles = "admin")]
+    [Authorize(Roles = "tecnico")]
     public class TelemetriasController : MainController
     {
         private readonly ILogTelemetriaService _logTelemetriaService;
