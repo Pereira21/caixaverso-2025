@@ -19,7 +19,11 @@ namespace InvestimentosCaixa.Infrastructure.Migrations
                 INSERT INTO TipoProduto (Nome, RiscoId, Liquidez, Descricao) VALUES 
                     ('Poupança', 1, 'Diária', 'Conta poupança com liquidez diária e baixo risco'), 
                     ('CDB', 2, 'Mensal', 'Certificado de Depósito Bancário com liquidez mensal e risco moderado'), 
-                    ('Ações', 3, 'Variável', 'Investimento em ações com alta volatilidade e maior risco');
+                    ('Ações', 3, 'Variável', 'Investimento em ações com alta volatilidade e maior risco'),
+                    ('LCI', 1, 'Mensal', 'Letra de Crédito Imobiliário isenta de IR para pessoa física e com baixo risco'),
+                    ('LCA', 1, 'Mensal', 'Letra de Crédito do Agronegócio isenta de IR para pessoa física e com baixo risco'),
+                    ('Tesouro Direto', 1, 'Diária', 'Títulos públicos federais considerados os investimentos mais seguros do país'),
+                    ('Fundos', 2, 'Diária', 'Fundos de investimento com gestão profissional e risco variado conforme a estratégia');
 
                 INSERT INTO Produto (TipoProdutoId, Nome, RentabilidadeAnual, PrazoMinimoMeses) VALUES
                     (1, 'Poupança Caixa', 0.0650, 0),
@@ -30,8 +34,10 @@ namespace InvestimentosCaixa.Infrastructure.Migrations
                     (3, 'Ações Petrobras (PETR4)', 0.1800, 0),
                     (3, 'Ações Vale (VALE3)', 0.1750, 0),
                     (3, 'Ações Magazine Luiza (MGLU3)', 0.2500, 0),
-                    (3, 'ETF BOVA11', 0.1300, 0),
-                    (2, 'CDB Caixa 102% CDI', 0.1190, 3);
+                    (4, 'LCI Caixa Imobiliária 2027', 0.0950, 12),
+                    (5, 'LCA Caixa Agronegócio 2026', 0.0920, 6),
+                    (6, 'Tesouro IPCA+ 2029', 0.0650, 0),
+                    (7, 'Fundo Multimercado Caixa Premium', 0.1100, 0);
     
                 INSERT INTO PerfilPontuacaoVolume (MinValor, MaxValor, Pontos) VALUES 
                     (0.01, 5000, 10), 
@@ -56,7 +62,7 @@ namespace InvestimentosCaixa.Infrastructure.Migrations
                 INSERT INTO PerfilClassificacao (PerfilRiscoId, MinPontuacao, MaxPontuacao) VALUES 
                     (1, 0, 50),     -- Conservador
                     (2, 51, 80),    -- Moderado
-                    (3, 81, 100);   -- Agressivo
+                    (3, 81, 150);   -- Agressivo
 
                 INSERT INTO RelPerfilRisco (PerfilRiscoId, RiscoId) VALUES 
                     (1, 1),  -- Conservador associado a Baixo risco
