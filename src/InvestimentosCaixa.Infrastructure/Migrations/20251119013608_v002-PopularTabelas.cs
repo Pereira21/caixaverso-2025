@@ -10,7 +10,7 @@ namespace InvestimentosCaixa.Infrastructure.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-                        migrationBuilder.Sql(@" 
+            migrationBuilder.Sql(@" 
                 INSERT INTO Risco (Nome, Descricao) VALUES 
                     ('Baixo', 'Perfil de risco baixo'), 
                     ('Médio', 'Perfil de risco médio'), 

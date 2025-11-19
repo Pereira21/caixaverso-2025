@@ -11,6 +11,7 @@ namespace InvestimentosCaixa.Infrastructure
         public InvestimentosCaixaDbContext(DbContextOptions<InvestimentosCaixaDbContext> options) : base(options) { }
 
         public DbSet<Produto> Produtos { get; set; }
+        public DbSet<TipoProduto> TiposProduto { get; set; }
         public DbSet<LogTelemetria> LogsTelemetria { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

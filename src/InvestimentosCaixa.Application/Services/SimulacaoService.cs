@@ -60,11 +60,11 @@ namespace InvestimentosCaixa.Application.Services
             return response;
         }
 
-        public async Task<List<SimulacaoResponseDTO>> ObterHistorico(Guid userId, string userEmail)
+        public async Task<List<SimulacaoResponseDTO>> ObterHistorico(Guid userId, string userEmail, int pagina, int tamanhoPagina)
         {
             _logger.LogInformation($"O analista {userId} - Email: {userEmail} está obtendo o histórico de todas as simulações!");
 
-            var simulacoes = await _simulacaoRepository.ObterTodosComProdutoAsync();
+            var simulacoes = await _simulacaoRepository.ObterTodosComProdutoAsync(pagina, tamanhoPagina);
             return _mapper.Map<List<SimulacaoResponseDTO>>(simulacoes);
         }
 

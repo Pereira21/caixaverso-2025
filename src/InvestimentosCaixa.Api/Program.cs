@@ -1,4 +1,5 @@
 using InvestimentosCaixa.Api.Config;
+using InvestimentosCaixa.Api.Models.Produto;
 using InvestimentosCaixa.Api.Models.Simulacao;
 using InvestimentosCaixa.Application.DTO;
 using InvestimentosCaixa.Application.DTO.Request;
@@ -58,6 +59,13 @@ builder.Services.AddAutoMapper(cfg =>
     cfg.CreateMap<PerfilPontuacaoVolume, PerfilPontuacaoVolumeDto>().ReverseMap();
     cfg.CreateMap<PerfilPontuacaoFrequencia, PerfilPontuacaoFrequenciaDto>().ReverseMap();
     cfg.CreateMap<PerfilPontuacaoRisco, PerfilPontuacaoRiscoDto>().ReverseMap();
+
+    #endregion
+
+    #region Entidade -> Model
+    cfg.CreateMap<TipoProduto, TipoProdutoDisponivelModel>()
+    .ForMember(dest => dest.RiscoNome, opt => opt.MapFrom(src => src.Risco != null ? src.Risco.Nome : string.Empty));
+    cfg.CreateMap<Produto, ProdutoDisponivelModel>();
     #endregion
 });
 

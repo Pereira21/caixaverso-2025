@@ -52,9 +52,9 @@ namespace InvestimentosCaixa.Api.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        public async Task<IActionResult> Obter()
+        public async Task<IActionResult> Obter([FromQuery] int pagina = 1, [FromQuery] int tamanhoPagina = 200)
         {
-            var historico = await _simulacaoService.ObterHistorico(UserId.Value, UserEmail);
+            var historico = await _simulacaoService.ObterHistorico(UserId.Value, UserEmail, pagina, tamanhoPagina);
             return CustomResponse(historico);
         }
 

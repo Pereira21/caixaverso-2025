@@ -8,5 +8,6 @@
         public string Liquidez { get; set; }
         public string Descricao { get; set; }
         public RiscoDto Risco { get; set; }
+        public List<ProdutoDto> Produtos { get; set; }
     }
 }

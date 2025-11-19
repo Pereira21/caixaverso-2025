@@ -19,7 +19,7 @@ namespace InvestimentosCaixa.Infrastructure.Mapeamentos
                 .HasColumnType("VARCHAR(50)")
                 .IsRequired();
 
-            builder.Property(tp => tp.RiscoId)                
+            builder.Property(tp => tp.RiscoId)
                 .IsRequired();
 
             builder.Property(tp => tp.Liquidez)
@@ -29,6 +29,16 @@ namespace InvestimentosCaixa.Infrastructure.Mapeamentos
             builder.Property(tp => tp.Descricao)
                 .HasColumnType("VARCHAR(200)")
                 .IsRequired(false);
+
+            builder.HasMany(tp => tp.Produtos)
+                .WithOne(tp => tp.TipoProduto)
+                .HasForeignKey(tp => tp.TipoProdutoId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            builder.HasOne(tp => tp.Risco)
+                .WithMany()
+                .HasForeignKey(tp => tp.RiscoId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

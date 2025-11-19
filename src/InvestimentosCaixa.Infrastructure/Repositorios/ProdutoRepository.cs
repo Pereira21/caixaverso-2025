@@ -34,6 +34,14 @@ namespace InvestimentosCaixa.Infrastructure.Repositorios
                 .ToListAsync();
         }
 
+        public async Task<List<TipoProduto>> ObterTipoProdutoComProdutosAsync()
+        {
+            return await _context.TiposProduto.AsNoTracking()
+                .Include(x => x.Produtos)
+                .Include(x => x.Risco)
+                .ToListAsync();
+        }
+
         #region metodos privados
         private async Task<List<ProdutoDto>> ObterProdutosComTipoAsync()
         {

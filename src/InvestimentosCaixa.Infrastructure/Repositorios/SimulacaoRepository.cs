@@ -10,9 +10,13 @@ namespace InvestimentosCaixa.Infrastructure.Repositorios
     {
         public SimulacaoRepository(InvestimentosCaixaDbContext context, IDistributedCache distributedCache) : base(context, distributedCache) { }
 
-        public async Task<List<Simulacao>> ObterTodosComProdutoAsync()
+        public async Task<List<Simulacao>> ObterTodosComProdutoAsync(int pagina, int tamanhoPagina)
         {
-            return await _dbSet.Include(x => x.Produto).ToListAsync();
+            return await _dbSet.Include(x => x.Produto)
+                .OrderByDescending(x => x.DataSimulacao)
+                .Skip((pagina - 1) * tamanhoPagina)
+                .Take(tamanhoPagina)
+                .ToListAsync();
         }
 
         public async Task<List<Simulacao>> ObterComProdutoPorClienteId(int clienteId)

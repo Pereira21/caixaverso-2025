@@ -7,5 +7,6 @@ namespace InvestimentosCaixa.Application.Interfaces.Repositorios
     {
         Task<ProdutoDto?> ObterAdequadoAsync(short prazoMeses, string tipoProduto);
         Task<List<Produto>> ObterPorRiscoAsync(List<int> riscoIdList);
+        Task<List<TipoProduto>> ObterTipoProdutoComProdutosAsync();
     }
 }
