@@ -146,26 +146,43 @@ namespace InvestimentosCaixa.Application.Services
         private async Task<int> ObtemScoreClienteRisco(List<RiscoAgrupadoDto> riscosMovimentadosAgrupados)
         {
             int scoreTotalRiscoProdutos = 0;
+
             var perfilPontuacaoRisco = await _perfilRiscoRepository.ObterPerfilPontuacaoRiscoPorRiscos(riscosMovimentadosAgrupados.Select(x => x.RiscoId).Distinct().ToList());
+
             if (perfilPontuacaoRisco != null && perfilPontuacaoRisco.Any())
             {
+                // Ordeno decrescente pelo risco de maior peso pra ser a base do cálculo
+                perfilPontuacaoRisco = perfilPontuacaoRisco.OrderByDescending(x => x.PontosBase).ToList();
 
+                bool naoAdicionarBase = false;
                 foreach (var risco in perfilPontuacaoRisco)
                 {
                     int quantidadeRisco = riscosMovimentadosAgrupados.FirstOrDefault(x => x.RiscoId == risco.Id).Quantidade;
+                    int totalRisco = 0;
 
-                    int totalRisco = risco.PontosBase;
-
-                    if (quantidadeRisco > 1)
+                    if (naoAdicionarBase)
                     {
+                        totalRisco = 0;
+
                         int incremento = (int)(risco.PontosBase * (risco.Multiplicador - 1));
-                        totalRisco += incremento * (quantidadeRisco - 1);
+                        totalRisco += incremento * (quantidadeRisco);
+                    }
+                    else
+                    {
+                        totalRisco = risco.PontosBase;
+
+                        if (quantidadeRisco > 1)
+                        {
+                            int incremento = (int)(risco.PontosBase * (risco.Multiplicador - 1));
+                            totalRisco += incremento * (quantidadeRisco - 1);
+                        }
                     }
 
                     // aplica teto máximo
                     totalRisco = Math.Min(totalRisco, risco.PontosMaximos);
 
                     scoreTotalRiscoProdutos += totalRisco;
+                    naoAdicionarBase = true;
                 }
             }
 
