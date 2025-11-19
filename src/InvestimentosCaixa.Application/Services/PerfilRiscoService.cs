@@ -149,9 +149,10 @@ namespace InvestimentosCaixa.Application.Services
             var perfilPontuacaoRisco = await _perfilRiscoRepository.ObterPerfilPontuacaoRiscoPorRiscos(riscosMovimentadosAgrupados.Select(x => x.RiscoId).Distinct().ToList());
             if (perfilPontuacaoRisco != null && perfilPontuacaoRisco.Any())
             {
+
                 foreach (var risco in perfilPontuacaoRisco)
                 {
-                    int quantidadeRisco = riscosMovimentadosAgrupados.Count(x => x.RiscoId == risco.Id);
+                    int quantidadeRisco = riscosMovimentadosAgrupados.FirstOrDefault(x => x.RiscoId == risco.Id).Quantidade;
 
                     int totalRisco = risco.PontosBase;
 

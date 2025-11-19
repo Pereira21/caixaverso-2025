@@ -519,7 +519,7 @@ namespace InvestimentosCaixa.Infrastructure.Migrations
                     (2, 'CDB Caixa 102% CDI', 0.1190, 3);
     
                 INSERT INTO PerfilPontuacaoVolume (MinValor, MaxValor, Pontos) VALUES 
-                    (0.01, 5000.00, 10), 
+                    (0.01, 5000, 10), 
                     (5000.01, 50000.00, 20), 
                     (50000.01, 99999999.99, 30);
 
@@ -529,9 +529,9 @@ namespace InvestimentosCaixa.Infrastructure.Migrations
                     (7, 99, 30);
 
                 INSERT INTO PerfilPontuacaoRisco (RiscoId, PontosBase, Multiplicador, PontosMaximos) VALUES 
-                    (1, 10, 1.0, 15),   -- Baixo risco → até 15
-                    (2, 20, 1.2, 30),   -- Médio risco → até 30
-                    (3, 30, 1.5, 45);   -- Alto risco → até 45
+                    (1, 10, 1.5, 15),   -- Baixo risco → até 15
+                    (2, 20, 1.25, 30),   -- Médio risco → até 25
+                    (3, 25, 1.6, 45);   -- Alto risco → até 40
 
                 INSERT INTO PerfilRisco (Nome, Descricao) VALUES 
                     ('Conservador', 'Perfil conservador com baixa tolerância ao risco'), 
@@ -540,8 +540,8 @@ namespace InvestimentosCaixa.Infrastructure.Migrations
 
                 INSERT INTO PerfilClassificacao (PerfilRiscoId, MinPontuacao, MaxPontuacao) VALUES 
                     (1, 0, 50),     -- Conservador
-                    (2, 51, 85),    -- Moderado
-                    (3, 86, 100);   -- Agressivo
+                    (2, 51, 80),    -- Moderado
+                    (3, 81, 100);   -- Agressivo
 
                 INSERT INTO RelPerfilRisco (PerfilRiscoId, RiscoId) VALUES 
                     (1, 1),  -- Conservador associado a Baixo risco
@@ -555,7 +555,9 @@ namespace InvestimentosCaixa.Infrastructure.Migrations
                     (2, 'Mariana Silva'),
                     (3, 'João Ferreira'),
                     (4, 'Ana Moreira'),
-                    (5, 'Bruno Almeida');
+                    (5, 'Bruno Almeida'),
+                    (123, 'Teste 1'),
+                    (1234, 'Teste 2');
 
                 INSERT INTO Simulacao (ClienteId, ProdutoId, ValorInvestido, ValorFinal, PrazoMeses, RentabilidadeEfetiva, DataSimulacao) VALUES
                     (1, 1, 1500.00, 1597.50, 12, 0.0650, '2025-01-11'),
@@ -575,16 +577,21 @@ namespace InvestimentosCaixa.Infrastructure.Migrations
 
                 INSERT INTO Investimento (ClienteId, ProdutoId, Valor, Rentabilidade, Data) VALUES
                     (1, 1, 1500.00, 0.0650, '2025-01-12'),
-                    (1, 3, 890.00, 0.1180, '2025-02-05'),
+                    (1, 1, 890.00, 0.1180, '2025-02-05'),
                     (2, 4, 3000.00, 0.1220, '2025-03-10'),
-                    (2, 6, 2000.00, 0.1800, '2025-03-22'),
+                    (2, 4, 2000.00, 0.1800, '2025-03-22'),
                     (3, 8, 1200.00, 0.2500, '2025-04-01'),
                     (3, 9, 2500.00, 0.1300, '2025-04-15'),
                     (4, 2, 900.00, 0.0640, '2025-01-25'),
                     (4, 5, 4000.00, 0.1150, '2025-02-18'),
                     (5, 7, 3200.00, 0.1750, '2025-03-28'),
                     (5, 10, 2000.00, 0.1190, '2025-04-05'),
-                    (5, 10, 3000.00, 0.1190, '2025-04-05');
+                    (5, 10, 3000.00, 0.1190, '2025-04-05'),
+                    (123, 6, 1500.00, 0.1190, '2025-04-05'),
+                    (123, 6, 1500.00, 0.1190, '2025-04-05'),
+                    (1234, 6, 1500.00, 0.1190, '2025-04-05'),
+                    (1234, 7, 1500.00, 0.1190, '2025-04-05'),
+                    (1234, 7, 100.00, 0.1190, '2025-04-05');
 
                 INSERT INTO LogTelemetria VALUES
                     ('telemetria', 'GET', 250, 1, '2025-10-18 12:00:00.1945291');
