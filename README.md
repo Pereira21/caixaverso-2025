@@ -184,6 +184,8 @@ INSERT INTO LogTelemetria VALUES
 
 
 dotnet-reportgenerator-globaltool
+dotnet test --collect:"XPlat Code Coverage"; reportgenerator -reports:"**/coverage.cobertura.xml" -targetdir:"coveragereport" -reporttypes:Html 
+
 coverage-report/index.html Testes
 
 

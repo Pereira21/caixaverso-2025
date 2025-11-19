@@ -45,5 +45,32 @@ namespace InvestimentosCaixa.Tests.Integracao
             analista.EndpointList.Should().HaveCount(3);
             analista.EndpointList.Select(e => e.Verbo).Should().OnlyContain(v => v == "GET");
         }
+
+        [Fact]
+        public async Task ObterProdutos_DeveRetornar200EListaDeProdutos()
+        {
+            // Act
+            var response = await _client.GetAsync("obter-produtos/");
+
+            // Assert
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+            var result = await response.Content.ReadFromJsonAsync<List<TipoProdutoDisponivelModel>>();
+
+            result.Should().NotBeNull("o endpoint deve retornar uma lista mapeada");
+            result!.Should().NotBeEmpty("deve existir ao menos 1 tipo de produto cadastrado ou seeded");
+
+            // validações básicas
+            result.All(tp => tp.Id > 0).Should().BeTrue();
+            result.All(tp => !string.IsNullOrWhiteSpace(tp.Nome)).Should().BeTrue();
+
+            // Se tiver produtos internos
+            result.Where(tp => tp.Produtos != null).ToList()
+                  .ForEach(tp =>
+                  {
+                      tp.Produtos.Should().NotBeNull();
+                      tp.Produtos!.All(p => p.Id > 0).Should().BeTrue();
+                  });
+        }
     }
 }
