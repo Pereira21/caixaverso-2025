@@ -81,21 +81,22 @@ Com base na tabela `PerfilPontuacaoRisco`:
 A pontuação foi dividida estratégicamente para respeitar as regras de mercado dando um peso um pouco maior ao fator risco, comparado à frequência e volume.
 Essa combinação captura diversidade + intensidade das escolhas de risco.
 
-Exemplo de caso:
-1. Cliente possui 3 investimentos de risco alto. Cálculo:
-30 + 30*(1.6 - 1) = 30 + 18 = 48 (ultrapassou limite de pontos maximos, então 45).
+Exemplo de caso: //AJUSTAR
+1. Cliente possui 3 investimentos de risco alto. Cálculo:  
+30 + 30*(1.6 - 1) =
+30 + 18 = 48 (ultrapassou limite de pontos maximos, então 45).  
 
-2. Cliente possui 1 investimento de risco médio e 1 de risco baixo. Cálculo:
-20 + 10*(1.5 - 1) = 20 + 5 = 25
+2. Cliente possui 1 investimento de risco médio e 1 de risco baixo. Cálculo:  
+20 + 10*(1.5 - 1) = 20 + 5 = 25  
 
-3. Cliente possui 2 investimentos de risco médio e 1 de risco baixo. Cálculo:
-20 + 20*(1.25 - 1) + 10*(1.5 - 1) = 20 + 5 + 5 = 30
+3. Cliente possui 2 investimentos de risco médio e 1 de risco baixo. Cálculo:  
+20 + 20*(1.25 - 1) + 10*(1.5 - 1) = 20 + 5 + 5 = 30  
 
-Ps. Os pontos máximos são sempre aplicados encima de faixas do mesmo risco. Ou seja, se eu tivesse 4 médios e 1 baixo:
-(20 + 20*(1.25 - 1) + 20*(1.25 - 1) + 20*(1.25 - 1)) + 10*(1.5 - 1) = 
-(20 + 5 + 5 + 5) + 5 =
-(35) + 5 =  -- note que a soma dos riscos de nível médio ultrapassou o limite de 35, então o limite é aplicado
-30 + 5 = 35
+Ps. Os pontos máximos são sempre aplicados encima de faixas do mesmo risco. Ou seja, se eu tivesse 4 médios e 1 baixo:  
+( (20)  +  (20*(1.25 - 1))   +   (20*(1.25 - 1))   +   (20*(1.25 - 1)))   +   (10*(1.5 - 1)) =   
+((20) + (5) + (5) + (5)) + (5) =  
+(35) + 5 =  -- note que a soma dos riscos de nível médio ultrapassou o limite de 35, então o limite é aplicado: 35 -> 30
+30 + 5 = 35  
 
 Essa abordagem permite evitar furos no cálculo.
 
@@ -197,10 +198,40 @@ INSERT INTO LogTelemetria VALUES
 
 # 2. Arquitetura + Features
 
-## 1.1 Arquitetura
+## 2.1 Arquitetura
+API desenvolvida em .NET 8, estruturada seguindo os princípios de Clean Code. A solução é dividida em camadas independentes — API, Application, Domain, Infrastructure e Tests — garantindo **alta coesão interna** e **baixo acoplamento** entre os módulos. Essa organização permite evolução contínua do código, testabilidade aprimorada e separação clara entre regras de negócio, lógica de aplicação e detalhes de infraestrutura.
 
+A aplicação utiliza **Entity Framework Core** como ORM e **SQL Server** como banco de dados principal, com suporte a testes utilizando a mesma base em ambiente controlado. Recursos como **Docker** e **Redis** são empregados para infraestrutura e otimização de performance, enquanto a documentação é exposta via **Swagger** para facilitar integração e inspeção dos endpoints.
 
+## 2.2 Features
+### Entity Framework Core
+O projeto utiliza Entity Framework Core para abstrair o acesso ao SQL Server, permitindo trabalhar com o banco de forma tipada e organizada. O EF Core facilita o mapeamento das entidades, gerencia o rastreamento de alterações e oferece suporte completo a **Migrations**, garantindo evolução controlada do esquema.
 
+### Redis
+O projeto utiliza Redis como cache distribuído para otimizar consultas pouco voláteis. Algumas informações — como tabelas de scores e listas de produtos — são acessadas frequentemente, mas mudam raramente. Essas respostas são armazenadas no Redis para reduzir carga no banco, melhorar o tempo de resposta e garantir maior escalabilidade. 
 
+### Swagger
+A aplicação expõe documentação interativa via Swagger, permitindo visualizar e testar todos os endpoints da API. Ele gera a especificação OpenAPI automaticamente, facilitando integração com outros sistemas, garantindo transparência das rotas e acelerando o desenvolvimento e a validação das funcionalidades.
 
+### Autenticaçaõ JWT
+A aplicação utiliza JWT para garantir que apenas usuários autenticados possam acessar endpoints internos e sensíveis — como consultas de investimentos por cliente, listagem geral de simulações e rota de telemetria. O token carrega as credenciais e permissões do usuário, permitindo validação rápida. Essa abordagem reforça a segurança e mantém a arquitetura escalável.
+
+### ASP.NET Identity
+Utilizo ASP.NET Identity para gerenciar autenticação de forma estruturada e segura. Ele fornece todo o fluxo essencial — criação de usuários, hashing de senhas, validação de credenciais e gerenciamento de contas — reduzindo complexidade e garantindo boas práticas de segurança. A integração com JWT permite emitir tokens a partir do próprio sistema de identidade.
+
+### Middleware de Exceção global
+A API inclui um middleware de tratamento global de exceções para garantir respostas consistentes e seguras centralizadas. Ele captura erros não tratados, registra detalhes relevantes para diagnóstico e retorna mensagens padronizadas ao cliente, evitando vazamento de informações sensíveis e mantendo o comportamento uniforme da aplicação.
+
+### AutoMapper
+O projeto utiliza AutoMapper para simplificar a conversão entre entidades, DTOs e modelos de resposta. Ele reduz código repetitivo, centraliza regras de mapeamento e garante que a API exponha apenas os dados necessários.
+
+### Rate Limiting (Segurança)
+A API utiliza Rate Limiting nativo do ASP.NET Core para controlar a quantidade de requisições permitidas por cliente ou rota em um intervalo de tempo. Esse mecanismo protege o sistema contra abusos, garante uso equilibrado dos recursos e melhora a estabilidade da aplicação em cenários de alto tráfego. 
+
+### Repository Pattern
+O projeto aplica o Repository Pattern para isolar o acesso a dados e manter o domínio independente de detalhes de persistência. Cada repositório encapsula consultas e operações específicas, permitindo testar regras de negócio sem depender diretamente do banco. Essa abordagem deixa a aplicação mais modular, facilita manutenção e reforça os princípios da arquitetura limpa.
+
+### Testes (Unitário e Integração)
+O projeto conta com uma camada completa de **testes unitários e de integração**, garantindo a validação das regras de negócio e o correto funcionamento dos fluxos reais da API. Os testes unitários isolam comportamentos do domínio e da aplicação, enquanto os testes de integração verificam endpoints, repositórios, banco de dados e comportamentos end-to-end.
+**A cobertura de código segue os padrões exigidos pela Caixa Econômica Federal, que requerem acima de 80%, e o projeto atualmente mantém cerca de 86% de cobertura total, garantindo alta confiabilidade e estabilidade.**
 
