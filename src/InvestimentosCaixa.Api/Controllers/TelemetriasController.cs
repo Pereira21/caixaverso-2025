@@ -6,6 +6,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace InvestimentosCaixa.Api.Controllers
 {
+    /// <summary>
+    /// Controlador focado em requisições de telemetria
+    /// </summary>
     [Authorize(Roles = "tecnico")]
     public class TelemetriasController : MainController
     {
@@ -15,6 +18,7 @@ namespace InvestimentosCaixa.Api.Controllers
         {
             _logTelemetriaService = logTelemetriaService;
         }
+
 
         /// <summary>
         /// Obter Telemetria Mensal

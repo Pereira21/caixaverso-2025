@@ -5,6 +5,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace InvestimentosCaixa.Api.Controllers
 {
+    /// <summary>
+    /// Controlador focado em requisições de perfil de risco
+    /// </summary>
     public class PerfisRiscoController : MainController
     {
         private readonly IPerfilRiscoService _perfilRiscoService;
@@ -22,6 +25,7 @@ namespace InvestimentosCaixa.Api.Controllers
         /// <response code="400">Não foi possível processar a requisição devido a parâmetros inválidos</response>
         /// <response code="401">Acesso não autorizado. Verifique suas credenciais ou o token JWT</response>
         /// <response code="404">O registro solicitado não existe na base de dados</response>
+        /// <returns>Retorna lista de perfis de risco paginados por cliente</returns>
         [HttpGet("perfil-risco/{clienteId:int}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]

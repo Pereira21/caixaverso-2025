@@ -6,6 +6,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace InvestimentosCaixa.Api.Controllers
 {
+    /// <summary>
+    /// Controlador focado em requisições de investimentos
+    /// </summary>
     [Authorize(Roles = "analista")]
     public class InvestimentosController : MainController
     {

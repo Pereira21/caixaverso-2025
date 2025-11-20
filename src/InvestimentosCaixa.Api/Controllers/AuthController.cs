@@ -6,6 +6,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace InvestimentosCaixa.Api.Controllers
 {
+    /// <summary>
+    /// Controlador focado em requisições de autenticação
+    /// </summary>
     public class AuthController : MainController
     {
         private readonly IAuthService _authService;
@@ -18,7 +21,7 @@ namespace InvestimentosCaixa.Api.Controllers
         /// <summary>
         /// Retorna credencial para utilizar serviços protegidos da API.
         /// </summary>
-        /// <param name="model"></param>
+        /// <param name="model">Retorna informações de token</param>
         /// <response code="200">Login realizado com sucesso</response>
         /// <response code="400">Não foi possível processar a requisição devido a parâmetros inválidos</response>
         [HttpPost("login")]

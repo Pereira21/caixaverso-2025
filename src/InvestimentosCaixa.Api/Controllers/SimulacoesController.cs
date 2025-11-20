@@ -8,6 +8,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace InvestimentosCaixa.Api.Controllers
 {
+    /// <summary>
+    /// Controlador focado em requisições de simulações de investimento
+    /// </summary>
     [Authorize]
     public class SimulacoesController : MainController
     {
