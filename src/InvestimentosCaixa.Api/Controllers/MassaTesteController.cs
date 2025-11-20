@@ -10,6 +10,7 @@ namespace InvestimentosCaixa.Api.Controllers
     /// <summary>
     /// Controlador focado em requisições para auxílio no preenchimento de outros endpoints
     /// </summary>
+    [Route("api/[controller]")]
     public class MassaTesteController : MainController
     {
         private readonly IProdutoRepository _produtoRepository;

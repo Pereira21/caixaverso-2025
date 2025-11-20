@@ -30,7 +30,7 @@ namespace InvestimentosCaixa.Tests.Integracao
         public async Task ObterUsuarios_DeveRetornar200ComListaUsuarios()
         {
             // Act
-            var response = await _client.GetAsync("obter-usuarios/");
+            var response = await _client.GetAsync("api/MassaTeste/obter-usuarios/");
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -50,7 +50,7 @@ namespace InvestimentosCaixa.Tests.Integracao
         public async Task ObterProdutos_DeveRetornar200EListaDeProdutos()
         {
             // Act
-            var response = await _client.GetAsync("obter-produtos/");
+            var response = await _client.GetAsync("api/MassaTeste/obter-produtos/");
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.OK);

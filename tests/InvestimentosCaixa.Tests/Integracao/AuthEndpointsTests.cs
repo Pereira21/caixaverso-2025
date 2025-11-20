@@ -24,7 +24,7 @@ namespace InvestimentosCaixa.Tests.Integracao
                 Senha = "SenhaForte123!"
             };
 
-            var response = await _client.PostAsJsonAsync("login", model);
+            var response = await _client.PostAsJsonAsync("api/Auth/login", model);
 
             response.StatusCode.Should().Be(HttpStatusCode.OK);
 
@@ -43,7 +43,7 @@ namespace InvestimentosCaixa.Tests.Integracao
                 Email = ""
             };
 
-            var response = await _client.PostAsJsonAsync("login", model);
+            var response = await _client.PostAsJsonAsync("api/Auth/login", model);
 
             response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         }

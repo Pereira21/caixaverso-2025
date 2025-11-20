@@ -9,6 +9,7 @@ namespace InvestimentosCaixa.Api.Controllers
     /// <summary>
     /// Controlador focado em requisições de autenticação
     /// </summary>
+    [Route("api/[controller]")]
     public class AuthController : MainController
     {
         private readonly IAuthService _authService;

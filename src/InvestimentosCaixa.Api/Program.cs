@@ -97,11 +97,6 @@ builder.Services.AddSwaggerGen(options =>
             Name = "Equipe CaixaInvestimentos",
             Email = "dev@investimentos-caixa.com",
             Url = new Uri("https://github.com/Pereira21/caixaverso-2025")
-        },
-        License = new OpenApiLicense
-        {
-            Name = "MIT",
-            Url = new Uri("https://opensource.org/licenses/MIT")
         }
     });
 

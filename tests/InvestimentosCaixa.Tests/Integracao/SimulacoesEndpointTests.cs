@@ -52,7 +52,7 @@ namespace InvestimentosCaixa.Tests.Integracao
             _mockSimulacaoService.Setup(x => x.SimularInvestimentoAsync(It.IsAny<SimularInvestimentoRequest>()))
                                  .ReturnsAsync(simulacaoEsperada);
 
-            var response = await _client.PostAsJsonAsync("simular-investimento", model);
+            var response = await _client.PostAsJsonAsync("api/Simulacoes/simular-investimento", model);
 
             response.StatusCode.Should().Be(HttpStatusCode.OK);
 
@@ -71,7 +71,7 @@ namespace InvestimentosCaixa.Tests.Integracao
                 TipoProduto = "CDB"
             };
 
-            var response = await _client.PostAsJsonAsync("simular-investimento", model);
+            var response = await _client.PostAsJsonAsync("api/Simulacoes/simular-investimento", model);
 
             response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         }
@@ -79,7 +79,7 @@ namespace InvestimentosCaixa.Tests.Integracao
         [Fact]
         public async Task ObterSimulacoes_SemAutorizacao_DeveRetornar401()
         {
-            var response = await _client.GetAsync("simulacoes");
+            var response = await _client.GetAsync("api/Simulacoes/simulacoes");
 
             response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
         }
@@ -90,7 +90,7 @@ namespace InvestimentosCaixa.Tests.Integracao
             _client.DefaultRequestHeaders.Add("X-Test-User",
                 "role=cliente;email=cliente@test.com;id=00000000-0000-0000-0000-000000000000");
 
-            var response = await _client.GetAsync("simulacoes");
+            var response = await _client.GetAsync("api/Simulacoes/simulacoes");
 
             response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
         }
@@ -109,7 +109,7 @@ namespace InvestimentosCaixa.Tests.Integracao
             _mockSimulacaoService.Setup(x => x.ObterHistoricoAsync(It.IsAny<Guid>(), It.IsAny<string>(), 1, 200))
                                  .ReturnsAsync(simulacoesMock);
 
-            var response = await _client.GetAsync("simulacoes");
+            var response = await _client.GetAsync("api/Simulacoes/simulacoes");
 
             response.StatusCode.Should().Be(HttpStatusCode.OK);
 

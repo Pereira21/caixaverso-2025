@@ -45,7 +45,7 @@ namespace InvestimentosCaixa.Tests.Integracao
             }).CreateClient();
 
             // Act
-            var response = await client.GetAsync($"/perfil-risco/{clienteId}");
+            var response = await client.GetAsync($"api/PerfisRisco/perfil-risco/{clienteId}");
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -87,7 +87,7 @@ namespace InvestimentosCaixa.Tests.Integracao
             }).CreateClient();
 
             // Act
-            var response = await client.GetAsync($"/produtos-recomendados/{perfil}");
+            var response = await client.GetAsync($"api/PerfisRisco/produtos-recomendados/{perfil}");
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.OK);

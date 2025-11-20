@@ -8,6 +8,7 @@ namespace InvestimentosCaixa.Api.Controllers
     /// <summary>
     /// Controlador focado em requisições de perfil de risco
     /// </summary>
+    [Route("api/[controller]")]
     public class PerfisRiscoController : MainController
     {
         private readonly IPerfilRiscoService _perfilRiscoService;

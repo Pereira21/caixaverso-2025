@@ -9,6 +9,7 @@ namespace InvestimentosCaixa.Api.Controllers
     /// <summary>
     /// Controlador focado em requisições de investimentos
     /// </summary>
+    [Route("api/[controller]")]
     [Authorize(Roles = "analista")]
     public class InvestimentosController : MainController
     {
@@ -24,7 +25,7 @@ namespace InvestimentosCaixa.Api.Controllers
         /// </summary>
         /// <param name="clienteId"></param>
         /// <response code="200">Investimentos retornados com sucesso</response>
-        /// <response code="200">Não há investimentos para o Cliente solicitado</response>
+        /// <response code="204">Não há investimentos para o Cliente solicitado</response>
         /// <response code="400">Não foi possível processar a requisição devido a parâmetros inválidos</response>
         /// <response code="401">Acesso não autorizado. Verifique suas credenciais ou o token JWT</response>
         /// <response code="403">Permissão insuficiente para acessar este recurso</response>

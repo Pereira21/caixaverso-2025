@@ -11,6 +11,7 @@ namespace InvestimentosCaixa.Api.Controllers
     /// <summary>
     /// Controlador focado em requisições de simulações de investimento
     /// </summary>
+    [Route("api/[controller]")]
     [Authorize]
     public class SimulacoesController : MainController
     {

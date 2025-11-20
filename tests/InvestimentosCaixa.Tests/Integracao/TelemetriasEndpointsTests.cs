@@ -21,7 +21,7 @@ namespace InvestimentosCaixa.Tests.Integracao
             _client.DefaultRequestHeaders.Add("X-Test-User",
                 "role=tecnico;email=usuario@tecnico.com;id=46ECE551-FEB3-45D7-A800-4980EC840D9B");
 
-            var response = await _client.GetAsync("telemetria");
+            var response = await _client.GetAsync("api/Telemetrias/telemetria");
 
             response.StatusCode.Should().Be(HttpStatusCode.OK);
 
@@ -36,7 +36,7 @@ namespace InvestimentosCaixa.Tests.Integracao
             _client.DefaultRequestHeaders.Add("X-Test-User",
                 "role=cliente;email=cliente@test.com;id=00000000-0000-0000-0000-000000000000");
 
-            var response = await _client.GetAsync("telemetria");
+            var response = await _client.GetAsync("api/Telemetrias/telemetria");
 
             response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
         }
@@ -45,7 +45,7 @@ namespace InvestimentosCaixa.Tests.Integracao
         public async Task GetTelemetria_SemToken_DeveRetornar401()
         {
             // Não adiciona header X-Test-User
-            var response = await _client.GetAsync("telemetria");
+            var response = await _client.GetAsync("api/Telemetrias/telemetria");
 
             response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
         }

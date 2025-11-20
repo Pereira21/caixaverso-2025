@@ -9,6 +9,7 @@ namespace InvestimentosCaixa.Api.Controllers
     /// <summary>
     /// Controlador focado em requisições de telemetria
     /// </summary>
+    [Route("api/[controller]")]
     [Authorize(Roles = "tecnico")]
     public class TelemetriasController : MainController
     {

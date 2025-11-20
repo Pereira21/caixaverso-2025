@@ -23,7 +23,7 @@ namespace InvestimentosCaixa.Tests.Integracao
                 "role=analista;email=analista@teste.com;id=11111111-1111-1111-1111-111111111111");
 
             int clienteId = 1; // id de teste
-            var response = await _client.GetAsync($"investimentos/{clienteId}");
+            var response = await _client.GetAsync($"api/Investimentos/investimentos/{clienteId}");
 
             response.StatusCode.Should().Be(HttpStatusCode.OK);
 
@@ -40,7 +40,7 @@ namespace InvestimentosCaixa.Tests.Integracao
                 "role=cliente;email=cliente@teste.com;id=22222222-2222-2222-2222-222222222222");
 
             int clienteId = 1;
-            var response = await _client.GetAsync($"investimentos/{clienteId}");
+            var response = await _client.GetAsync($"api/Investimentos/investimentos/{clienteId}");
 
             response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
         }
@@ -50,7 +50,7 @@ namespace InvestimentosCaixa.Tests.Integracao
         {
             int clienteId = 1;
             // Não adiciona header X-Test-User
-            var response = await _client.GetAsync($"investimentos/{clienteId}");
+            var response = await _client.GetAsync($"api/Investimentos/investimentos/{clienteId}");
 
             response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
         }
@@ -63,7 +63,7 @@ namespace InvestimentosCaixa.Tests.Integracao
                 "role=analista;email=analista@teste.com;id=33333333-3333-3333-3333-333333333333");
 
             int clienteId = 999; // cliente sem investimentos
-            var response = await _client.GetAsync($"investimentos/{clienteId}");
+            var response = await _client.GetAsync($"api/Investimentos/investimentos/{clienteId}");
 
             response.StatusCode.Should().Be(HttpStatusCode.NoContent);
         }
