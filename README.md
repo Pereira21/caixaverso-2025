@@ -76,7 +76,7 @@ Com base na tabela `PerfilPontuacaoRisco`:
 |---------|------------|---------------|--------------|
 | 1 | 10 | 1.5 | 15 |
 | 2 | 20 | 1.3 | 30 |
-| 3 | 30 | 1.6 | 45 |
+| 3 | 25 | 1.6 | 45 |
 
 A pontuação foi dividida estratégicamente para respeitar as regras de mercado dando um peso um pouco maior ao fator risco, comparado à frequência e volume.
 Essa combinação captura diversidade + intensidade das escolhas de risco.
@@ -84,9 +84,9 @@ Essa combinação captura diversidade + intensidade das escolhas de risco.
 Exemplo de caso: 
 1. Cliente possui 3 investimentos de risco alto. Cálculo:
 PontosBase +   1° inc     +     2° inc
-30         + 30*(1.6 - 1) + (30*(1.6 - 1)) =
-30         +       18     +     18  =
-48 --ultrapassou limite de pontos maximos, então 45.  
+25         + 25*(1.6 - 1) + (25*(1.6 - 1)) =
+25         +       15     +     15  =
+55 --ultrapassou limite de pontos maximos, então 45.  
 
 2. Cliente possui 1 investimento de risco médio e 1 de risco baixo. Cálculo: Pontos Base Médio + inc risco baixo  
 20 + 10*(1.5 - 1) = 20 + 5 = 25  
