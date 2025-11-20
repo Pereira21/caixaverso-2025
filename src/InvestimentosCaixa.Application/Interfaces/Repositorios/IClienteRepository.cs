@@ -2,8 +2,5 @@
 
 namespace InvestimentosCaixa.Application.Interfaces.Repositorios
 {
-    public interface IClienteRepository : IRepository<Cliente>
-    {
-
-    }
+    public interface IClienteRepository : IRepository<Cliente> { }
 }

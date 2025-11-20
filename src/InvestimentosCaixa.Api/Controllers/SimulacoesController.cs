@@ -34,7 +34,7 @@ namespace InvestimentosCaixa.Api.Controllers
 
             var request = _mapper.Map<SimularInvestimentoRequest>(model);
 
-            var simulacao = await _simulacaoService.SimularInvestimento(request);
+            var simulacao = await _simulacaoService.SimularInvestimentoAsync(request);
 
             return CustomResponse(simulacao);
         }
@@ -54,7 +54,7 @@ namespace InvestimentosCaixa.Api.Controllers
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> Obter([FromQuery] int pagina = 1, [FromQuery] int tamanhoPagina = 200)
         {
-            var historico = await _simulacaoService.ObterHistorico(UserId.Value, UserEmail, pagina, tamanhoPagina);
+            var historico = await _simulacaoService.ObterHistoricoAsync(UserId.Value, UserEmail, pagina, tamanhoPagina);
             return CustomResponse(historico);
         }
 

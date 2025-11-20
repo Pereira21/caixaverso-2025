@@ -31,7 +31,7 @@ namespace InvestimentosCaixa.Tests.Integracao
             };
 
             var mock = new Mock<IPerfilRiscoService>();
-            mock.Setup(s => s.ObterPorClienteId(clienteId))
+            mock.Setup(s => s.ObterPorClienteIdAsync(clienteId))
                 .ReturnsAsync(expectedPerfil);
 
             var client = _factory.WithWebHostBuilder(builder =>
@@ -73,7 +73,7 @@ namespace InvestimentosCaixa.Tests.Integracao
             };
 
             var mock = new Mock<IPerfilRiscoService>();
-            mock.Setup(s => s.ObterProdutosRecomendadosPorPerfil(perfil, 1, 200))
+            mock.Setup(s => s.ObterProdutosRecomendadosPorPerfilAsync(perfil, 1, 200))
                 .ReturnsAsync(produtos.ToList());
 
             var client = _factory.WithWebHostBuilder(builder =>

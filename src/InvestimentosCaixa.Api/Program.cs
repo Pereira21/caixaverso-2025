@@ -128,7 +128,7 @@ builder.Services.AddSwaggerGen(options =>
                     Id = "Bearer"
                 }
             },
-            new List<string>() // versão 10 exige ICollection<string>
+            new List<string>()
         }
     });
 

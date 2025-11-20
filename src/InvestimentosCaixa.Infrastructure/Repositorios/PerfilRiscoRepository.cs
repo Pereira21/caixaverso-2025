@@ -15,12 +15,12 @@ namespace InvestimentosCaixa.Infrastructure.Repositorios
         private const string PerfilClassificacaoCache = "PerfilClassificacaoCache";
         public PerfilRiscoRepository(InvestimentosCaixaDbContext context, IDistributedCache distributedCache) : base(context, distributedCache) { }
 
-        public async Task<PerfilRisco?> ObterComRiscoPorNome(string nome)
+        public async Task<PerfilRisco?> ObterComRiscoPorNomeAsync(string nome)
         {
             return await _context.Set<PerfilRisco>().Include(x => x.RelPerfilRiscoList).AsNoTracking().FirstOrDefaultAsync(x => x.Nome == nome);
         }
 
-        public async Task<PerfilPontuacaoVolumeDto?> ObterPerfilPontuacaoVolume(decimal volumeInvestido)
+        public async Task<PerfilPontuacaoVolumeDto?> ObterPerfilPontuacaoVolumeAsync(decimal volumeInvestido)
         {
             var list = await RedisHelper.GetOrSetCacheAsync<List<PerfilPontuacaoVolumeDto>>(_distributedCache,
                 PerfilPontuacaoVolumeCache,
@@ -44,7 +44,7 @@ namespace InvestimentosCaixa.Infrastructure.Repositorios
                 x.MaxValor >= volumeInvestido);
         }
 
-        public async Task<PerfilPontuacaoFrequenciaDto?> ObterPerfilPontuacaoFrequencia(int totalSimulacoes)
+        public async Task<PerfilPontuacaoFrequenciaDto?> ObterPerfilPontuacaoFrequenciaAsync(int totalSimulacoes)
         {
             var list = await RedisHelper.GetOrSetCacheAsync<List<PerfilPontuacaoFrequenciaDto>>(
                 _distributedCache,
@@ -68,7 +68,7 @@ namespace InvestimentosCaixa.Infrastructure.Repositorios
                 x.MaxQtd >= totalSimulacoes);
         }
 
-        public async Task<List<PerfilPontuacaoRiscoDto>> ObterPerfilPontuacaoRiscoPorRiscos(List<int> riscoIdList)
+        public async Task<List<PerfilPontuacaoRiscoDto>> ObterPerfilPontuacaoRiscoPorRiscosAsync(List<int> riscoIdList)
         {
             var list = await RedisHelper.GetOrSetCacheAsync<List<PerfilPontuacaoRiscoDto>>(
                 _distributedCache,
@@ -91,7 +91,7 @@ namespace InvestimentosCaixa.Infrastructure.Repositorios
             return list.Where(x => riscoIdList.Contains(x.RiscoId)).ToList();
         }
 
-        public async Task<PerfilClassificacaoDto?> ObterPerfilClassificacaoPorPontuacao(int pontuacaoCliente)
+        public async Task<PerfilClassificacaoDto?> ObterPerfilClassificacaoPorPontuacaoAsync(int pontuacaoCliente)
         {
             var list = await RedisHelper.GetOrSetCacheAsync<List<PerfilClassificacaoDto>>(
                 _distributedCache,

@@ -49,7 +49,7 @@ namespace InvestimentosCaixa.Tests.Integracao
                 }
             };
 
-            _mockSimulacaoService.Setup(x => x.SimularInvestimento(It.IsAny<SimularInvestimentoRequest>()))
+            _mockSimulacaoService.Setup(x => x.SimularInvestimentoAsync(It.IsAny<SimularInvestimentoRequest>()))
                                  .ReturnsAsync(simulacaoEsperada);
 
             var response = await _client.PostAsJsonAsync("simular-investimento", model);
@@ -106,7 +106,7 @@ namespace InvestimentosCaixa.Tests.Integracao
                 new SimulacaoResponseDTO{ Id = 1, ValorInvestido = 1000, ValorFinal = 1120, DataSimulacao = DateTime.UtcNow }
             };
 
-            _mockSimulacaoService.Setup(x => x.ObterHistorico(It.IsAny<Guid>(), It.IsAny<string>(), 1, 200))
+            _mockSimulacaoService.Setup(x => x.ObterHistoricoAsync(It.IsAny<Guid>(), It.IsAny<string>(), 1, 200))
                                  .ReturnsAsync(simulacoesMock);
 
             var response = await _client.GetAsync("simulacoes");

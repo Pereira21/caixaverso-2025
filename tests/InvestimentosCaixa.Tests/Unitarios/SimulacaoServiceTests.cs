@@ -61,7 +61,7 @@ namespace InvestimentosCaixa.Tests.Unitarios
                             .ReturnsAsync((ProdutoDto?)null);
 
             // Act
-            var result = await _service.SimularInvestimento(req);
+            var result = await _service.SimularInvestimentoAsync(req);
 
             // Assert
             Assert.Null(result);
@@ -102,7 +102,7 @@ namespace InvestimentosCaixa.Tests.Unitarios
                             .ReturnsAsync((Cliente?)null);
 
             // Act
-            var result = await _service.SimularInvestimento(req);
+            var result = await _service.SimularInvestimentoAsync(req);
 
             // Assert
             _clienteRepoMock.Verify(x => x.AdicionarAsync(It.IsAny<Cliente>()), Times.Once);
@@ -140,7 +140,7 @@ namespace InvestimentosCaixa.Tests.Unitarios
                             .ReturnsAsync(new Cliente(req.ClienteId));
 
             // Act
-            var result = await _service.SimularInvestimento(req);
+            var result = await _service.SimularInvestimentoAsync(req);
 
             // Assert
             _clienteRepoMock.Verify(x => x.AdicionarAsync(It.IsAny<Cliente>()), Times.Never);
@@ -177,11 +177,11 @@ namespace InvestimentosCaixa.Tests.Unitarios
                             .ReturnsAsync(new Cliente(req.ClienteId));
 
             // Act
-            await _service.SimularInvestimento(req);
+            await _service.SimularInvestimentoAsync(req);
 
             // Assert
             _simulacaoRepoMock.Verify(x => x.AdicionarAsync(It.IsAny<Simulacao>()), Times.Once);
-            _uowMock.Verify(x => x.SaveChangesAsync(new CancellationToken()), Times.Once);
+            _uowMock.Verify(x => x.SaveChangesAsync(), Times.Once);
         }
 
         [Fact(DisplayName = "Deve retornar lista mapeada")]
@@ -212,7 +212,7 @@ namespace InvestimentosCaixa.Tests.Unitarios
                 .Returns(simulacoesDTO);
 
             // Act
-            var result = await _service.ObterHistorico(userId, email, 1, 10);
+            var result = await _service.ObterHistoricoAsync(userId, email, 1, 10);
 
             // Assert
             Assert.NotNull(result);

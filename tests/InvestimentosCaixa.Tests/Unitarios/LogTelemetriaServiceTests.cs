@@ -134,7 +134,7 @@ namespace InvestimentosCaixa.Tests.Unitarios
                 Times.Once
             );
 
-            _uowMock.Verify(u => u.SaveChangesAsync(new CancellationToken()), Times.Once);
+            _uowMock.Verify(u => u.SaveChangesAsync(), Times.Once);
         }
     }
 }

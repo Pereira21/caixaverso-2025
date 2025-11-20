@@ -29,7 +29,7 @@ namespace InvestimentosCaixa.Api.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> ObterPerfilRisco(int clienteId)
         {
-            var perfilRisco = await _perfilRiscoService.ObterPorClienteId(clienteId);
+            var perfilRisco = await _perfilRiscoService.ObterPorClienteIdAsync(clienteId);
 
             return CustomResponse(perfilRisco);
         }
@@ -49,7 +49,7 @@ namespace InvestimentosCaixa.Api.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> ObterProdutosRecomendadosPorPerfil(string perfil, [FromQuery] int pagina = 1, [FromQuery] int tamanhoPagina = 200)
         {
-            var produtosRecomendados = await _perfilRiscoService.ObterProdutosRecomendadosPorPerfil(perfil, pagina, tamanhoPagina);
+            var produtosRecomendados = await _perfilRiscoService.ObterProdutosRecomendadosPorPerfilAsync(perfil, pagina, tamanhoPagina);
             return CustomResponse(produtosRecomendados);
         }
     }

@@ -7,6 +7,6 @@ namespace InvestimentosCaixa.Infrastructure.UnitOfWork
         private readonly InvestimentosCaixaDbContext _context;
         public UnitOfWork(InvestimentosCaixaDbContext context) => _context = context;
 
-        public Task<int> SaveChangesAsync(CancellationToken cancellationToken = default) => _context.SaveChangesAsync(cancellationToken);
+        public Task<int> SaveChangesAsync() => _context.SaveChangesAsync();
     }
 }

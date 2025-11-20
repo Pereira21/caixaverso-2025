@@ -51,13 +51,13 @@ namespace InvestimentosCaixa.Tests.Unitarios
         {
             // Arrange
             _perfilRiscoRepositoryMock
-                .Setup(r => r.ObterComRiscoPorNome("Conservador"))
+                .Setup(r => r.ObterComRiscoPorNomeAsync("Conservador"))
                 .ReturnsAsync((PerfilRisco?)null);
 
             var service = CreateService();
 
             // Act
-            var result = await service.ObterProdutosRecomendadosPorPerfil("Conservador", 1, 200);
+            var result = await service.ObterProdutosRecomendadosPorPerfilAsync("Conservador", 1, 200);
 
             // Assert
             Assert.Null(result);
@@ -83,7 +83,7 @@ namespace InvestimentosCaixa.Tests.Unitarios
             };
 
             _perfilRiscoRepositoryMock
-                .Setup(r => r.ObterComRiscoPorNome("Moderado"))
+                .Setup(r => r.ObterComRiscoPorNomeAsync("Moderado"))
                 .ReturnsAsync(perfil);
 
             _produtoRepositoryMock
@@ -97,14 +97,14 @@ namespace InvestimentosCaixa.Tests.Unitarios
             var service = CreateService();
 
             // Act
-            var result = await service.ObterProdutosRecomendadosPorPerfil("Moderado", 1, 200);
+            var result = await service.ObterProdutosRecomendadosPorPerfilAsync("Moderado", 1, 200);
 
             // Assert
             Assert.NotNull(result);
             Assert.Single(result);
             Assert.Equal("CDB XPTO", result.First().Nome);
 
-            _perfilRiscoRepositoryMock.Verify(r => r.ObterComRiscoPorNome("Moderado"), Times.Once);
+            _perfilRiscoRepositoryMock.Verify(r => r.ObterComRiscoPorNomeAsync("Moderado"), Times.Once);
             _produtoRepositoryMock.Verify(r => r.ObterPaginadoPorRiscoAsync(It.IsAny<List<int>>(), 1, 200), Times.Once);
             _mapperMock.Verify(m => m.Map<List<ProdutoRecomendadoResponse>>(produtos), Times.Once);
         }
@@ -117,17 +117,17 @@ namespace InvestimentosCaixa.Tests.Unitarios
             int clienteId = 123;
 
             _investimentoRepositoryMock
-                .Setup(r => r.ObterComProdutoPorClienteId(clienteId))
+                .Setup(r => r.ObterComProdutoPorClienteIdAsync(clienteId))
                 .ReturnsAsync(new List<Investimento>()); // nenhum investimento
 
             _simulacaoRepositoryMock
-                .Setup(r => r.ObterComProdutoPorClienteId(clienteId))
+                .Setup(r => r.ObterComProdutoPorClienteIdAsync(clienteId))
                 .ReturnsAsync(new List<Simulacao>()); // nenhuma simulação
 
             var service = CreateService();
 
             // Act
-            var result = await service.ObterPorClienteId(clienteId);
+            var result = await service.ObterPorClienteIdAsync(clienteId);
 
             // Assert
             Assert.Null(result);
@@ -149,11 +149,11 @@ namespace InvestimentosCaixa.Tests.Unitarios
                 };
 
             _investimentoRepositoryMock
-                .Setup(r => r.ObterComProdutoPorClienteId(clienteId))
+                .Setup(r => r.ObterComProdutoPorClienteIdAsync(clienteId))
                 .ReturnsAsync(investimentos);
 
             _perfilRiscoRepositoryMock
-                .Setup(r => r.ObterPerfilPontuacaoVolume(It.IsAny<decimal>()))
+                .Setup(r => r.ObterPerfilPontuacaoVolumeAsync(It.IsAny<decimal>()))
                 .ReturnsAsync(new PerfilPontuacaoVolumeDto
                 {
                     MinValor = 0.01m,
@@ -163,7 +163,7 @@ namespace InvestimentosCaixa.Tests.Unitarios
 
             // Score frequência
             _perfilRiscoRepositoryMock
-                .Setup(r => r.ObterPerfilPontuacaoFrequencia(1))
+                .Setup(r => r.ObterPerfilPontuacaoFrequenciaAsync(1))
                 .ReturnsAsync(new PerfilPontuacaoFrequenciaDto
                 {
                     MinQtd = 0,
@@ -173,7 +173,7 @@ namespace InvestimentosCaixa.Tests.Unitarios
 
             // Score risco
             _perfilRiscoRepositoryMock
-                .Setup(r => r.ObterPerfilPontuacaoRiscoPorRiscos(It.IsAny<List<int>>()))
+                .Setup(r => r.ObterPerfilPontuacaoRiscoPorRiscosAsync(It.IsAny<List<int>>()))
                 .ReturnsAsync(new List<PerfilPontuacaoRiscoDto>
                 {
                         new PerfilPontuacaoRiscoDto
@@ -189,7 +189,7 @@ namespace InvestimentosCaixa.Tests.Unitarios
             var classificacaoDto = new PerfilClassificacaoDto();
 
             _perfilRiscoRepositoryMock
-                .Setup(r => r.ObterPerfilClassificacaoPorPontuacao(It.IsAny<int>()))
+                .Setup(r => r.ObterPerfilClassificacaoPorPontuacaoAsync(It.IsAny<int>()))
                 .ReturnsAsync(classificacaoDto);
 
             _mapperMock
@@ -199,7 +199,7 @@ namespace InvestimentosCaixa.Tests.Unitarios
             var service = CreateService();
 
             // Act
-            var result = await service.ObterPorClienteId(clienteId);
+            var result = await service.ObterPorClienteIdAsync(clienteId);
 
             // Assert
             Assert.NotNull(result);
@@ -221,11 +221,11 @@ namespace InvestimentosCaixa.Tests.Unitarios
                 };
 
             _investimentoRepositoryMock
-                .Setup(r => r.ObterComProdutoPorClienteId(clienteId))
+                .Setup(r => r.ObterComProdutoPorClienteIdAsync(clienteId))
                 .ReturnsAsync(investimentos);
 
             _perfilRiscoRepositoryMock
-                .Setup(r => r.ObterPerfilPontuacaoVolume(It.IsAny<decimal>()))
+                .Setup(r => r.ObterPerfilPontuacaoVolumeAsync(It.IsAny<decimal>()))
                 .ReturnsAsync(new PerfilPontuacaoVolumeDto
                 {
                     MinValor = 0.01m,
@@ -235,7 +235,7 @@ namespace InvestimentosCaixa.Tests.Unitarios
 
             // Score frequência
             _perfilRiscoRepositoryMock
-                .Setup(r => r.ObterPerfilPontuacaoFrequencia(1))
+                .Setup(r => r.ObterPerfilPontuacaoFrequenciaAsync(1))
                 .ReturnsAsync(new PerfilPontuacaoFrequenciaDto
                 {
                     MinQtd = 1,
@@ -245,7 +245,7 @@ namespace InvestimentosCaixa.Tests.Unitarios
 
             // Score risco
             _perfilRiscoRepositoryMock
-                .Setup(r => r.ObterPerfilPontuacaoRiscoPorRiscos(It.IsAny<List<int>>()))
+                .Setup(r => r.ObterPerfilPontuacaoRiscoPorRiscosAsync(It.IsAny<List<int>>()))
                 .ReturnsAsync(new List<PerfilPontuacaoRiscoDto>
                 {
                         new PerfilPontuacaoRiscoDto
@@ -259,13 +259,13 @@ namespace InvestimentosCaixa.Tests.Unitarios
 
 
             _perfilRiscoRepositoryMock
-                .Setup(r => r.ObterPerfilClassificacaoPorPontuacao(It.IsAny<int>()))
+                .Setup(r => r.ObterPerfilClassificacaoPorPontuacaoAsync(It.IsAny<int>()))
                 .ReturnsAsync((PerfilClassificacaoDto?)null);
 
             var service = CreateService();
 
             // Act
-            var result = await service.ObterPorClienteId(clienteId);
+            var result = await service.ObterPorClienteIdAsync(clienteId);
 
             // Assert
             Assert.Null(result);

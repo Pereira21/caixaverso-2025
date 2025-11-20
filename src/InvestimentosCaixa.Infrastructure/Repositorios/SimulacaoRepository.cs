@@ -19,7 +19,7 @@ namespace InvestimentosCaixa.Infrastructure.Repositorios
                 .ToListAsync();
         }
 
-        public async Task<List<Simulacao>> ObterComProdutoPorClienteId(int clienteId)
+        public async Task<List<Simulacao>> ObterComProdutoPorClienteIdAsync(int clienteId)
         {
             return await _dbSet
                 .Include(x => x.Produto)

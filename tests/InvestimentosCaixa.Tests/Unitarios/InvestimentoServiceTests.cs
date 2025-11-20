@@ -48,14 +48,14 @@ namespace InvestimentosCaixa.Tests.Unitarios
             Guid userId = Guid.NewGuid();
             string email = "teste@teste.com";
 
-            _repoMock.Setup(r => r.ObterComProdutoPorClienteId(clienteId))
+            _repoMock.Setup(r => r.ObterComProdutoPorClienteIdAsync(clienteId))
                      .ReturnsAsync(new List<Investimento>());
 
             _mapperMock.Setup(m => m.Map<List<InvestimentoResponse>>(It.IsAny<List<Investimento>>()))
                        .Returns(new List<InvestimentoResponse>());
 
             // Act
-            await _service.ObterPorClienteId(userId, email, clienteId, 1, 200);
+            await _service.ObterPorClienteIdAsync(userId, email, clienteId, 1, 200);
 
             // Assert
             _loggerMock.Verify(
@@ -83,7 +83,7 @@ namespace InvestimentosCaixa.Tests.Unitarios
             string email = "teste@teste.com";
 
             _repoMock
-                .Setup(r => r.ObterComProdutoPorClienteId(clienteId))
+                .Setup(r => r.ObterComProdutoPorClienteIdAsync(clienteId))
                 .ReturnsAsync(new List<Investimento>());
 
             _mapperMock
@@ -91,10 +91,10 @@ namespace InvestimentosCaixa.Tests.Unitarios
                 .Returns(new List<InvestimentoResponse>());
 
             // Act
-            await _service.ObterPorClienteId(userId, email, clienteId, 1, 200);
+            await _service.ObterPorClienteIdAsync(userId, email, clienteId, 1, 200);
 
             // Assert
-            _repoMock.Verify(r => r.ObterPaginadoComProdutoPorClienteId(clienteId, 1, 200), Times.Once);
+            _repoMock.Verify(r => r.ObterPaginadoComProdutoPorClienteIdAsync(clienteId, 1, 200), Times.Once);
         }
 
         [Fact(DisplayName = "Deve mapear investimentos para response quando obtem pelo cliente")]
@@ -117,14 +117,14 @@ namespace InvestimentosCaixa.Tests.Unitarios
                 new InvestimentoResponse()
             };
 
-            _repoMock.Setup(r => r.ObterPaginadoComProdutoPorClienteId(clienteId, 1, 200))
+            _repoMock.Setup(r => r.ObterPaginadoComProdutoPorClienteIdAsync(clienteId, 1, 200))
                      .ReturnsAsync(investimentos);
 
             _mapperMock.Setup(m => m.Map<List<InvestimentoResponse>>(investimentos))
                        .Returns(mapped);
 
             // Act
-            var result = await _service.ObterPorClienteId(userId, email, clienteId,1 , 200);
+            var result = await _service.ObterPorClienteIdAsync(userId, email, clienteId,1 , 200);
 
             // Assert
             Assert.Equal(mapped, result);

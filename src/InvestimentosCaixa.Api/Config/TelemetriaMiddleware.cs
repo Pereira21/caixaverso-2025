@@ -22,9 +22,11 @@ namespace InvestimentosCaixa.Api.Config
 
             stopwatch.Stop();
 
+            var routePattern = (context.GetEndpoint() as RouteEndpoint)?.RoutePattern.RawText;
+
             var registro = new LogTelemetriaRequest()
             {
-                Endpoint = context.Request.Path.Value?.TrimStart('/'),
+                Endpoint = routePattern?.TrimStart('/') ?? "rota-desconhecida",
                 Metodo = context.Request.Method,
                 TempoRespostaMs = (int)stopwatch.ElapsedMilliseconds,
                 Sucesso = context.Response.StatusCode < 400,

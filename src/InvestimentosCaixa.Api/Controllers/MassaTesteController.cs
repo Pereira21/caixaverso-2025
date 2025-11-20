@@ -42,7 +42,7 @@ namespace InvestimentosCaixa.Api.Controllers
                 new UsuarioModel()
                 {
                     Email = "usuario@analista.com",
-                    Senha = "Senha@123",
+                    Senha = "@Analista123",
                     EndpointList = new List<EndpointModel>()
                     {
                         new EndpointModel() { Url = "/investimentos/{clienteId}", Verbo = "GET" },

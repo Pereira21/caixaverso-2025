@@ -9,7 +9,7 @@ namespace InvestimentosCaixa.Infrastructure.Repositorios
     {
         public InvestimentoRepository(InvestimentosCaixaDbContext context, IDistributedCache distributedCache) : base(context, distributedCache) { }
 
-        public async Task<List<Investimento>> ObterComProdutoPorClienteId(int clienteId)
+        public async Task<List<Investimento>> ObterComProdutoPorClienteIdAsync(int clienteId)
         {
             return await _dbSet
                 .AsNoTracking()
@@ -20,7 +20,7 @@ namespace InvestimentosCaixa.Infrastructure.Repositorios
                 .ToListAsync();
         }
 
-        public async Task<List<Investimento>> ObterPaginadoComProdutoPorClienteId(int clienteId, int pagina = 1, int tamanhoPagina = 200)
+        public async Task<List<Investimento>> ObterPaginadoComProdutoPorClienteIdAsync(int clienteId, int pagina = 1, int tamanhoPagina = 200)
         {
             return await _dbSet
                 .AsNoTracking()

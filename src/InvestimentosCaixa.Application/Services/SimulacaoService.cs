@@ -28,7 +28,7 @@ namespace InvestimentosCaixa.Application.Services
             _clienteRepository = clienteRepository;
         }
 
-        public async Task<SimularInvestimentoResponse?> SimularInvestimento(SimularInvestimentoRequest request)
+        public async Task<SimularInvestimentoResponse?> SimularInvestimentoAsync(SimularInvestimentoRequest request)
         {
             var dataSimulacao = DateTime.UtcNow;
             var produtoBaseDto = await _produtoRepository.ObterAdequadoAsync(request.PrazoMeses, request.TipoProduto);
@@ -60,7 +60,7 @@ namespace InvestimentosCaixa.Application.Services
             return response;
         }
 
-        public async Task<List<SimulacaoResponseDTO>> ObterHistorico(Guid userId, string userEmail, int pagina, int tamanhoPagina)
+        public async Task<List<SimulacaoResponseDTO>> ObterHistoricoAsync(Guid userId, string userEmail, int pagina, int tamanhoPagina)
         {
             _logger.LogInformation($"O analista {userId} - Email: {userEmail} está obtendo o histórico de todas as simulações!");
 

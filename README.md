@@ -97,8 +97,8 @@ PontosBase +   1° inc     +     2° inc
 
 Ps. Os pontos máximos são sempre aplicados encima de faixas do mesmo risco. Ou seja, se eu tivesse 4 médios e 1 baixo:  
 ( (20)  +  (20*(1.3 - 1))   +   (20*(1.3 - 1))   +   (20*(1.3 - 1)))   +   (10*(1.5 - 1)) =   
-((20) + (5) + (5) + (5)) + (5) =  
-(35) + 5 =  -- note que a soma dos riscos de nível médio ultrapassou o limite de 35, então o limite é aplicado: 35 -> 30
+((20) + (6) + (6) + (6)) + (5) =  
+(38) + 5 =  -- note que a soma dos riscos de nível médio ultrapassou o limite de 38, então o limite é aplicado: 38 -> 30
 30 + 5 = 35  
 
 Essa abordagem permite evitar furos nos pesos.

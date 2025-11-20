@@ -28,9 +28,9 @@ namespace InvestimentosCaixa.Application.Services
             _investimentoRepository = investimentoRepository;
         }
 
-        public async Task<IEnumerable<ProdutoRecomendadoResponse>> ObterProdutosRecomendadosPorPerfil(string perfil, int pagina, int tamanhoPagina)
+        public async Task<IEnumerable<ProdutoRecomendadoResponse>> ObterProdutosRecomendadosPorPerfilAsync(string perfil, int pagina, int tamanhoPagina)
         {
-            var perfilRisco = await _perfilRiscoRepository.ObterComRiscoPorNome(perfil);
+            var perfilRisco = await _perfilRiscoRepository.ObterComRiscoPorNomeAsync(perfil);
             if (perfilRisco == null)
             {
                 _logger.LogWarning($"Perfil solicitado para obter produtos recomendados não existe!. Perfil: {perfil}!");
@@ -44,7 +44,7 @@ namespace InvestimentosCaixa.Application.Services
             return _mapper.Map<List<ProdutoRecomendadoResponse>>(produtosRecomendados);
         }
 
-        public async Task<PerfilRiscoResponse?> ObterPorClienteId(int clienteId)
+        public async Task<PerfilRiscoResponse?> ObterPorClienteIdAsync(int clienteId)
         {
             return await DiagnosticarPerfilRisco(clienteId);
         }
@@ -60,11 +60,11 @@ namespace InvestimentosCaixa.Application.Services
             int pontuacaoCliente = 0;
             var simulacoesPorCliente = new List<Simulacao>();
 
-            var investimentosPorCliente = await _investimentoRepository.ObterComProdutoPorClienteId(clienteId);
+            var investimentosPorCliente = await _investimentoRepository.ObterComProdutoPorClienteIdAsync(clienteId);
             bool temInvestimentos = investimentosPorCliente != null && investimentosPorCliente.Count != 0;
             if (!temInvestimentos) // caso não haja investimentos, procuro simulações por cliente
             {
-                simulacoesPorCliente = await _simulacaoRepository.ObterComProdutoPorClienteId(clienteId);
+                simulacoesPorCliente = await _simulacaoRepository.ObterComProdutoPorClienteIdAsync(clienteId);
                 if (simulacoesPorCliente == null || !simulacoesPorCliente.Any())
                 {
                     _logger.LogWarning($"Cliente não possui investimentos para determinar Perfil de Risco!. Cliente: {clienteId}!");
@@ -116,7 +116,7 @@ namespace InvestimentosCaixa.Application.Services
         /// <returns></returns>
         private async Task<int> ObtemScoreClienteVolume(decimal valorInvestido)
         {
-            var perfilPontuacaoVolume = await _perfilRiscoRepository.ObterPerfilPontuacaoVolume(valorInvestido);
+            var perfilPontuacaoVolume = await _perfilRiscoRepository.ObterPerfilPontuacaoVolumeAsync(valorInvestido);
 
             if (perfilPontuacaoVolume != null)
                 return perfilPontuacaoVolume.Pontos;
@@ -131,7 +131,7 @@ namespace InvestimentosCaixa.Application.Services
         /// <returns></returns>
         private async Task<int> ObtemScoreClienteFrequencia(int quantidadeMovimentacoes)
         {
-            var perfilPontuacaoFrequencia = await _perfilRiscoRepository.ObterPerfilPontuacaoFrequencia(quantidadeMovimentacoes);
+            var perfilPontuacaoFrequencia = await _perfilRiscoRepository.ObterPerfilPontuacaoFrequenciaAsync(quantidadeMovimentacoes);
             if (perfilPontuacaoFrequencia != null)
                 return perfilPontuacaoFrequencia.Pontos;
 
@@ -147,7 +147,7 @@ namespace InvestimentosCaixa.Application.Services
         {
             int scoreTotalRiscoProdutos = 0;
 
-            var perfilPontuacaoRisco = await _perfilRiscoRepository.ObterPerfilPontuacaoRiscoPorRiscos(riscosMovimentadosAgrupados.Select(x => x.RiscoId).Distinct().ToList());
+            var perfilPontuacaoRisco = await _perfilRiscoRepository.ObterPerfilPontuacaoRiscoPorRiscosAsync(riscosMovimentadosAgrupados.Select(x => x.RiscoId).Distinct().ToList());
 
             if (perfilPontuacaoRisco != null && perfilPontuacaoRisco.Any())
             {
@@ -196,7 +196,7 @@ namespace InvestimentosCaixa.Application.Services
         /// <returns></returns>
         private async Task<PerfilClassificacao> ObtemPerfilClassificacao(int pontuacaoCliente)
         {
-            var perfilClassificacaoDto = await _perfilRiscoRepository.ObterPerfilClassificacaoPorPontuacao(pontuacaoCliente);
+            var perfilClassificacaoDto = await _perfilRiscoRepository.ObterPerfilClassificacaoPorPontuacaoAsync(pontuacaoCliente);
             if (perfilClassificacaoDto == null)
             {
                 _logger.LogWarning($"Não foi encontrado um Perfil Risco para a pontuação {pontuacaoCliente}!");
