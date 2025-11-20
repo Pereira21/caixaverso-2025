@@ -2,6 +2,12 @@
 
 Abaixo segue algumas particularidades nos endpoints que serão de interesse do(s) avaliador(es).
 
+Para rodar o projeto:
+docker compose up --build
+
+API disponível em:
+http://localhost:5000/swagger/index.html
+
 ---
 
 # 1. Endpoints + Explicações
