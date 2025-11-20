@@ -1,29 +1,28 @@
 # 📌 API de Investimentos – Documentação de Endpoints
 
-Este documento apresenta os endpoints disponíveis na API, suas finalidades, níveis de acesso e massa de testes.  
-A arquitetura aplicada e o motor de recomendação também são descritos de forma clara e objetiva.
+Abaixo segue algumas particularidades nos endpoints que serão de interesse do(s) avaliador(es).
 
 ---
 
 # 1. Endpoints + Explicações
 
-## 🔐 1.1 Autenticação
+## 1.1 Autenticação
 
 ### **[POST] /api/Auth/login**
 **Acesso:** Público  
-**Finalidade:** Atende a exigência de autenticação no sistema. Alguns endpoints são públicos, outros exigem token, e apenas o endpoint de telemetria requer *role* específica.
+**Finalidade:** Atende a exigência de autenticação no sistema. Alguns endpoints são públicos, outros exigem token. Foram pré-cadastrados dois usuários com roles específicas que são exigidas nos endpoints privados. Inserido no swagger um endpoint para obter os usuários.
 
 **Massa de Teste**  
 - **Admin:**  
-  - Email: `admin@admin.com`  
-  - Senha: `@Admin123`
+  - Email: `usuario@analista.com`  
+  - Senha: `@Analista123`
 - **Usuário comum:**  
-  - Email: `usuario@teste.com`  
-  - Senha: `@User123`
+  - Email: `usuario@tecnico.com`  
+  - Senha: `@Tecnico123`
 
 ---
 
-## 📊 1.2 Perfil de Risco
+## 1.2 Perfil de Risco
 
 ### **[GET] /api/PerfisRisco/perfil-risco/{clienteId}**
 **Acesso:** Público  
@@ -34,7 +33,7 @@ Como o desafio solicita um algoritmo simples baseado em:
 - **frequência de movimentações**  
 
 → o motor prioriza **investimentos concretizados**.  
-Caso o cliente **não tenha investimentos**, a análise recai sobre **simulações**, permitindo que o avaliador teste o motor sem depender de um endpoint de "investir".
+Caso o cliente **não tenha investimentos** realizados, a análise recai sobre **simulações**, permitindo que o avaliador teste o motor sem depender de um endpoint de "investir" (existe um de simular).
 
 ### 🔧 Lógica do Motor de Recomendações
 
@@ -43,7 +42,7 @@ O score do cliente é calculado a partir de três componentes:
 ---
 
 #### **1. Volume Total Investido**
-A soma dos valores investidos é comparada à tabela `PerfilPontuacaoVolume`:
+A soma dos valores investidos (ou simulados) é comparada à tabela `PerfilPontuacaoVolume`:
 
 | Faixa (R$) | Pontos |
 |------------|--------|
@@ -54,7 +53,7 @@ A soma dos valores investidos é comparada à tabela `PerfilPontuacaoVolume`:
 ---
 
 #### **2. Frequência de Movimentações**
-Quantidade de movimentações → tabela `PerfilPontuacaoFrequencia`:
+Quantidade de movimentações (ou simulações) → tabela `PerfilPontuacaoFrequencia`:
 
 | Qtd. Movimentações | Pontos |
 |--------------------|--------|
@@ -73,7 +72,32 @@ Com base na tabela `PerfilPontuacaoRisco`:
   - **Multiplicador** por quantidade
   - **PontosMáximos** como limite superior
 
+| RiscoId | PontosBase | Multiplicador | PontosMaximos|
+|---------|------------|---------------|--------------|
+| 1 | 10 | 1.5 | 15 |
+| 2 | 20 | 1.25 | 30 |
+| 3 | 30 | 1.6 | 45 |
+
+A pontuação foi dividida estratégicamente para respeitar as regras de mercado dando um peso um pouco maior ao fator risco, comparado à frequência e volume.
 Essa combinação captura diversidade + intensidade das escolhas de risco.
+
+Exemplo de caso:
+1. Cliente possui 3 investimentos de risco alto. Cálculo:
+30 + 30*(1.6 - 1) = 30 + 18 = 48 (ultrapassou limite de pontos maximos, então 45).
+
+2. Cliente possui 1 investimento de risco médio e 1 de risco baixo. Cálculo:
+20 + 10*(1.5 - 1) = 20 + 5 = 25
+
+3. Cliente possui 2 investimentos de risco médio e 1 de risco baixo. Cálculo:
+20 + 20*(1.25 - 1) + 10*(1.5 - 1) = 20 + 5 + 5 = 30
+
+Ps. Os pontos máximos são sempre aplicados encima de faixas do mesmo risco. Ou seja, se eu tivesse 4 médios e 1 baixo:
+(20 + 20*(1.25 - 1) + 20*(1.25 - 1) + 20*(1.25 - 1)) + 10*(1.5 - 1) = 
+(20 + 5 + 5 + 5) + 5 =
+(35) + 5 =  -- note que a soma dos riscos de nível médio ultrapassou o limite de 35, então o limite é aplicado
+30 + 5 = 35
+
+Essa abordagem permite evitar furos no cálculo.
 
 ---
 
@@ -83,19 +107,19 @@ Essa combinação captura diversidade + intensidade das escolhas de risco.
 |-------------|--------|
 | 0 – 50 | Conservador |
 | 51 – 85 | Moderado |
-| 86 – 100 | Agressivo |
+| 86 – 150 | Agressivo |
 
 Esse processo garante análise objetiva e auditável.
 
 ---
 
-## 🎯 1.3 Produtos Recomendados
+## 1.3 Produtos Recomendados
 
 ### **[GET] /api/PerfisRisco/produtos-recomendados/{perfil}**
 **Acesso:** Público  
 **Finalidade:** Retorna os produtos recomendados com base no perfil informado.
 
-**Massa de Teste** – tabela `PerfilRisco`:
+**Massa de Teste** – Os perfis pré-cadastrados estão na tabela `PerfilRisco`:
 
 ```sql
 INSERT INTO PerfilRisco (Nome, Descricao) VALUES 
@@ -106,27 +130,11 @@ INSERT INTO PerfilRisco (Nome, Descricao) VALUES
 
 ---
 
-## 💰 1.4 Investimentos
+## 1.4 Investimentos
 
 ### **[GET] /api/Investimentos/investimentos/{clienteId}**
 **Acesso:** Exige autenticação mínima  
-**Finalidade:** Usuários internos podem visualizar os investimentos de um cliente.
-
-**Massa de Teste** – tabela `PerfilRisco`:
-```sql
-INSERT INTO Investimento (ClienteId, ProdutoId, Valor, Rentabilidade, Data) VALUES
-(1, 1, 1500.00, 0.0650, '2025-01-12'),
-(1, 3, 890.00, 0.1180, '2025-02-05'),
-(2, 4, 3000.00, 0.1220, '2025-03-10'),
-(2, 6, 2000.00, 0.1800, '2025-03-22'),
-(3, 8, 1200.00, 0.2500, '2025-04-01'),
-(3, 9, 2500.00, 0.1300, '2025-04-15'),
-(4, 2, 900.00, 0.0640, '2025-01-25'),
-(4, 5, 4000.00, 0.1150, '2025-02-18'),
-(5, 7, 3200.00, 0.1750, '2025-03-28'),
-(5, 10, 2000.00, 0.1190, '2025-04-05'),
-(5, 10, 3000.00, 0.1190, '2025-04-05');
-```
+**Finalidade:** Usuários com role 'analista' podem visualizar os investimentos de um cliente. 
 
 ---
 
@@ -136,15 +144,11 @@ INSERT INTO Investimento (ClienteId, ProdutoId, Valor, Rentabilidade, Data) VALU
 **Acesso:** Público
 **Finalidade:** Permite simular investimentos.
 
-**Massa de Teste** – N/A
-
 ---
 
 ### **[GET] /api/Simulacoes/simulacoes**
 **Acesso:** Exige autenticação mínima
-**Finalidade:** Usuários internos podem visualizar todas as simulações.
-
-**Massa de Teste** – N/A
+**Finalidade:** Usuários internos com a role 'analista' podem visualizar todas as simulações.
 
 ---
 
@@ -152,7 +156,7 @@ INSERT INTO Investimento (ClienteId, ProdutoId, Valor, Rentabilidade, Data) VALU
 **Acesso:** Exige autenticação mínima
 **Finalidade:** Lista simulações agrupadas por produto e dia.
 
-**Massa de Teste** – N/A
+**Massa de Teste** – Algumas simulações foram pré-cadastradas para que o avaliador tenha dados de dias diferentes.
 
 ---
 
@@ -160,14 +164,27 @@ INSERT INTO Investimento (ClienteId, ProdutoId, Valor, Rentabilidade, Data) VALU
 **Acesso:** Exige autenticação mínima
 **Finalidade:** Lista simulações agrupadas por produto e dia.
 
-**Massa de Teste** – N/A
+**Massa de Teste** – 
+```sql
+                INSERT INTO Simulacao (ClienteId, ProdutoId, ValorInvestido, ValorFinal, PrazoMeses, RentabilidadeEfetiva, DataSimulacao) VALUES
+                    (1, 1, 1500.00, 1597.50, 12, 0.0650, '2025-01-11'),
+                    (1, 3,  890.00,  994.02, 6,  0.1180, '2025-02-04'),
+                    (2, 4, 3000.00, 3366.00, 12, 0.1220, '2025-03-09'),
+                    (2, 6, 2000.00, 2360.00, 12, 0.1800, '2025-03-21'),
+                    (3, 8, 1200.00, 1500.00, 12, 0.2500, '2025-03-31'),
+                    (3, 9, 2500.00, 2825.00, 12, 0.1300, '2025-04-14'),
+                    (4, 2,  900.00,  957.60, 12, 0.0640, '2025-01-24'),
+                    (4, 5, 4000.00, 4460.00, 12, 0.1150, '2025-02-17'),
+                    (5, 7, 3200.00, 3760.00, 12, 0.1750, '2025-03-27'),
+                    (5,10, 2000.00, 2238.00, 3,  0.1190, '2025-04-04');
+```
 
 ---
 
-## 🎯 1.6 Telemetria
+## 1.6 Telemetria
 
 ### **[GET] /api/Telemetrias/telemetria**
-**Acesso:** Exige usuário com role admin. [Usuário pré-cadastrado: admin@admin.com / @Admin123]
+**Acesso:** Exige usuário com role 'tecnico' por se tratar de um endpoint interno de análise técnica.
 **Finalidade:** Endpoint técnico/gerencial para consultas internas.
 
 **Massa de Teste**  – tabela `LogTelemetria`:
@@ -176,112 +193,14 @@ Como o endpoint agrupa por mês, o registro abaixo foi criado com um mês anteri
 INSERT INTO LogTelemetria VALUES
 ('telemetria', 'GET', 250, 1, '2025-10-18 12:00:00.1945291');
 ```
+---
+
+# 2. Arquitetura + Features
+
+## 1.1 Arquitetura
 
 
 
 
 
 
-
-dotnet-reportgenerator-globaltool
-dotnet test --collect:"XPlat Code Coverage"; reportgenerator -reports:"**/coverage.cobertura.xml" -targetdir:"coveragereport" -reporttypes:Html 
-
-coverage-report/index.html Testes
-
-
-Tecnologias abordadas no projeto:
-O projeto segue Clean Architecture e aplica um CQRS simples.
-Em vez de um único repositório, separo os repositórios de escrita (commands) dos repositórios de leitura (queries).
-As escritas trabalham apenas com entidades do domínio, e as leituras usam projeções e DTOs para otimizar performance.
-
-            migrationBuilder.Sql(@" 
-                INSERT INTO Risco (Nome, Descricao) VALUES 
-                    ('Baixo', 'Perfil de risco baixo'), 
-                    ('Médio', 'Perfil de risco médio'), 
-                    ('Alto', 'Perfil de risco alto');
-
-                INSERT INTO TipoProduto (Nome, RiscoId, Liquidez, Descricao) VALUES 
-                    ('Poupança', 1, 'Diária', 'Conta poupança com liquidez diária e baixo risco'), 
-                    ('CDB', 2, 'Mensal', 'Certificado de Depósito Bancário com liquidez mensal e risco moderado'), 
-                    ('Ações', 3, 'Variável', 'Investimento em ações com alta volatilidade e maior risco');
-
-                INSERT INTO Produto (TipoProdutoId, Nome, RentabilidadeAnual, PrazoMinimoMeses) VALUES
-                    (1, 'Poupança Caixa', 0.0650, 0),
-                    (1, 'Poupança Caixa 2', 0.0640, 0),
-                    (2, 'CDB Caixa 100% CDI', 0.1180, 6),
-                    (2, 'CDB Caixa 110% CDI', 0.1220, 12),
-                    (2, 'CDB Liquidez Diária Caixa', 0.1150, 0),
-                    (3, 'Ações Petrobras (PETR4)', 0.1800, 0),
-                    (3, 'Ações Vale (VALE3)', 0.1750, 0),
-                    (3, 'Ações Magazine Luiza (MGLU3)', 0.2500, 0),
-                    (3, 'ETF BOVA11', 0.1300, 0),
-                    (2, 'CDB Caixa 102% CDI', 0.1190, 3);
-    
-                INSERT INTO PerfilPontuacaoVolume (MinValor, MaxValor, Pontos) VALUES 
-                    (0.01, 5000.00, 10), 
-                    (5000.01, 50000.00, 20), 
-                    (50000.01, 99999999.99, 30);
-
-                INSERT INTO PerfilPontuacaoFrequencia (MinQtd, MaxQtd, Pontos) VALUES 
-                    (1, 2, 10), 
-                    (3, 6, 20), 
-                    (7, 99, 30);
-
-                INSERT INTO PerfilPontuacaoRisco (RiscoId, PontosBase, Multiplicador, PontosMaximos) VALUES 
-                    (1, 10, 1.0, 15),   -- Baixo risco → até 15
-                    (2, 20, 1.2, 30),   -- Médio risco → até 30
-                    (3, 30, 1.5, 45);   -- Alto risco → até 45
-
-                INSERT INTO PerfilRisco (Nome, Descricao) VALUES 
-                    ('Conservador', 'Perfil conservador com baixa tolerância ao risco'), 
-                    ('Moderado', 'Perfil moderado com tolerância média ao risco'), 
-                    ('Agressivo', 'Perfil agressivo com alta tolerância ao risco');
-
-                INSERT INTO PerfilClassificacao (PerfilRiscoId, MinPontuacao, MaxPontuacao) VALUES 
-                    (1, 0, 50),     -- Conservador
-                    (2, 51, 85),    -- Moderado
-                    (3, 86, 100);   -- Agressivo
-
-                INSERT INTO RelPerfilRisco (PerfilRiscoId, RiscoId) VALUES 
-                    (1, 1),  -- Conservador associado a Baixo risco
-                    (2, 1),  -- Moderado associado a Baixo risco
-                    (2, 2),  -- Moderado associado a Médio risco
-                    (3, 2),  -- Agressivo associado a Médio risco
-                    (3, 3);  -- Agressivo associado a Alto risco
-
-                INSERT INTO Cliente (Id, Nome) VALUES 
-                    (1, 'Lucas Pereira'),
-                    (2, 'Mariana Silva'),
-                    (3, 'João Ferreira'),
-                    (4, 'Ana Moreira'),
-                    (5, 'Bruno Almeida');
-
-                INSERT INTO Simulacao (ClienteId, ProdutoId, ValorInvestido, ValorFinal, PrazoMeses, RentabilidadeEfetiva, DataSimulacao) VALUES
-                    (1, 1, 1500.00, 1597.50, 12, 0.0650, '2025-01-11'),
-                    (1, 3,  890.00,  994.02, 6,  0.1180, '2025-02-04'),
-
-                    (2, 4, 3000.00, 3366.00, 12, 0.1220, '2025-03-09'),
-                    (2, 6, 2000.00, 2360.00, 12, 0.1800, '2025-03-21'),
-
-                    (3, 8, 1200.00, 1500.00, 12, 0.2500, '2025-03-31'),
-                    (3, 9, 2500.00, 2825.00, 12, 0.1300, '2025-04-14'),
-
-                    (4, 2,  900.00,  957.60, 12, 0.0640, '2025-01-24'),
-                    (4, 5, 4000.00, 4460.00, 12, 0.1150, '2025-02-17'),
-
-                    (5, 7, 3200.00, 3760.00, 12, 0.1750, '2025-03-27'),
-                    (5,10, 2000.00, 2238.00, 3,  0.1190, '2025-04-04');
-
-                INSERT INTO Investimento (ClienteId, ProdutoId, Valor, Rentabilidade, Data) VALUES
-                    (1, 1, 1500.00, 0.0650, '2025-01-12'),
-                    (1, 3, 890.00, 0.1180, '2025-02-05'),
-                    (2, 4, 3000.00, 0.1220, '2025-03-10'),
-                    (2, 6, 2000.00, 0.1800, '2025-03-22'),
-                    (3, 8, 1200.00, 0.2500, '2025-04-01'),
-                    (3, 9, 2500.00, 0.1300, '2025-04-15'),
-                    (4, 2, 900.00, 0.0640, '2025-01-25'),
-                    (4, 5, 4000.00, 0.1150, '2025-02-18'),
-                    (5, 7, 3200.00, 0.1750, '2025-03-28'),
-                    (5, 10, 2000.00, 0.1190, '2025-04-05'),
-                    (5, 10, 3000.00, 0.1190, '2025-04-05');
-            ");
