@@ -1,4 +1,0 @@
-Lucas Pereira D'Amico
-c158799-3
-Desafio backend .NET
-https://github.com/Pereira21/caixaverso-2025
