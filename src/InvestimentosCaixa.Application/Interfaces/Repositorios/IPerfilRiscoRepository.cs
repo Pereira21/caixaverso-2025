@@ -4,7 +4,7 @@ using InvestimentosCaixa.Domain.Entidades;
 
 namespace InvestimentosCaixa.Application.Interfaces.Repositorios
 {
-    public interface IPerfilRiscoRepository
+    public interface IPerfilRiscoRepository : IRepository<PerfilRisco>
     {
         /// <summary>
         /// Obter perfil de risco por nome com os riscos associados

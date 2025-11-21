@@ -53,7 +53,7 @@ namespace InvestimentosCaixa.Api.Controllers
                         new EndpointModel() { Url = "api/Investimentos/investimentos/{clienteId}", Verbo = "GET" },
                         new EndpointModel() { Url = "api/PerfisRisco/perfil-risco/{clienteId}", Verbo = "GET" },
                         new EndpointModel() { Url = "api/PerfisRisco/produtos-recomendados/{perfil}", Verbo = "GET" },
-                        new EndpointModel() { Url = "api/Simulacoes/simulacoes/", Verbo = "POST" },
+                        new EndpointModel() { Url = "api/Simulacoes/simular-investimento/", Verbo = "POST" },
                         new EndpointModel() { Url = "api/Simulacoes/simulacoes", Verbo = "GET" },
                         new EndpointModel() { Url = "api/Simulacoes/simulacoes/por-produto-dia", Verbo = "GET" }
                     }
@@ -67,7 +67,7 @@ namespace InvestimentosCaixa.Api.Controllers
                     {
                         new EndpointModel() { Url = "api/PerfisRisco/perfil-risco/{clienteId}", Verbo = "GET" },
                         new EndpointModel() { Url = "api/PerfisRisco/produtos-recomendados/{perfil}", Verbo = "GET" },
-                        new EndpointModel() { Url = "api/Simulacoes/simulacoes/", Verbo = "POST" },
+                        new EndpointModel() { Url = "api/Simulacoes/simular-investimento/", Verbo = "POST" },
                         new EndpointModel() { Url = "telemetria", Verbo = "GET" }
                     }
                 },
@@ -80,7 +80,7 @@ namespace InvestimentosCaixa.Api.Controllers
                     {
                         new EndpointModel() { Url = "api/PerfisRisco/perfil-risco/{clienteId}", Verbo = "GET" },
                         new EndpointModel() { Url = "api/PerfisRisco/produtos-recomendados/{perfil}", Verbo = "GET" },
-                        new EndpointModel() { Url = "api/Simulacoes/simulacoes/", Verbo = "POST" },
+                        new EndpointModel() { Url = "api/Simulacoes/simular-investimento/", Verbo = "POST" },
                     }
                 }
             };

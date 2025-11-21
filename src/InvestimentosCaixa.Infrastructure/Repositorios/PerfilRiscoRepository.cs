@@ -7,7 +7,7 @@ using Microsoft.Extensions.Caching.Distributed;
 
 namespace InvestimentosCaixa.Infrastructure.Repositorios
 {
-    public class PerfilRiscoRepository : Repository<LogTelemetria>, IPerfilRiscoRepository
+    public class PerfilRiscoRepository : Repository<PerfilRisco>, IPerfilRiscoRepository
     {
         private const string PerfilPontuacaoVolumeCache = "PerfilPontuacaoVolumeCache";
         private const string PerfilPontuacaoFrequenciaCache = "PerfilPontuacaoFrequenciaCache";
