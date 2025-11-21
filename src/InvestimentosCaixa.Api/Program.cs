@@ -271,9 +271,29 @@ static async Task SeedIdentityAsync(IServiceProvider services)
             EmailConfirmed = true
         };
 
-        var createAdmin = await userManager.CreateAsync(tecnico, "@Tecnico123");
-        if (!createAdmin.Succeeded)
-            throw new Exception("Erro ao criar admin: " + string.Join("; ", createAdmin.Errors.Select(e => e.Description)));
+        var createTecnico = await userManager.CreateAsync(tecnico, "@Tecnico123");
+        if (!createTecnico.Succeeded)
+            throw new Exception("Erro ao criar tecnico: " + string.Join("; ", createTecnico.Errors.Select(e => e.Description)));
+    }
+
+    // 3) Cria usuário comum
+    var usuarioEmail = "usuario@usuario.com";
+    var usuario = await userManager.FindByEmailAsync(usuarioEmail);
+    if (usuario == null)
+    {
+        usuario = new IdentityUser<Guid>
+        {
+            Id = Guid.Parse("E6B7794B-9367-4B2A-AEF4-85B15FA42571"),
+            UserName = "usuario",
+            NormalizedUserName = "usuario",
+            Email = usuarioEmail,
+            NormalizedEmail = usuarioEmail.ToUpperInvariant(),
+            EmailConfirmed = true
+        };
+
+        var createUsuario = await userManager.CreateAsync(usuario, "@Usuario123");
+        if (!createUsuario.Succeeded)
+            throw new Exception("Erro ao criar usuario comum: " + string.Join("; ", createUsuario.Errors.Select(e => e.Description)));
     }
 
     // Vincula analista à role analista

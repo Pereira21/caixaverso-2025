@@ -28,10 +28,10 @@ namespace InvestimentosCaixa.Api.Controllers
         /// <param name="model"></param>
         /// <response code="200">Simulação realizada com sucesso</response>
         /// <response code="400">Não foi possível processar a requisição devido a parâmetros inválidos</response>
+        /// <response code="401">Acesso não autorizado. Verifique suas credenciais ou o token JWT</response>
         [HttpPost("simular-investimento")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [AllowAnonymous]
         public async Task<IActionResult> SimularInvestimento([FromBody] SimularInvestimentoModel model)
         {
             if (!ModelState.IsValid) return CustomResponse(ModelState);

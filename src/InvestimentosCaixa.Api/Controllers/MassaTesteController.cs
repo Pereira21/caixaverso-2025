@@ -47,20 +47,40 @@ namespace InvestimentosCaixa.Api.Controllers
                 {
                     Email = "usuario@analista.com",
                     Senha = "@Analista123",
+                    Descricao = "Usuário de perfil analista. Role 'analista'",
                     EndpointList = new List<EndpointModel>()
                     {
-                        new EndpointModel() { Url = "/investimentos/{clienteId}", Verbo = "GET" },
-                        new EndpointModel() { Url = "/simulacoes", Verbo = "GET" },
-                        new EndpointModel() { Url = "/simulacoes/por-produto-dia", Verbo = "GET" }
+                        new EndpointModel() { Url = "api/Investimentos/investimentos/{clienteId}", Verbo = "GET" },
+                        new EndpointModel() { Url = "api/PerfisRisco/perfil-risco/{clienteId}", Verbo = "GET" },
+                        new EndpointModel() { Url = "api/PerfisRisco/produtos-recomendados/{perfil}", Verbo = "GET" },
+                        new EndpointModel() { Url = "api/Simulacoes/simulacoes/", Verbo = "POST" },
+                        new EndpointModel() { Url = "api/Simulacoes/simulacoes", Verbo = "GET" },
+                        new EndpointModel() { Url = "api/Simulacoes/simulacoes/por-produto-dia", Verbo = "GET" }
                     }
                 },
                 new UsuarioModel()
                 {
                     Email = "usuario@tecnico.com",
                     Senha = "@Tecnico123",
+                    Descricao = "Usuário de perfil técnico. Role 'tecnico'",
                     EndpointList = new List<EndpointModel>()
                     {
+                        new EndpointModel() { Url = "api/PerfisRisco/perfil-risco/{clienteId}", Verbo = "GET" },
+                        new EndpointModel() { Url = "api/PerfisRisco/produtos-recomendados/{perfil}", Verbo = "GET" },
+                        new EndpointModel() { Url = "api/Simulacoes/simulacoes/", Verbo = "POST" },
                         new EndpointModel() { Url = "telemetria", Verbo = "GET" }
+                    }
+                },
+                new UsuarioModel()
+                {
+                    Email = "usuario@usuario.com",
+                    Senha = "@Usuario123",
+                    Descricao = "Usuário comum sem privilégios",
+                    EndpointList = new List<EndpointModel>()
+                    {
+                        new EndpointModel() { Url = "api/PerfisRisco/perfil-risco/{clienteId}", Verbo = "GET" },
+                        new EndpointModel() { Url = "api/PerfisRisco/produtos-recomendados/{perfil}", Verbo = "GET" },
+                        new EndpointModel() { Url = "api/Simulacoes/simulacoes/", Verbo = "POST" },
                     }
                 }
             };

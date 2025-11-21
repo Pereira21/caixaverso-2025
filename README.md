@@ -16,7 +16,7 @@ API disponível em:
 
 ### **[POST] /api/Auth/login**
 **Acesso:** Público  
-**Finalidade:** Atende a exigência de autenticação no sistema. Alguns endpoints são públicos, outros exigem token. Foram pré-cadastrados dois usuários com roles específicas que são exigidas nos endpoints privados. Inserido no swagger um endpoint para obter os usuários.
+**Finalidade:** Atende a exigência de autenticação no sistema. Foram pré-cadastrados três usuários, cada um atendendo um nível de usuário. Inserido no swagger um endpoint para obter os usuários.
 
 **Massa de Teste** 
 - **Técnico:**  Para endpoints técnicos. Ex: Telemetria  
@@ -25,14 +25,17 @@ API disponível em:
 - **Analista:** Para endpoints de análise interna. Ex: Listar investimentos por cliente, listar todas simulações, etc.  
   - Email: `usuario@analista.com`  
   - Senha: `@Analista123`
+- **Comum:** Para endpoints de usuário comum. Ex: Simular investimento, obter perfil risco, etc.  
+  - Email: `usuario@usuario.com`  
+  - Senha: `@Usuario123`
 
 ---
 
 ## 1.2 Perfil de Risco
 
 ### **[GET] /api/PerfisRisco/perfil-risco/{clienteId}**
-**Acesso:** Público  
-**Finalidade:** Retorna o Perfil de Risco do cliente por meio do motor de recomendação.
+**Acesso:** Exige autênticação mínima sem necessidade de role.  
+**Finalidade:** Retorna o Perfil de Risco do cliente por meio do motor de recomendação.  
 
 Como o desafio solicita um algoritmo simples baseado em:
 - **volume de investimentos**, e  
@@ -118,7 +121,7 @@ Após os cálculos dos três tipos de scores, é feito uma soma entre os três e
 |-------------|--------|
 | 0 – 50 | Conservador |
 | 51 – 85 | Moderado |
-| 86 – 150 | Agressivo |
+| 86 – 100 | Agressivo |
 
 Esse processo garante análise objetiva e auditável.
 
@@ -127,7 +130,7 @@ Esse processo garante análise objetiva e auditável.
 ## 1.3 Produtos Recomendados
 
 ### **[GET] /api/PerfisRisco/produtos-recomendados/{perfil}**
-**Acesso:** Público  
+**Acesso:** Exige autênticação mínima sem necessidade de role.  
 **Finalidade:** Retorna os produtos recomendados com base no perfil informado.
 
 **Massa de Teste** – Os perfis pré-cadastrados estão na tabela `PerfilRisco`:
@@ -152,7 +155,7 @@ INSERT INTO PerfilRisco (Nome, Descricao) VALUES
 ## 1.5 Simulações
 
 ### **[POST] /api/Simulacoes/simular-investimento**  
-**Acesso:** Público  
+**Acesso:** Exige autênticação mínima sem necessidade de role.  
 **Finalidade:** Permite simular investimentos.  
 **Massa de Teste** – Incluído endpoint de listar produtos disponíveis. (MassaTeste)  
 

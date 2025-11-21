@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using InvestimentosCaixa.Application.Interfaces.Services;
 using InvestimentosCaixa.Application.Notificacoes;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace InvestimentosCaixa.Api.Controllers
@@ -9,6 +10,7 @@ namespace InvestimentosCaixa.Api.Controllers
     /// Controlador focado em requisições de perfil de risco
     /// </summary>
     [Route("api/[controller]")]
+    [Authorize]
     public class PerfisRiscoController : MainController
     {
         private readonly IPerfilRiscoService _perfilRiscoService;

@@ -62,7 +62,7 @@ namespace InvestimentosCaixa.Infrastructure.Migrations
                 INSERT INTO PerfilClassificacao (PerfilRiscoId, MinPontuacao, MaxPontuacao) VALUES 
                     (1, 0, 50),     -- Conservador
                     (2, 51, 80),    -- Moderado
-                    (3, 81, 150);   -- Agressivo
+                    (3, 81, 100);   -- Agressivo
 
                 INSERT INTO RelPerfilRisco (PerfilRiscoId, RiscoId) VALUES 
                     (1, 1),  -- Conservador associado a Baixo risco

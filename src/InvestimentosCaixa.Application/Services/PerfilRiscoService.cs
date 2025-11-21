@@ -95,6 +95,8 @@ namespace InvestimentosCaixa.Application.Services
 
             pontuacaoCliente += await ObtemScoreClienteRisco(riscosMovimentadosAgrupados);
 
+            pontuacaoCliente = Math.Min(pontuacaoCliente, 100);
+
             PerfilClassificacao perfilClassificacao = await ObtemPerfilClassificacao(pontuacaoCliente);
 
             if (_notificador.TemNotificacao())
